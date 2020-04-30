@@ -1,0 +1,18 @@
+{
+  "name": "Minimal New Tab",
+  "version": "1.0",
+  "description": "A clean, customizable new tab experience",
+  "permissions": ["storage", "geolocation"],
+  "page_action": {
+    "default_icon": {
+      "16": "/assets/icons/minimal-new-tab-16.png",
+      "32": "/assets/icons/minimal-new-tab-32.png",
+      "48": "/assets/icons/minimal-new-tab-48.png",
+      "128": "/assets/icons/minimal-new-tab-128.png"
+    }
+  },
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "manifest_version": 2
+}

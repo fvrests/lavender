@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
+    "watch": "NODE_ENV=production vue-cli-service build --watch",
+    "test": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -54,6 +55,10 @@
         }
       }
     ]
+  },
+  "prettier": {
+    "singleQuote": true,
+    "semi": false
   },
   "browserslist": [
     "> 1%",
