@@ -1,11 +1,24 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import Vuex from 'vuex'
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
-  state: {},
-  mutations: {},
-  actions: {},
-  modules: {}
-});
+export default Vuex.createStore({
+  state: {
+    useMilitaryTime: true,
+    useCelsius: true,
+    position: {
+      latitude: '',
+      longitude: ''
+    },
+    weather: {}
+  },
+  mutations: {
+    toggleCelsius(state) {
+      state.useCelsius = !state.useCelsius
+    },
+    toggleMilitaryTime(state) {
+      state.useMilitaryTime = !state.useMilitaryTime
+    },
+    setPosition(state, coords) {
+      state.position = { ...coords, timestamp: Date.now() }
+    }
+  }
+})

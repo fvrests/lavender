@@ -1,17 +1,23 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="app is working :) " />
+    <v-weather msg="app is working ON VUE3 :)))))" />
+    <v-options />
+    <v-time />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Weather from './components/weather.vue'
+import Options from './components/options.vue'
+import Time from './components/time.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    'v-weather': Weather,
+    'v-options': Options,
+    'v-time': Time
   }
 }
 </script>
