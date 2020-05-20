@@ -1,21 +1,16 @@
 {
-  "name": "Minimal New Tab",
+  "name": "lavender | new tab",
   "version": "1.0",
   "description": "A clean, customizable new tab experience",
-  "permissions": [
-    "storage",
-    "geolocation",
-    "https://maps.googleapis.com/maps/api/"
-  ],
+  "permissions": ["storage", "geolocation"],
   "page_action": {
     "default_icon": {
-      "16": "/assets/icons/minimal-new-tab-16.png",
-      "32": "/assets/icons/minimal-new-tab-32.png",
-      "48": "/assets/icons/minimal-new-tab-48.png",
-      "128": "/assets/icons/minimal-new-tab-128.png"
+      "16": "/assets/icons/lavender-favicon-16@2x.png",
+      "32": "/assets/icons/lavender-favicon-32@2x.png",
+      "48": "/assets/icons/lavender-favicon-48@2x.png",
+      "128": "/assets/icons/lavender-favicon-128@2x.png"
     }
   },
-  "content_security_policy": "script-src 'self' 'unsafe-eval' https://maps.googleapis.com object-src 'self'",
   "chrome_url_overrides": {
     "newtab": "index.html"
   },

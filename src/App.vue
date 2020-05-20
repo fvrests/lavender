@@ -1,34 +1,47 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <v-weather msg="app is working ON VUE3 :)))))" />
-    <v-options />
-    <v-time />
-  </div>
+    <div class="wrapper">
+        <v-icon style="width: 128px; height: 128px;" />
+        <v-time />
+        <v-weather />
+        <v-options />
+    </div>
 </template>
 
 <script>
-import Weather from './components/weather.vue'
-import Options from './components/options.vue'
-import Time from './components/time.vue'
+import VWeather from './components/weather.vue'
+import VOptions from './components/options.vue'
+import VTime from './components/time.vue'
+import VIcon from './assets/icons/icon.vue'
 
 export default {
-  name: 'App',
-  components: {
-    'v-weather': Weather,
-    'v-options': Options,
-    'v-time': Time
-  }
+    name: 'App',
+    components: {
+        VWeather,
+        VOptions,
+        VTime,
+        VIcon
+    }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+@import './assets/styles/normalize.css';
+@import './assets/styles/weather-icons.min.css';
+
+body {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    background-color: #222222;
+    color: white;
+    min-height: 100vh;
+}
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    min-height: 100vh;
 }
 </style>

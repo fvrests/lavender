@@ -5,5 +5,5 @@ import store from './store'
 console.log('from main:', store.state)
 
 createApp(App)
-  .use(store)
-  .mount('#app')
+    .use(store)
+    .mount('#app')
