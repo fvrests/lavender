@@ -1,59 +1,119 @@
 <template>
-    <div class="button-wrapper">
-        <div class="weather-buttons" />
-        <p>Weather format ☁️</p>
-        <button @click="toggleCelsius">
-            {{ useCelsius ? 'Fahrenheit' : 'Celsius' }}
-        </button>
-        <div class="time-buttons" />
-        <p>Time format ⌛️</p>
-        <button @click="toggleMilitaryTime">
-            {{ useMilitaryTime ? 'Standard' : 'Military' }}
-        </button>
+    <div class="options">
+        <transition name="optionsMenu">
+            <div v-show="isOptionsOpen" class="options-menu">
+                <h3>Options</h3>
+                <v-options-item
+                    option="useMilitaryTime"
+                    text="⌛️ use Military Time"
+                />
+                <v-options-item option="useCelsius" text="☁️ use Celsius" />
+                <v-options-item
+                    option="useHorizontalTime"
+                    text="use horizontal time layout"
+                />
+                <v-options-item
+                    option="useDescriptiveWeather"
+                    text="🌤 use more descriptive weather"
+                />
+                <div v-if="storedWeather.hasData">
+                    <p>
+                        🌎 Stored locale: {{ storedWeather.name }},
+                        {{ storedWeather.sys.country }}
+                    </p>
+                </div>
+                <button @click="fetchPositionAndWeather">
+                    Refresh location
+                </button>
+            </div>
+        </transition>
+        <div
+            @click="toggleOptionsMenu"
+            class="options-icon-container"
+            style="user-select: none"
+        >
+            <v-icon class="options-icon" style="width: 24px; height: 24px;" />
+        </div>
     </div>
 </template>
 
 <script>
+import VIcon from '../assets/icons/icon.vue'
+import { fetchPositionAndWeather } from '../utils/helpers'
+import VOptionsItem from './options-item.vue'
+
 export default {
-    components: {},
-    mounted() {
-        this.$store.commit('getCachedOptions')
-        console.log('got cached options - complete!~')
+    components: {
+        VIcon,
+        VOptionsItem
+    },
+    data: function() {
+        return {
+            isOptionsOpen: false,
+            fetchPositionAndWeather
+        }
     },
     methods: {
-        toggleCelsius() {
-            this.$store.commit('toggleCelsius')
-            console.log(this.$store.state)
+        toggleProperty(property) {
+            this.$store.commit('toggleProperty', property)
+            console.log(property, this.$store.state[property])
         },
-        toggleMilitaryTime() {
-            this.$store.commit('toggleMilitaryTime')
-            console.log(this.$store.state)
+        toggleOptionsMenu() {
+            this.isOptionsOpen = !this.isOptionsOpen
         }
     },
     computed: {
-        useMilitaryTime: function() {
-            return this.$store.state.useMilitaryTime
-        },
-        useCelsius: function() {
-            return this.$store.state.useCelsius
+        storedWeather: function() {
+            return this.$store.state.weather
         }
     }
 }
 </script>
 
 <style scoped>
-button {
-    background-color: white;
-    color: black;
-    font-weight: bold;
-    height: 24px;
-    border-radius: 12px;
-    padding: 0px 6px;
+.options {
+    position: fixed;
+    right: 32px;
+    bottom: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
 }
-.button-wrapper {
+.options-menu {
+    background-color: white;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 120px;
+    padding: 24px;
+    border-radius: 8px;
+}
+
+.optionsMenu-enter-active,
+.optionsMenu-leave-active {
+    transition: ease-in-out all 100ms;
+}
+.optionsMenu-enter-from,
+.optionsMenu-leave-to {
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+.options-icon-container {
+    height: 32px;
+    width: 32px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 12px;
+    border-radius: 16px;
+}
+.options-icon-container:hover {
+    background-color: #ffffff1a;
+}
+.options-icon {
+    color: #222222;
+    transform: scale(0.8);
 }
 </style>

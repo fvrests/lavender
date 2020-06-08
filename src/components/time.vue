@@ -1,6 +1,20 @@
 <template>
-    <div>
-        <h2 class="time">{{ time }}</h2>
+    <div class="wrapper">
+        <div v-if="store.state.useHorizontalTime" class="time">
+            <h2>{{ hour }}:{{ minute }}</h2>
+        </div>
+        <div v-else class="time">
+            <div class="outline">
+                <div class="mono">
+                    <span>{{ hour[0] }}</span
+                    ><span>{{ hour[1] }}</span>
+                </div>
+                <div class="mono">
+                    <span>{{ minute[0] }}</span
+                    ><span>{{ minute[1] }}</span>
+                </div>
+            </div>
+        </div>
         <h2 class="descriptor">{{ descriptor }}</h2>
         <h2 class="today">{{ today }}</h2>
     </div>
@@ -14,49 +28,57 @@ import { setCorrectingInterval } from '@/utils/helpers'
 
 export default {
     created() {
-        // get time once then every second
-        this.getTime()
-        setCorrectingInterval(() => this.getTime(), 1000)
-
-        // check if day or night once then every 15 minutes - used to set icons
-        this.checkTimeOfDay()
-        setCorrectingInterval(() => this.checkTimeOfDay(), 15 * 60 * 1000)
+        setCorrectingInterval(() => this.getTime(), 1000, true)
     },
     setup() {
         let store = useStore()
         let newDate = ref(new Date())
         let today = computed(() => format(newDate.value, 'LLLL do, yyyy'))
-        let time = computed(() =>
+        let hour = computed(() =>
             store.state.useMilitaryTime
-                ? format(newDate.value, 'HH:mm')
-                : format(newDate.value, 'h:mm')
+                ? format(newDate.value, 'HH')
+                : format(newDate.value, 'hh')
         )
+        let minute = computed(() => format(newDate.value, 'mm'))
         let descriptor = computed(() => format(newDate.value, 'B'))
 
         function getTime() {
             newDate.value = new Date()
         }
-
-        function checkTimeOfDay() {
-            let hour = format(newDate.value, 'HH')
-            let day = !!(hour > 4 && hour < 20)
-            console.log('day:', day)
-            store.commit('setIsDaytime', day)
-            console.log('daytime set!', store.state.isDaytime)
-        }
-
-        return { today, getTime, time, checkTimeOfDay, descriptor }
+        return { today, getTime, hour, minute, descriptor, store }
     }
 }
 </script>
 
 <style>
+.wrapper {
+    grid-area: middle;
+}
 .time {
     font-size: 96px;
-    color: pink;
+    line-height: 96px;
     font-weight: bold;
+    margin-bottom: 12px;
 }
 .descriptor {
     font-size: 14px;
+    text-transform: uppercase;
+    font-style: italic;
+}
+.today {
+    font-weight: bold;
+}
+.mono {
+    display: flex;
+}
+.mono > span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1ch;
+}
+.outline {
+    border: 3px solid #222222;
+    padding: 12px;
 }
 </style>

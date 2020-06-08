@@ -1,7 +1,9 @@
 import store from '../store'
 
-export const setCorrectingInterval = (func, delay) => {
+export const setCorrectingInterval = (func, delay, init = false) => {
     var instance = {}
+
+    if (init) func()
 
     function tick(func, delay) {
         if (!instance.started) {
@@ -48,6 +50,12 @@ export async function fetchNewPosition() {
     })
 }
 
+export function fetchPositionAndWeather() {
+    fetchNewPosition().then(() => {
+        fetchWeather()
+    })
+}
+
 export function fetchWeather() {
     let baseUrl = 'https://api.openweathermap.org/data/2.5/weather'
     let appid = 'de619c7b223045c3ad4bc7d8332d55ab'
@@ -86,5 +94,7 @@ export function fetchWeather() {
  * @param {number} maxAge
  */
 export function invalidateProperty(timestamp, maxAge = 30 * 60) {
-    return !timestamp || Date.now() - timestamp >= maxAge
+    if (store.state.init) {
+        return !timestamp || Date.now() - timestamp >= maxAge
+    } else return
 }

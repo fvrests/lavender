@@ -1,6 +1,5 @@
 <template>
-    <div class="wrapper">
-        <v-icon style="width: 128px; height: 128px;" />
+    <div class="app-wrapper">
         <v-time />
         <v-weather />
         <v-options />
@@ -11,15 +10,31 @@
 import VWeather from './components/weather.vue'
 import VOptions from './components/options.vue'
 import VTime from './components/time.vue'
-import VIcon from './assets/icons/icon.vue'
+import store from '@/store'
+import { onBeforeUnmount } from 'vue'
 
 export default {
     name: 'App',
     components: {
         VWeather,
         VOptions,
-        VTime,
-        VIcon
+        VTime
+    },
+    setup() {
+        store.commit('initializeStore')
+        console.log('store initialized 🥳', store.state)
+
+        store.subscribe((mutations, state) => {
+            if (state.init)
+                chrome.storage.sync.set({
+                    ...state,
+                    lastSynced: Date.now()
+                })
+        })
+
+        onBeforeUnmount(() => {
+            store.unsubscribe()
+        })
     }
 }
 </script>
@@ -27,21 +42,6 @@ export default {
 <style>
 @import './assets/styles/normalize.css';
 @import './assets/styles/weather-icons.min.css';
-
-body {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    background-color: #222222;
-    color: white;
-    min-height: 100vh;
-}
-.wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-direction: column;
-    min-height: 100vh;
-}
+@import './assets/styles/global.css';
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap');
 </style>

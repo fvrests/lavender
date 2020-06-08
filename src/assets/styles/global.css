@@ -1,0 +1,51 @@
+:root {
+    --color-rose: #f5e0dc;
+    --color-cloud: #bec3c6;
+    --color-leaf: #ced9cd;
+    --color-lemon: #fae5b4;
+    --color-lavender: #c8c0cf;
+    --color-sand: #e4dcd4;
+
+    --color-eggplant: #393438;
+    --color-dark-gray: #292929;
+    --color-soft-gray: #404040;
+
+    --theme-bg: var(--color-rose);
+}
+
+body {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    background-color: var(--theme-bg);
+    color: var(--color-dark-gray);
+    min-height: 100vh;
+    font-family: 'Lora', serif;
+}
+.app-wrapper {
+    display: grid;
+    grid-template-areas:
+        'top top top'
+        'left middle right'
+        'bottom bottom bottom';
+    justify-items: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 32px;
+}
+button {
+    background-color: var(--color-dark-gray);
+    color: white;
+    font-weight: bold;
+    height: 24px;
+    border-radius: 12px;
+    padding: 0px 12px;
+}
+p,
+h3 {
+    color: var(--color-dark-gray);
+}
+h3 {
+    font-weight: bold;
+}
