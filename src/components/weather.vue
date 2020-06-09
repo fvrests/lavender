@@ -22,35 +22,57 @@
 </template>
 
 <script>
-import store from '@/store'
-import { mapGetters } from 'vuex'
+import { computed, onMounted, watch } from 'vue'
+import { useStore } from 'vuex'
+
 import {
     invalidateProperty,
     fetchPositionAndWeather,
-    fetchWeather
+    fetchWeather,
+    setCorrectingInterval
 } from '@/utils/helpers'
 
 export default {
-    components: {},
-    // created() {
-    //     setCorrectingInterval(
-    //         () => this.refreshWeather(),
-    //         30 * 60 * 1000,
-    //         false
-    //     )
-    // },
-    data() {
-        return {
-            fetchPositionAndWeather
-        }
-    },
-    methods: {
-        refreshWeather() {
-            if (!this.shouldFetchNewWeather)
+    setup() {
+        let store = useStore()
+        let storeInitialized = computed(() => store.state.init)
+        watch(storeInitialized, () => {
+            refreshWeather()
+        })
+        onMounted(() => {
+            setCorrectingInterval(() => {
+                if (storeInitialized) {
+                    console.log('newPos', shouldFetchNewPosition.value)
+                    refreshWeather()
+                }
+            }, 60 * 1000)
+        })
+        let storedWeather = computed(() => store.state.weather)
+        let weatherIconClass = computed(() => store.getters.weatherIconClass)
+        let formattedTemp = computed(() => store.getters.formattedTemp)
+        let weatherConditions = computed(() => store.getters.weatherConditions)
+        let shouldFetchNewWeather = computed(() =>
+            store.state.init
+                ? invalidateProperty(
+                      store.state.weather.timestamp,
+                      15 * 60 * 1000
+                  )
+                : null
+        )
+        let shouldFetchNewPosition = computed(() =>
+            store.state.init
+                ? invalidateProperty(
+                      store.state.position.timestamp,
+                      30 * 24 * 60 * 60 * 1000
+                  )
+                : null
+        )
+        function refreshWeather() {
+            if (!shouldFetchNewWeather.value) {
                 return console.log(
                     'weather is recent. using stored weather data'
                 )
-            if (this.shouldFetchNewPosition) {
+            } else if (shouldFetchNewPosition.value) {
                 if (!store.state.position.hasData) {
                     return console.log(
                         'awaiting user input to fetch location data...'
@@ -67,45 +89,13 @@ export default {
                 )
             }
         }
-    },
-    watch: {
-        storeInitialized: function() {
-            console.log('refreshing weather:')
-            this.refreshWeather()
-        },
-        shouldFetchNewWeather: function() {
-            this.refreshWeather()
-        }
-    },
-    computed: {
-        ...mapGetters([
-            'weatherIconClass',
-            'formattedTemp',
-            'weatherConditions'
-        ]),
-        storeInitialized: function() {
-            return store.state.init
-        },
-        storedWeather: function() {
-            return store.state.weather
-        },
-        shouldFetchNewWeather: function() {
-            // invalidate weather after 15 minutes - keeps temp & conditions current
-            if (store.state.init) {
-                return invalidateProperty(
-                    store.state.weather.timestamp,
-                    15 * 60 * 1000
-                )
-            } else return null
-        },
-        shouldFetchNewPosition: function() {
-            // invalidate position after 30 days - req'd by google maps api
-            if (store.state.init) {
-                return invalidateProperty(
-                    store.state.position.timestamp,
-                    30 * 24 * 60 * 60 * 1000
-                )
-            } else return null
+
+        return {
+            fetchPositionAndWeather,
+            storedWeather,
+            weatherIconClass,
+            formattedTemp,
+            weatherConditions
         }
     }
 }
