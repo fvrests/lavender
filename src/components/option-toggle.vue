@@ -1,17 +1,17 @@
 <template>
     <div class="item-wrapper">
-        <div class="container">
+        <div class="text" style="font-weight: bold">{{ text }}</div>
+        <div class="switch-container">
             <label class="switch" :for="option">
                 <input
                     :id="option"
                     type="checkbox"
-                    @change="handleChange"
+                    @change="toggle"
                     :checked="initialValue"
                 />
                 <div class="slider round"></div>
             </label>
         </div>
-        <p class="text">{{ text }}</p>
     </div>
 </template>
 
@@ -28,27 +28,25 @@ export default {
         let store = useStore()
         let initialValue = computed(() => store.state[props.option])
 
-        function handleChange() {
-            console.log('option to change', props.option)
+        function toggle() {
             store.commit('toggleProperty', props.option)
-            console.log('new option value', store.state[props.option])
         }
 
-        return { initialValue, handleChange }
+        return { initialValue, toggle }
     }
 }
 </script>
 
 <style scoped>
 /* general styling */
-
-.container {
-    transform: scale(0.5);
+.switch-container {
+    transform: scale(0.4);
     margin-right: 8px;
 }
 .item-wrapper {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     width: 100%;
     margin: 0 auto;
 }
@@ -66,7 +64,8 @@ export default {
 }
 
 .slider {
-    background-color: var(--color-cloud);
+    box-sizing: border-box;
+    background-color: var(--color-light-gray);
     bottom: 0;
     cursor: pointer;
     left: 0;
@@ -74,25 +73,28 @@ export default {
     right: 0;
     top: 0;
     transition: 0.4s;
+    border: 4px solid var(--color-soft-gray);
 }
 
 .slider:before {
+    box-sizing: border-box;
     background-color: white;
-    bottom: 4px;
+    bottom: -3px;
     content: '';
-    height: 26px;
-    left: 4px;
+    height: 32px;
+    left: -4px;
     position: absolute;
     transition: 0.4s;
-    width: 26px;
+    width: 32px;
+    border: 4px solid var(--color-soft-gray);
 }
 
 input:checked + .slider {
-    background-color: var(--color-dark-gray);
+    background-color: var(--theme-bg);
 }
 
 input:checked + .slider:before {
-    transform: translateX(26px);
+    transform: translateX(28px);
     background-color: white;
 }
 

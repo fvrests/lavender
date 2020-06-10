@@ -1,5 +1,6 @@
 import store from '../store'
 
+// correcting interval - corrects compounding variation in time between ticks that would occur using setInterval
 export const setCorrectingInterval = (func, delay, init = false) => {
     var instance = {}
 
@@ -27,18 +28,15 @@ export const setCorrectingInterval = (func, delay, init = false) => {
     return tick(func, delay)
 }
 
+// fetch new position from geolocation - must be called on user input
 export async function fetchNewPosition() {
     console.log('attempting fetch')
     await new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(
             pos => {
                 console.log('pos', pos)
-                // console.log('fetching new location...')
-                // console.log('pos', pos)
                 let { latitude, longitude } = pos.coords
-                // console.log('coords:', latitude, longitude)
                 store.commit('setPosition', { latitude, longitude })
-                // console.log('new: ', store.state.position)
                 resolve()
             },
             err => {
@@ -50,12 +48,14 @@ export async function fetchNewPosition() {
     })
 }
 
+// handles instances where weather must be fetched asynchronously after position is resolved
 export function fetchPositionAndWeather() {
     fetchNewPosition().then(() => {
         fetchWeather()
     })
 }
 
+// fetches current weather info from OpenWeatherMap API - max 60 calls/minute or 1,000,000 calls/month
 export function fetchWeather() {
     let baseUrl = 'https://api.openweathermap.org/data/2.5/weather'
     let appid = 'de619c7b223045c3ad4bc7d8332d55ab'
@@ -65,28 +65,10 @@ export function fetchWeather() {
         .then(res => res.json())
         .then(json => {
             let weather = json
-            // use setChromeStorage?
             store.commit('setWeather', weather)
             console.log('weather set!', weather)
         })
 }
-
-// not using - use autocomplete from locationIQ? instead?
-// export function reverseGeocode() {
-//   let baseUrl = 'https://us1.locationiq.com/v1/reverse.php'
-//   let key = 'e7d53f1438a4a3'
-//   let { latitude, longitude } = store.state.position
-//   fetch(`${baseUrl}?key=${key}&lat=${latitude}&lon=${longitude}&format=json`)
-//     .then(res => res.json())
-//     .then(json => {
-//       console.log(
-//         'reverse geocode:',
-//         json.address.county,
-//         ',',
-//         json.address.state
-//       )
-//     })
-// }
 
 /**
  *

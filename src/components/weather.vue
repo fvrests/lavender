@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { computed, onMounted, watch } from 'vue'
+import { computed, onMounted, watch, ref } from 'vue'
 import { useStore } from 'vuex'
 
 import {
@@ -39,38 +39,43 @@ export default {
         watch(storeInitialized, () => {
             refreshWeather()
         })
+        let shouldFetchNewWeather = ref(null)
+        let shouldFetchNewPosition = ref(null)
         onMounted(() => {
             setCorrectingInterval(() => {
+                shouldFetchNewWeather = storeInitialized.value
+                    ? invalidateProperty(
+                          store.state.weather.timestamp,
+                          30 * 1000
+                      )
+                    : null
+
+                shouldFetchNewPosition = storeInitialized.value
+                    ? invalidateProperty(
+                          store.state.position.timestamp,
+                          30 * 24 * 60 * 60 * 1000
+                      )
+                    : null
+
                 if (storeInitialized) {
                     console.log('newPos', shouldFetchNewPosition.value)
+                    console.log('newWeather', shouldFetchNewWeather.value)
                     refreshWeather()
                 }
-            }, 60 * 1000)
+            }, 10 * 1000)
         })
         let storedWeather = computed(() => store.state.weather)
         let weatherIconClass = computed(() => store.getters.weatherIconClass)
         let formattedTemp = computed(() => store.getters.formattedTemp)
         let weatherConditions = computed(() => store.getters.weatherConditions)
-        let shouldFetchNewWeather = computed(() =>
-            store.state.init
-                ? invalidateProperty(
-                      store.state.weather.timestamp,
-                      15 * 60 * 1000
-                  )
-                : null
-        )
-        let shouldFetchNewPosition = computed(() =>
-            store.state.init
-                ? invalidateProperty(
-                      store.state.position.timestamp,
-                      30 * 24 * 60 * 60 * 1000
-                  )
-                : null
-        )
         function refreshWeather() {
             if (!shouldFetchNewWeather.value) {
                 return console.log(
-                    'weather is recent. using stored weather data'
+                    'weather is recent. using stored weather data',
+                    'now:',
+                    Date.now(),
+                    'timestamp:',
+                    store.state.weather.timestamp
                 )
             } else if (shouldFetchNewPosition.value) {
                 if (!store.state.position.hasData) {
@@ -104,20 +109,21 @@ export default {
 <style scoped>
 .wrapper {
     grid-area: bottom;
+    text-align: center;
 }
 .wi {
-    font-size: 36px;
+    font-size: var(--text-large);
     color: var(--color-dark-gray);
     background-color: var(--theme-bg);
-    height: 64px;
-    width: 64px;
-    border-radius: 32px;
+    height: var(--space-large);
+    width: var(--space-large);
+    border-radius: var(--rounded-full);
     line-height: 64px;
 }
 .row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-gap: 4px;
+    grid-gap: 8px;
 }
 .temp {
     grid-column: 1;
@@ -136,17 +142,10 @@ p {
     margin-top: 24px;
     text-transform: uppercase;
 }
-
 .location-prompt button {
     position: fixed;
-    bottom: 32px;
+    bottom: var(--page-padding);
     transform: translateX(-50%);
     margin: 0 auto;
-    background-color: var(--color-dark-gray);
-    color: white;
-    font-weight: bold;
-    height: 24px;
-    border-radius: 12px;
-    padding: 0px 12px;
 }
 </style>

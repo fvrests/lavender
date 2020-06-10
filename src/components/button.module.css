@@ -1,0 +1,48 @@
+.primary,
+.icon,
+.card {
+    user-select: none;
+}
+
+.primary {
+    background-color: white;
+    color: var(--color-dark-gray);
+    border: 2px solid var(--color-dark-gray);
+    font-weight: bold;
+    border-radius: var(--rounded-full);
+    padding: 4px 12px;
+    font-size: 12px;
+}
+.primary:hover,
+.primary:focus {
+    background-color: var(--theme-bg);
+}
+
+.card {
+    background-color: white;
+    color: var(--color-dark-gray);
+    border: 2px solid var(--color-dark-gray);
+    font-weight: bold;
+    border-radius: var(--rounded);
+    padding: 4px 12px;
+    font-size: 12px;
+}
+
+.icon {
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--rounded-full);
+    color: var(--color-dark-gray);
+}
+.icon:hover {
+    background-color: white;
+    border: 2px solid var(--color-soft-gray);
+}
+.icon:focus {
+    outline: none;
+    background-color: white;
+}

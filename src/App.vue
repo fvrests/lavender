@@ -12,6 +12,9 @@ import VOptions from './components/options.vue'
 import VTime from './components/time.vue'
 import store from '@/store'
 import { onBeforeUnmount } from 'vue'
+import './assets/styles/normalize.css'
+import './assets/styles/weather-icons.min.css'
+import './assets/styles/global.css'
 
 export default {
     name: 'App',
@@ -39,9 +42,16 @@ export default {
 }
 </script>
 
-<style>
-@import './assets/styles/normalize.css';
-@import './assets/styles/weather-icons.min.css';
-@import './assets/styles/global.css';
-@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap');
+<style scoped>
+.app-wrapper {
+    display: grid;
+    grid-template-areas:
+        'top top top'
+        'left middle right'
+        'bottom bottom bottom';
+    justify-items: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: var(--space-medium);
+}
 </style>

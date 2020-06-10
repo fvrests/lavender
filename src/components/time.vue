@@ -1,22 +1,28 @@
 <template>
     <div class="wrapper">
-        <div v-if="store.state.useHorizontalTime" class="time">
-            <h2>{{ hour }}:{{ minute }}</h2>
+        <div v-if="store.state.timeFormat == 'horizontal'" class="time">
+            <div>{{ hour }}:{{ minute }}</div>
         </div>
         <div v-else class="time">
             <div class="outline">
-                <div class="mono">
+                <div class="monospaced">
                     <span>{{ hour[0] }}</span
                     ><span>{{ hour[1] }}</span>
                 </div>
-                <div class="mono">
+                <div class="monospaced">
                     <span>{{ minute[0] }}</span
                     ><span>{{ minute[1] }}</span>
                 </div>
             </div>
         </div>
-        <h2 class="descriptor">{{ descriptor }}</h2>
-        <h2 class="today">{{ today }}</h2>
+        <div class="space-small" />
+        <div v-if="!store.state.useMilitaryTime" class="italic">
+            {{ descriptor }}
+        </div>
+        <div v-else class="italic">
+            today is
+        </div>
+        <div class="today">{{ today }}</div>
     </div>
 </template>
 
@@ -50,35 +56,36 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .wrapper {
     grid-area: middle;
+    text-align: center;
 }
 .time {
     font-size: 96px;
     line-height: 96px;
     font-weight: bold;
-    margin-bottom: 12px;
 }
-.descriptor {
-    font-size: 14px;
-    text-transform: uppercase;
-    font-style: italic;
-}
-.today {
-    font-weight: bold;
-}
-.mono {
+.monospaced {
     display: flex;
 }
-.mono > span {
+.monospaced > span {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 1ch;
 }
 .outline {
-    border: 3px solid #222222;
-    padding: 12px;
+    border: 3px solid var(--color-dark-gray);
+    padding: var(--space-small);
+}
+.italic {
+    text-transform: uppercase;
+    font-size: 14px;
+    font-style: italic;
+}
+.today {
+    /* text-transform: none; */
+    font-weight: bold;
 }
 </style>

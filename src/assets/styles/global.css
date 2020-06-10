@@ -1,51 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap');
+
 :root {
     --color-rose: #f5e0dc;
-    --color-cloud: #bec3c6;
+    --color-cloud: #c6ced3;
     --color-leaf: #ced9cd;
     --color-lemon: #fae5b4;
-    --color-lavender: #c8c0cf;
+    --color-lavender: #dad4e0;
     --color-sand: #e4dcd4;
 
+    --color-white-semi: rgba(255, 255, 255, 0.8);
+    --color-white-demi: rgba(255, 255, 255, 0.4);
     --color-eggplant: #393438;
     --color-dark-gray: #292929;
     --color-soft-gray: #404040;
+    --color-light-gray: #dddddd;
 
+    --theme-bg: var(--color-lavender);
+
+    --space-small: 16px;
+    --space-medium: 32px;
+    --space-large: 64px;
+
+    --page-padding: 32px;
+
+    --rounded-full: 9999px;
+    --rounded: 12px;
+
+    --font-serif: 'Lora', serif;
+
+    --text-large: 36px;
+}
+
+.rose:root {
     --theme-bg: var(--color-rose);
+}
+.cloud:root {
+    --theme-bg: var(--color-cloud);
+}
+.leaf:root {
+    --theme-bg: var(--color-leaf);
+}
+.lemon:root {
+    --theme-bg: var(--color-lemon);
+}
+.lavender:root {
+    --theme-bg: var(--color-lavender);
+}
+.sand:root {
+    --theme-bg: var(--color-sand);
 }
 
 body {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
+    font-family: var(--font-serif), -apple-system, BlinkMacSystemFont,
+        'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
+        'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-align: center;
     background-color: var(--theme-bg);
     color: var(--color-dark-gray);
     min-height: 100vh;
-    font-family: 'Lora', serif;
 }
-.app-wrapper {
-    display: grid;
-    grid-template-areas:
-        'top top top'
-        'left middle right'
-        'bottom bottom bottom';
-    justify-items: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 32px;
+
+.space-small {
+    height: var(--space-small);
 }
-button {
-    background-color: var(--color-dark-gray);
-    color: white;
-    font-weight: bold;
-    height: 24px;
-    border-radius: 12px;
-    padding: 0px 12px;
-}
-p,
-h3 {
-    color: var(--color-dark-gray);
-}
-h3 {
-    font-weight: bold;
+.space-medium {
+    height: var(--space-medium);
 }

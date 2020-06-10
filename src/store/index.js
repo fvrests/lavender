@@ -6,9 +6,10 @@ const store = new Vuex.Store({
         init: false,
         useMilitaryTime: false,
         useCelsius: false,
-        useHorizontalTime: true,
+        timeFormat: 'horizontal',
         isDaytime: true,
         useDescriptiveWeather: false,
+        themeColor: 'var(--color-rose)',
         position: {
             hasData: false,
             latitude: '',
@@ -23,6 +24,10 @@ const store = new Vuex.Store({
     mutations: {
         toggleProperty(state, property) {
             state[property] = !state[property]
+        },
+        changeProperty(state, { property, newValue }) {
+            console.log('changing property', property, newValue)
+            state[property] = newValue
         },
         initializeStore(state) {
             chrome.storage.sync.get(null, value => {
