@@ -2,114 +2,138 @@
     <div class="options">
         <transition name="optionsMenu">
             <div v-show="isOptionsOpen" class="options-menu">
-                <div class="menu-title">Options</div>
-                <div class="space-small" />
-                <div class="italic">data format</div>
+                <div :class="text.title">Options</div>
 
+                <div :class="text.subtitle">time</div>
                 <v-option-toggle
                     option="useMilitaryTime"
-                    text="Time: 24 hour format"
+                    label="Format:"
+                    sublabel="24 hour"
                 />
+                <div :class="text.label">Layout:</div>
+                <v-radio-group
+                    property="timeLayout"
+                    :options="['default', 'stacked']"
+                >
+                    <template #default>
+                        <div class="time">
+                            <div>9:41</div>
+                        </div>
+                    </template>
+
+                    <template #stacked>
+                        <div class="time">
+                            <div class="outline">
+                                <div :class="text.monospaced">
+                                    <span>0</span>
+                                    <span>9</span>
+                                </div>
+                                <div :class="text.monospaced">
+                                    <span>4</span>
+                                    <span>1</span>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </v-radio-group>
+
+                <div class="divider" />
+
+                <div :class="text.subtitle">weather</div>
                 <v-option-toggle
                     option="useCelsius"
-                    text="Temperature: display in Celsius"
+                    label="Units:"
+                    sublabel="Celsius"
                 />
-                <v-options-toggle
+                <v-option-toggle
                     option="useDescriptiveWeather"
-                    text="More descriptive weather conditions"
+                    label="Conditions:"
+                    sublabel="More specific values"
                 />
-                <div class="space-small" />
-                <div class="italic">layout</div>
-                <input
-                    type="radio"
-                    name="layout"
-                    value="horizontal"
-                    v-model="selectedOption"
-                    :checked="initialValue == 'horizontal'"
-                />
-                <input
-                    type="radio"
-                    name="layout"
-                    value="vertical"
-                    v-model="selectedOption"
-                    :checked="initialValue == 'vertical'"
-                />
-                {{ selectedOption }}
-                <div class="space-small" />
-                <div v-if="storedWeather.hasData">
-                    <div style="font-weight: bold">
-                        Your stored location:
-                        <span style="font-weight: normal; font-style: italic;">
-                            {{ storedWeather.name }},
-                            {{ storedWeather.sys.country }}
-                        </span>
+
+                <div class="divider" />
+
+                <div :class="text.subtitle">location</div>
+                <div class="row separated">
+                    <div v-if="storedWeather.hasData">
+                        <div class="row" :class="text.label">
+                            Stored location:
+                            <div :class="text.sublabel">
+                                {{ storedWeather.name }},
+                                {{ storedWeather.sys.country }}
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button
+                            :class="button.primary"
+                            style="margin: 0 auto;"
+                            @click="fetchPositionAndWeather"
+                        >
+                            Refresh
+                        </button>
                     </div>
                 </div>
-                <div class="space-small" />
-                <div>
-                    <button
-                        @click="fetchPositionAndWeather"
-                        :class="button.primary"
-                        style="margin: 0 auto;"
-                    >
-                        Refresh Location
-                    </button>
-                </div>
 
-                <div class="space-small" />
-                <div style="font-weight: bold">Color theme</div>
-                <div class="space-small" />
-                <div class="row even">
+                <div class="divider" />
+
+                <div :class="text.subtitle">theme</div>
+                <div class="row" :class="text.label">
+                    Selected:
+                    <div :class="text.sublabel">{{ storedTheme }}</div>
+                </div>
+                <div class="row even" style="padding-top: 6px;">
                     <!-- use aria label for buttons -->
                     <button
                         class="colorToggle"
-                        style="background-color: var(--color-sand)"
+                        style="background-color: var(--color-sand);"
                         @click="toggleTheme('sand')"
                         @mouseenter="previewTheme('sand')"
                         @mouseleave="toggleTheme()"
                     />
                     <button
                         class="colorToggle"
-                        style="background-color: var(--color-rose)"
+                        style="background-color: var(--color-rose);"
                         @click="toggleTheme('rose')"
                         @mouseenter="previewTheme('rose')"
                         @mouseleave="toggleTheme()"
                     />
                     <button
                         class="colorToggle"
-                        style="background-color: var(--color-lavender)"
+                        style="background-color: var(--color-lavender);"
                         @click="toggleTheme('lavender')"
                         @mouseenter="previewTheme('lavender')"
                         @mouseleave="toggleTheme()"
                     />
                     <button
                         class="colorToggle"
-                        style="background-color: var(--color-lemon)"
+                        style="background-color: var(--color-lemon);"
                         @click="toggleTheme('lemon')"
                         @mouseenter="previewTheme('lemon')"
                         @mouseleave="toggleTheme()"
                     />
                     <button
                         class="colorToggle"
-                        style="background-color: var(--color-leaf)"
+                        style="background-color: var(--color-leaf);"
                         @click="toggleTheme('leaf')"
                         @mouseenter="previewTheme('leaf')"
                         @mouseleave="toggleTheme()"
                     />
                     <button
                         class="colorToggle"
-                        style="background-color: var(--color-cloud)"
-                        @click="toggleTheme('cloud')"
-                        @mouseenter="previewTheme('cloud')"
+                        style="background-color: var(--color-sea);"
+                        @click="toggleTheme('sea')"
+                        @mouseenter="previewTheme('sea')"
                         @mouseleave="toggleTheme()"
                     />
                 </div>
             </div>
         </transition>
+
         <div class="space-small" />
         <button
-            @click="toggleOptionsMenu"
             :class="[{ open: isOptionsOpen }, button.icon]"
+            @click="toggleOptionsMenu"
         >
             <v-icon class="options-icon" style="width: 20px; height: 20px;" />
         </button>
@@ -119,40 +143,42 @@
 
 <script>
 import VIcon from '../assets/icons/icon.vue'
-import { fetchPositionAndWeather } from '../utils/helpers'
 import VOptionToggle from './option-toggle.vue'
-// import VOptionCard from './option-card.vue'
-import { toggleTheme, previewTheme } from '../utils/theme'
+import VRadioGroup from './radio-group.vue'
 import button from './button.module.css'
+import text from './text.module.css'
+import { toggleTheme, previewTheme } from '../utils/theme'
+import { fetchPositionAndWeather } from '../utils/helpers'
 
 export default {
     components: {
         VIcon,
-        VOptionToggle
+        VOptionToggle,
+        VRadioGroup,
     },
-    data: function() {
+    data: function () {
         return {
             isOptionsOpen: false,
             fetchPositionAndWeather,
             toggleTheme,
             previewTheme,
-            selectedOption: '',
             button,
-            initialValue: ''
+            text,
         }
     },
-    watch: {
-        selectedOption: function(newV) {
-            this.$store.commit('changeProperty', {
-                property: 'timeFormat',
-                newValue: newV
-            })
-            console.log('v', newV)
+    computed: {
+        storedWeather: function () {
+            return this.$store.state.weather
         },
-        storeInitialized: function() {
-            this.initialValue = this.$store.state.timeFormat
-            this.selectedOption = this.$store.state.timeFormat
-        }
+        storeInitialized: function () {
+            return this.$store.state.init
+        },
+        storedTheme: function () {
+            return this.$store.state.themeColor
+        },
+        timeLayout: function () {
+            return this.$store.state.timeLayout
+        },
     },
     methods: {
         toggleProperty(property) {
@@ -161,16 +187,8 @@ export default {
         },
         toggleOptionsMenu() {
             this.isOptionsOpen = !this.isOptionsOpen
-        }
-    },
-    computed: {
-        storedWeather: function() {
-            return this.$store.state.weather
         },
-        storeInitialized: function() {
-            return this.$store.state.init
-        }
-    }
+    },
 }
 </script>
 
@@ -185,14 +203,12 @@ export default {
 }
 .options-menu {
     background-color: white;
-    display: flex;
-    flex-direction: column;
     padding: var(--space-medium);
     border-radius: var(--rounded);
     z-index: 10;
-    border: 2px solid var(--color-soft-gray);
+    border: var(--border);
+    min-width: 320px;
 }
-
 .optionsMenu-enter-active,
 .optionsMenu-leave-active {
     transition: ease-in-out all 100ms;
@@ -211,32 +227,20 @@ export default {
     background-color: transparent;
     z-index: 9;
 }
-.menu-title {
-    font-weight: bold;
-    font-size: 16px;
-}
 .colorToggle {
     height: 24px;
     width: 24px;
     border-radius: var(--rounded-full);
     cursor: pointer;
-    border: 1.5px solid var(--color-soft-gray);
+    border: var(--border);
 }
-.row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.time {
+    font-size: 24px;
+    line-height: 24px;
+    font-weight: bold;
 }
-.even {
-    justify-content: space-evenly;
-}
-.open {
-    background-color: white;
-    border: 2px solid var(--color-soft-gray);
-}
-.italic {
-    text-transform: uppercase;
-    font-size: 12px;
-    font-style: italic;
+.outline {
+    border: var(--border);
+    padding: 4px;
 }
 </style>

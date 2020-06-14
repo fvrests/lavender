@@ -33,13 +33,13 @@ export async function fetchNewPosition() {
     console.log('attempting fetch')
     await new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(
-            pos => {
+            (pos) => {
                 console.log('pos', pos)
                 let { latitude, longitude } = pos.coords
                 store.commit('setPosition', { latitude, longitude })
                 resolve()
             },
-            err => {
+            (err) => {
                 console.log('err', err)
                 reject()
             },
@@ -62,8 +62,8 @@ export function fetchWeather() {
     console.log('stored values', store.state.position)
     let { latitude, longitude } = store.state.position
     fetch(`${baseUrl}?lat=${latitude}&lon=${longitude}&appid=${appid}`)
-        .then(res => res.json())
-        .then(json => {
+        .then((res) => res.json())
+        .then((json) => {
             let weather = json
             store.commit('setWeather', weather)
             console.log('weather set!', weather)

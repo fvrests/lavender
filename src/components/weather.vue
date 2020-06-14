@@ -1,7 +1,9 @@
 <template>
     <div class="wrapper">
-        <div class="row">
-            <p class="temp" v-if="storedWeather.hasData">{{ formattedTemp }}</p>
+        <div class="weather-items">
+            <p v-if="storedWeather.hasData" class="temp">
+                {{ formattedTemp }}
+            </p>
             <div class="wi-bg">
                 <i
                     :class="
@@ -9,59 +11,50 @@
                             ? weatherIconClass
                             : 'wi wi-cloud-refresh'
                     "
-                ></i>
+                />
             </div>
-            <p class="conditions" v-if="storedWeather.hasData">
+            <p v-if="storedWeather.hasData" class="conditions">
                 {{ weatherConditions }}
             </p>
         </div>
-        <div class="location-prompt" v-if="shouldFetchNewPosition">
-            <button @click="fetchPositionAndWeather">get location</button>
+        <div v-if="shouldFetchNewPosition" class="location-prompt">
+            <button @click="fetchPositionAndWeather">
+                get location
+            </button>
         </div>
     </div>
 </template>
 
 <script>
-import { computed, onMounted, watch, ref } from 'vue'
+import { computed, watch, ref } from 'vue'
 import { useStore } from 'vuex'
 
 import {
     invalidateProperty,
     fetchPositionAndWeather,
     fetchWeather,
-    setCorrectingInterval
+    setCorrectingInterval,
 } from '@/utils/helpers'
 
 export default {
     setup() {
         let store = useStore()
         let storeInitialized = computed(() => store.state.init)
-        watch(storeInitialized, () => {
-            refreshWeather()
-        })
         let shouldFetchNewWeather = ref(null)
         let shouldFetchNewPosition = ref(null)
-        onMounted(() => {
+        watch(storeInitialized, () => {
+            refreshWeather()
             setCorrectingInterval(() => {
-                shouldFetchNewWeather = storeInitialized.value
-                    ? invalidateProperty(
-                          store.state.weather.timestamp,
-                          30 * 1000
-                      )
-                    : null
+                shouldFetchNewWeather.value = invalidateProperty(
+                    store.state.weather.timestamp,
+                    10 * 60 * 1000
+                )
 
-                shouldFetchNewPosition = storeInitialized.value
-                    ? invalidateProperty(
-                          store.state.position.timestamp,
-                          30 * 24 * 60 * 60 * 1000
-                      )
-                    : null
-
-                if (storeInitialized) {
-                    console.log('newPos', shouldFetchNewPosition.value)
-                    console.log('newWeather', shouldFetchNewWeather.value)
-                    refreshWeather()
-                }
+                shouldFetchNewPosition.value = invalidateProperty(
+                    store.state.position.timestamp,
+                    30 * 24 * 60 * 60 * 1000
+                )
+                refreshWeather()
             }, 10 * 1000)
         })
         let storedWeather = computed(() => store.state.weather)
@@ -71,11 +64,13 @@ export default {
         function refreshWeather() {
             if (!shouldFetchNewWeather.value) {
                 return console.log(
-                    'weather is recent. using stored weather data',
-                    'now:',
-                    Date.now(),
-                    'timestamp:',
-                    store.state.weather.timestamp
+                    'weather is recent. using stored weather data.',
+                    'age of timestamp:',
+                    (
+                        (Date.now() - store.state.weather.timestamp) /
+                        1000
+                    ).toFixed(),
+                    'seconds'
                 )
             } else if (shouldFetchNewPosition.value) {
                 if (!store.state.position.hasData) {
@@ -100,9 +95,9 @@ export default {
             storedWeather,
             weatherIconClass,
             formattedTemp,
-            weatherConditions
+            weatherConditions,
         }
-    }
+    },
 }
 </script>
 
@@ -120,7 +115,7 @@ export default {
     border-radius: var(--rounded-full);
     line-height: 64px;
 }
-.row {
+.weather-items {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 8px;

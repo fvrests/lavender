@@ -2,7 +2,7 @@
 
 :root {
     --color-rose: #f5e0dc;
-    --color-cloud: #c6ced3;
+    --color-sea: #c6ced3;
     --color-leaf: #ced9cd;
     --color-lemon: #fae5b4;
     --color-lavender: #dad4e0;
@@ -25,6 +25,7 @@
 
     --rounded-full: 9999px;
     --rounded: 12px;
+    --border: 2px solid var(--color-soft-gray);
 
     --font-serif: 'Lora', serif;
 
@@ -34,8 +35,8 @@
 .rose:root {
     --theme-bg: var(--color-rose);
 }
-.cloud:root {
-    --theme-bg: var(--color-cloud);
+.sea:root {
+    --theme-bg: var(--color-sea);
 }
 .leaf:root {
     --theme-bg: var(--color-leaf);
@@ -66,4 +67,26 @@ body {
 }
 .space-medium {
     height: var(--space-medium);
+}
+.divider {
+    width: 240px;
+    height: 1px;
+    background-color: var(--color-light-gray);
+    border-radius: var(--rounded-full);
+    margin: 12px auto;
+}
+.row {
+    display: flex;
+    align-items: center;
+}
+.column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.even {
+    justify-content: space-evenly;
+}
+.separated {
+    justify-content: space-between;
 }

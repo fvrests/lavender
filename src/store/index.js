@@ -6,31 +6,31 @@ const store = new Vuex.Store({
         init: false,
         useMilitaryTime: false,
         useCelsius: false,
-        timeFormat: 'horizontal',
+        timeLayout: 'default',
         isDaytime: true,
         useDescriptiveWeather: false,
-        themeColor: 'var(--color-rose)',
+        // themeColor: 'var(--color-rose)',
+        themeColor: 'rose',
         position: {
             hasData: false,
             latitude: '',
             longitude: '',
-            timestamp: ''
+            timestamp: '',
         },
         weather: {
             hasData: false,
-            timestamp: ''
-        }
+            timestamp: '',
+        },
     },
     mutations: {
         toggleProperty(state, property) {
             state[property] = !state[property]
         },
         changeProperty(state, { property, newValue }) {
-            console.log('changing property', property, newValue)
             state[property] = newValue
         },
         initializeStore(state) {
-            chrome.storage.sync.get(null, value => {
+            chrome.storage.sync.get(null, (value) => {
                 if (value) {
                     store.replaceState(
                         Object.assign(state, { ...value, init: true })
@@ -49,10 +49,10 @@ const store = new Vuex.Store({
         },
         setIsDaytime(state, day = Boolean) {
             state.isDaytime = day
-        }
+        },
     },
     getters: {
-        weatherIconClass: state => {
+        weatherIconClass: (state) => {
             if (state.weather.hasData) {
                 let day = true
                 day = !!(
@@ -65,7 +65,7 @@ const store = new Vuex.Store({
                 return iconClass
             }
         },
-        formattedTemp: state => {
+        formattedTemp: (state) => {
             if (state.weather.hasData) {
                 let celsiusTemp = (state.weather.main.temp - 273.15).toFixed()
                 let fahrenheitTemp = (celsiusTemp * (9 / 5) + 32).toFixed()
@@ -74,7 +74,7 @@ const store = new Vuex.Store({
                 return 'Pls click the cloud to get data!'
             }
         },
-        weatherConditions: state => {
+        weatherConditions: (state) => {
             if (state.weather.hasData) {
                 let condition = state.useDescriptiveWeather
                     ? conditions[state.weather.weather[0].id][0]
@@ -83,8 +83,8 @@ const store = new Vuex.Store({
             } else {
                 return 'No weather data available!'
             }
-        }
-    }
+        },
+    },
 })
 
 export default store

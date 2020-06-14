@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <div v-if="store.state.timeFormat == 'horizontal'" class="time">
+        <div v-if="store.state.timeLayout == 'default'" class="time">
             <div>{{ hour }}:{{ minute }}</div>
         </div>
         <div v-else class="time">
@@ -22,7 +22,9 @@
         <div v-else class="italic">
             today is
         </div>
-        <div class="today">{{ today }}</div>
+        <div class="today">
+            {{ today }}
+        </div>
     </div>
 </template>
 
@@ -33,9 +35,6 @@ import { format } from 'date-fns'
 import { setCorrectingInterval } from '@/utils/helpers'
 
 export default {
-    created() {
-        setCorrectingInterval(() => this.getTime(), 1000, true)
-    },
     setup() {
         let store = useStore()
         let newDate = ref(new Date())
@@ -52,7 +51,10 @@ export default {
             newDate.value = new Date()
         }
         return { today, getTime, hour, minute, descriptor, store }
-    }
+    },
+    created() {
+        setCorrectingInterval(() => this.getTime(), 1000, true)
+    },
 }
 </script>
 

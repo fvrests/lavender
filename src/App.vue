@@ -21,7 +21,7 @@ export default {
     components: {
         VWeather,
         VOptions,
-        VTime
+        VTime,
     },
     setup() {
         store.commit('initializeStore')
@@ -31,14 +31,14 @@ export default {
             if (state.init)
                 chrome.storage.sync.set({
                     ...state,
-                    lastSynced: Date.now()
+                    lastSynced: Date.now(),
                 })
         })
 
         onBeforeUnmount(() => {
             store.unsubscribe()
         })
-    }
+    },
 }
 </script>
 

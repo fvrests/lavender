@@ -53,7 +53,7 @@ let conditions = {
     801: ['few clouds', 'slightly cloudy'],
     802: ['scattered clouds', 'cloudy'],
     803: ['broken clouds', 'cloudy'],
-    804: ['overcast clouds', 'overcast']
+    804: ['overcast clouds', 'overcast'],
 }
 
 export default conditions

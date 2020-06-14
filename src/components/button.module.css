@@ -10,7 +10,7 @@
     border: 2px solid var(--color-dark-gray);
     font-weight: bold;
     border-radius: var(--rounded-full);
-    padding: 4px 12px;
+    padding: 2px 12px;
     font-size: 12px;
 }
 .primary:hover,
@@ -38,11 +38,11 @@
     border-radius: var(--rounded-full);
     color: var(--color-dark-gray);
 }
-.icon:hover {
+.icon:hover,
+.icon:focus {
     background-color: white;
     border: 2px solid var(--color-soft-gray);
 }
 .icon:focus {
     outline: none;
-    background-color: white;
 }
