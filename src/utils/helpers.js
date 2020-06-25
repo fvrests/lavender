@@ -41,17 +41,10 @@ export async function fetchNewPosition() {
             },
             (err) => {
                 console.log('err', err)
-                reject()
+                reject(err)
             },
             { timeout: 5000, enableHighAccuracy: true }
         )
-    })
-}
-
-// handles instances where weather must be fetched asynchronously after position is resolved
-export function fetchPositionAndWeather() {
-    fetchNewPosition().then(() => {
-        fetchWeather()
     })
 }
 
@@ -75,8 +68,12 @@ export function fetchWeather() {
  * @param {timestamp} timestamp
  * @param {number} maxAge
  */
-export function invalidateProperty(timestamp, maxAge = 30 * 60) {
+export function invalidateProperty(
+    timestamp,
+    maxAge = 30 * 60,
+    date = Date.now()
+) {
     if (store.state.init) {
-        return !timestamp || Date.now() - timestamp >= maxAge
+        return !timestamp || date - timestamp >= maxAge
     } else return
 }

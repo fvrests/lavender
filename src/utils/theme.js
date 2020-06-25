@@ -2,7 +2,7 @@ import store from '../store'
 
 export function toggleTheme(newTheme) {
     if (!newTheme) {
-        newTheme = window.localStorage.getItem('theme-color')
+        newTheme = window.localStorage.getItem('theme-color') || 'lavender'
     }
     document.querySelector('html').className = newTheme
     window.localStorage.setItem('theme-color', newTheme)
@@ -16,4 +16,3 @@ export function toggleTheme(newTheme) {
 export function previewTheme(newTheme) {
     document.querySelector('html').className = newTheme
 }
-// make sure class is deleted on change if it was added on page load

@@ -1,7 +1,15 @@
 <template>
-    <div class="options">
+    <div class="options" @keyup.esc="isOptionsOpen = false">
+        <button
+            :class="[{ open: isOptionsOpen }, button.icon]"
+            class="options-button"
+            @click="toggleOptionsMenu"
+        >
+            <v-icon class="options-icon" style="width: 20px; height: 20px;" />
+        </button>
+        <div v-if="isOptionsOpen" class="overlay" @click="toggleOptionsMenu" />
         <transition name="optionsMenu">
-            <div v-show="isOptionsOpen" class="options-menu">
+            <div v-show="isOptionsOpen" class="options-menu" role="menu">
                 <div :class="text.title">Options</div>
 
                 <div :class="text.subtitle">time</div>
@@ -9,6 +17,7 @@
                     option="useMilitaryTime"
                     label="Format:"
                     sublabel="24 hour"
+                    role="menuitem"
                 />
                 <div :class="text.label">Layout:</div>
                 <v-radio-group
@@ -54,14 +63,13 @@
                 <div class="divider" />
 
                 <div :class="text.subtitle">location</div>
-                <div class="row separated">
-                    <div v-if="storedWeather.hasData">
-                        <div class="row" :class="text.label">
-                            Stored location:
-                            <div :class="text.sublabel">
-                                {{ storedWeather.name }},
-                                {{ storedWeather.sys.country }}
-                            </div>
+
+                <div v-if="storedWeather.hasData" class="row separated">
+                    <div class="row" :class="text.label">
+                        Stored location:
+                        <div :class="text.sublabel">
+                            {{ storedWeather.name }},
+                            {{ storedWeather.sys.country }}
                         </div>
                     </div>
                     <div>
@@ -72,6 +80,28 @@
                         >
                             Refresh
                         </button>
+                    </div>
+                </div>
+                <div v-else>
+                    <div class="row separated">
+                        <div :class="text.label">
+                            Location disabled.
+                        </div>
+                        <div>
+                            <button
+                                :class="button.primary"
+                                style="margin: 0 auto;"
+                                @click="fetchPositionAndWeather"
+                            >
+                                Enable
+                            </button>
+                        </div>
+                    </div>
+
+                    <div :class="text.base">
+                        Lavender will never access your location without your
+                        permission. Please click 'enable' to enable location
+                        access.
                     </div>
                 </div>
 
@@ -86,9 +116,9 @@
                     <!-- use aria label for buttons -->
                     <button
                         class="colorToggle"
-                        style="background-color: var(--color-sand);"
-                        @click="toggleTheme('sand')"
-                        @mouseenter="previewTheme('sand')"
+                        style="background-color: var(--color-lavender);"
+                        @click="toggleTheme('lavender')"
+                        @mouseenter="previewTheme('lavender')"
                         @mouseleave="toggleTheme()"
                     />
                     <button
@@ -100,16 +130,16 @@
                     />
                     <button
                         class="colorToggle"
-                        style="background-color: var(--color-lavender);"
-                        @click="toggleTheme('lavender')"
-                        @mouseenter="previewTheme('lavender')"
+                        style="background-color: var(--color-lemon);"
+                        @click="toggleTheme('lemon')"
+                        @mouseenter="previewTheme('lemon')"
                         @mouseleave="toggleTheme()"
                     />
                     <button
                         class="colorToggle"
-                        style="background-color: var(--color-lemon);"
-                        @click="toggleTheme('lemon')"
-                        @mouseenter="previewTheme('lemon')"
+                        style="background-color: var(--color-sea);"
+                        @click="toggleTheme('sea')"
+                        @mouseenter="previewTheme('sea')"
                         @mouseleave="toggleTheme()"
                     />
                     <button
@@ -121,23 +151,14 @@
                     />
                     <button
                         class="colorToggle"
-                        style="background-color: var(--color-sea);"
-                        @click="toggleTheme('sea')"
-                        @mouseenter="previewTheme('sea')"
+                        style="background-color: var(--color-sand);"
+                        @click="toggleTheme('sand')"
+                        @mouseenter="previewTheme('sand')"
                         @mouseleave="toggleTheme()"
                     />
                 </div>
             </div>
         </transition>
-
-        <div class="space-small" />
-        <button
-            :class="[{ open: isOptionsOpen }, button.icon]"
-            @click="toggleOptionsMenu"
-        >
-            <v-icon class="options-icon" style="width: 20px; height: 20px;" />
-        </button>
-        <div v-if="isOptionsOpen" class="overlay" @click="toggleOptionsMenu" />
     </div>
 </template>
 
@@ -148,7 +169,6 @@ import VRadioGroup from './radio-group.vue'
 import button from './button.module.css'
 import text from './text.module.css'
 import { toggleTheme, previewTheme } from '../utils/theme'
-import { fetchPositionAndWeather } from '../utils/helpers'
 
 export default {
     components: {
@@ -159,7 +179,6 @@ export default {
     data: function () {
         return {
             isOptionsOpen: false,
-            fetchPositionAndWeather,
             toggleTheme,
             previewTheme,
             button,
@@ -202,12 +221,24 @@ export default {
     align-items: flex-end;
 }
 .options-menu {
-    background-color: white;
-    padding: var(--space-medium);
-    border-radius: var(--rounded);
     z-index: 10;
+    width: 320px;
+    max-height: 640px;
+    overflow: scroll;
+    position: fixed;
+    bottom: calc(var(--page-padding) + 36px + var(--space-small));
+    right: var(--page-padding);
+    padding: var(--space-medium);
     border: var(--border);
-    min-width: 320px;
+    border-radius: var(--rounded);
+    background-color: white;
+    height: 101%;
+}
+
+.options-button {
+    position: fixed;
+    bottom: var(--page-padding);
+    right: var(--page-padding);
 }
 .optionsMenu-enter-active,
 .optionsMenu-leave-active {
@@ -243,4 +274,17 @@ export default {
     border: var(--border);
     padding: 4px;
 }
+
+/* ::-webkit-scrollbar {
+    width: 12px;
+}
+::-webkit-scrollbar-track {
+    border-radius: var(--rounded-full);
+} */
+/* ::-webkit-scrollbar-button the buttons on the scrollbar (arrows pointing upwards and downwards).
+::-webkit-scrollbar-thumb the draggable scrolling handle.
+
+::-webkit-scrollbar-track-piece the track (progress bar) NOT covered by the handle.
+::-webkit-scrollbar-corner the bottom corner of the scrollbar, where both horizontal and vertical scrollbars meet.
+::-webkit-resizer the draggable resizing handle that appears at the bottom corner of some elements. */
 </style>

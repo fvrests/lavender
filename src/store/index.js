@@ -9,8 +9,7 @@ const store = new Vuex.Store({
         timeLayout: 'default',
         isDaytime: true,
         useDescriptiveWeather: false,
-        // themeColor: 'var(--color-rose)',
-        themeColor: 'rose',
+        themeColor: 'lavender',
         position: {
             hasData: false,
             latitude: '',

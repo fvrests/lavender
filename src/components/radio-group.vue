@@ -8,6 +8,7 @@
                 type="radio"
                 :value="n"
                 :checked="storedValue == n"
+                @keyup.enter="console.log('working')"
             />
             <div class="column" role="“radiogroup”">
                 <label
@@ -16,11 +17,12 @@
                     tabindex="0"
                     role="“radio”"
                     aria-checked="selected == n ? 'true' : 'false'"
+                    @keyup.enter="selected = n"
+                    @keyup.space="selected = n"
                 >
                     <div
                         class="dot"
                         :class="selected == n ? 'filled' : null"
-                        aria-hidden="“true”"
                         :alt="selected == n ? 'selected' : 'not-selected'"
                     />
                     <slot :name="n" />
@@ -53,8 +55,6 @@ export default {
         })
 
         watch(selected, () => {
-            console.log(selected.value)
-            console.log('init', storedValue.value)
             store.commit('changeProperty', {
                 property: props.property,
                 newValue: selected.value,

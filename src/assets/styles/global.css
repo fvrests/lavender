@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap');
 
 :root {
+    --color-lavender: #dad4e0;
     --color-rose: #f5e0dc;
+    --color-lemon: #fae5b4;
     --color-sea: #c6ced3;
     --color-leaf: #ced9cd;
-    --color-lemon: #fae5b4;
-    --color-lavender: #dad4e0;
     --color-sand: #e4dcd4;
 
     --color-white-semi: rgba(255, 255, 255, 0.8);

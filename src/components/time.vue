@@ -39,11 +39,17 @@ export default {
         let store = useStore()
         let newDate = ref(new Date())
         let today = computed(() => format(newDate.value, 'LLLL do, yyyy'))
-        let hour = computed(() =>
-            store.state.useMilitaryTime
-                ? format(newDate.value, 'HH')
-                : format(newDate.value, 'hh')
-        )
+        let hour = computed(() => {
+            let h = ''
+            if (store.state.useMilitaryTime) {
+                h = format(newDate.value, 'HH')
+            } else if (store.state.timeLayout == 'stacked') {
+                h = format(newDate.value, 'hh')
+            } else {
+                h = format(newDate.value, 'h')
+            }
+            return h
+        })
         let minute = computed(() => format(newDate.value, 'mm'))
         let descriptor = computed(() => format(newDate.value, 'B'))
 
