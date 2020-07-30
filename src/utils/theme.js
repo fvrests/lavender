@@ -7,10 +7,7 @@ export function toggleTheme(newTheme) {
     document.querySelector('html').className = newTheme
     window.localStorage.setItem('theme-color', newTheme)
     window.theme = newTheme
-    store.commit('changeProperty', {
-        property: 'themeColor',
-        newValue: newTheme,
-    })
+    store.commit('update', { key: 'themeColor', value: newTheme })
 }
 
 export function previewTheme(newTheme) {

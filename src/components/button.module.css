@@ -18,6 +18,56 @@
     background-color: var(--theme-bg);
 }
 
+.primary[disabled] {
+    cursor: not-allowed;
+    color: var(--color-light-gray);
+    border-color: var(--color-light-gray);
+}
+.primary[disabled]:hover,
+.primary[disabled]:focus {
+    background-color: white;
+}
+
+.secondary {
+    color: var(--color-dark-gray);
+    font-weight: bold;
+    font-size: 11px;
+    padding: 4px 14px;
+    border-radius: var(--rounded-full);
+    position: relative;
+    display: block;
+    text-align: center;
+}
+.secondary::after,
+.secondary::after {
+    content: '';
+    position: absolute;
+    height: 2px;
+    width: calc(100% - 28px);
+    left: 14px;
+    bottom: 10%;
+    background-color: var(--theme-bg);
+    z-index: -1;
+    transition: 0.4s ease all 20ms;
+}
+
+.secondary:hover,
+.secondary:focus {
+    font-weight: bold;
+}
+.secondary:hover::after,
+.secondary:focus::after {
+    content: '';
+    position: absolute;
+    height: 4px;
+    width: calc(100% - 28px);
+    left: 14px;
+    bottom: 10%;
+    background-color: var(--theme-bg);
+    z-index: -1;
+    transition: 0.4s ease all 20ms;
+}
+
 .card {
     background-color: white;
     color: var(--color-dark-gray);

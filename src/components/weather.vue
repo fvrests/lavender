@@ -17,28 +17,44 @@
         </div>
     </div>
     <transition name="prompt">
-        <div v-if="shouldFetchNewPosition" class="location-prompt">
-            <div class="row separated">
-                <div class="alert-container">
+        <div
+            v-if="
+                storeInitialized &&
+                requestPosition &&
+                !fetchingPosition &&
+                !positionDeclined
+            "
+            class="location-prompt"
+        >
+            <div class="row">
+                <div
+                    class="alert-container"
+                    style="margin-right: var(--space-small);"
+                >
                     <v-alert style="width: 24px; height: 24px;" />
                 </div>
-                <p :class="text.label" class="alert-text">
+
+                <p :class="text.label">
                     Lavender needs permission to fetch your location.
                 </p>
             </div>
-            <p :class="text.base">
-                Data will be used to update weather for your region.
+
+            <p :class="text.base" style="padding-left: 38px;">
+                Location is used to fetch local weather data. You can always
+                enable this later in settings.
             </p>
             <div class="space-small"></div>
-            <div class="row even">
-                <button
-                    :class="button.primary"
-                    @click="fetchPositionAndWeather"
-                >
+            <div class="row" style="justify-content: center;">
+                <button :class="button.primary" @click="handleFetch">
                     Fetch location
                 </button>
+                <button :class="button.secondary" @click="handleDecline">
+                    Not now
+                </button>
             </div>
-            <div v-if="error" :class="text.base">
+
+            <div class="space-small"></div>
+            <div v-if="fetchError" :class="text.base">
                 Failed to fetch location. Please try again.
             </div>
         </div>
@@ -52,12 +68,7 @@ import text from './text.module.css'
 import button from './button.module.css'
 import VAlert from '../assets/icons/alert.vue'
 
-import {
-    invalidateProperty,
-    fetchNewPosition,
-    fetchWeather,
-    setCorrectingInterval,
-} from '@/utils/helpers'
+import { setCorrectingInterval, fetchWeather } from '@/utils/helpers'
 
 export default {
     components: {
@@ -66,87 +77,84 @@ export default {
     setup() {
         let store = useStore()
         let storeInitialized = computed(() => store.state.init)
-        let shouldFetchNewPosition = ref(false)
-        let shouldFetchNewWeather = ref(false)
-        watch(storeInitialized, () => {
-            startRefreshLoop()
-        })
+        let positionData = computed(() => store.state.position.hasData)
+        let requestPosition = computed(() => !store.state.position.hasData)
+        let fetchError = ref(null)
         let storedWeather = computed(() => store.state.weather)
         let weatherIconClass = computed(() => store.getters.weatherIconClass)
         let formattedTemp = computed(() => store.getters.formattedTemp)
         let weatherConditions = computed(() => store.getters.weatherConditions)
-        let error = ref(null)
-        function fetchPositionAndWeather() {
-            shouldFetchNewPosition.value = false
-            fetchNewPosition()
-                .then(() => {
-                    error.value = null
-                    fetchWeather()
-                })
-                .catch((err) => {
-                    error.value = err
-                    shouldFetchNewPosition.value = true
-                })
-        }
+        let fetchingPosition = computed(() => store.state.position.fetching)
+        let positionDeclined = computed(() => store.state.position.declined)
 
+        // fetches new weather if needed & waits for new location if none is stored
         function refreshWeather() {
-            if (!shouldFetchNewWeather.value) {
-                return console.log(
-                    'weather is recent. using stored weather data.',
-                    'age of timestamp:',
-                    (
-                        (Date.now() - store.state.weather.timestamp) /
-                        1000
-                    ).toFixed(),
-                    'seconds'
-                )
-            } else if (shouldFetchNewPosition.value) {
-                if (!store.state.position.hasData) {
-                    return console.log(
-                        'awaiting user input to fetch location data...'
-                    )
-                } else {
-                    return console.log(
-                        'location exists but is too old. please click to get new location...'
-                    )
-                }
+            let invalidated =
+                !store.state.weather.timestamp ||
+                Date.now() - store.state.weather.timestamp >= 30 * 60 * 1000
+            if (!invalidated) {
+                return
+                // console.log(
+                //     'weather is recent. using stored weather data.',
+                //     'age of timestamp:',
+                //     (
+                //         (Date.now() - store.state.weather.timestamp) /
+                //         1000
+                //     ).toFixed(),
+                //     'seconds'
+                // )
+            } else if (!store.state.position.hasData) {
+                return
+                // console.log(
+                //     'awaiting user input to fetch location data...'
+                // )
             } else {
                 fetchWeather()
-                return console.log(
-                    'using last known position to fetch weather...'
-                )
+                return
+                // console.log(
+                //     'using last known position to fetch weather...'
+                // )
             }
         }
 
-        function invalidateAndRefresh() {
-            shouldFetchNewWeather.value = invalidateProperty(
-                store.state.weather.timestamp,
-                10 * 60 * 1000
-            )
-            shouldFetchNewPosition.value = invalidateProperty(
-                store.state.position.timestamp,
-                30 * 24 * 60 * 60 * 1000
-            )
-            refreshWeather()
-        }
-
         function startRefreshLoop() {
-            invalidateAndRefresh()
+            refreshWeather()
             setCorrectingInterval(() => {
-                invalidateAndRefresh()
-            }, 10 * 1000)
+                refreshWeather()
+            }, 5 * 60 * 1000)
+        }
+        watch(storeInitialized, () => {
+            startRefreshLoop()
+        })
+        watch(positionData, () => {
+            refreshWeather()
+        })
+
+        function handleFetch() {
+            fetchError = store.dispatch('fetchPosition')
+        }
+        function handleDecline() {
+            store.commit('update', {
+                key: 'position',
+                value: { ...store.state.position, declined: true },
+            })
         }
 
         return {
-            fetchPositionAndWeather,
             storedWeather,
             weatherIconClass,
             formattedTemp,
             weatherConditions,
             text,
             button,
-            shouldFetchNewPosition,
-            error,
+            store,
+            requestPosition,
+            handleFetch,
+            handleDecline,
+            fetchError,
+            fetchingPosition,
+            storeInitialized,
+            positionDeclined,
         }
     },
 }
@@ -218,8 +226,5 @@ export default {
     height: 24px;
     border-radius: var(--rounded-full);
     background-color: var(--theme-bg);
-}
-.alert-text {
-    max-width: 240px;
 }
 </style>

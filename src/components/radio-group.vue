@@ -8,7 +8,6 @@
                 type="radio"
                 :value="n"
                 :checked="storedValue == n"
-                @keyup.enter="console.log('working')"
             />
             <div class="column" role="“radiogroup”">
                 <label
@@ -55,9 +54,9 @@ export default {
         })
 
         watch(selected, () => {
-            store.commit('changeProperty', {
-                property: props.property,
-                newValue: selected.value,
+            store.commit('update', {
+                key: props.property,
+                value: selected.value,
             })
         })
 
