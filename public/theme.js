@@ -1,7 +1,11 @@
-window.themeColor = 'rose'
+window.themeColor = 'lavender'
 try {
     const themeColor = window.localStorage.getItem('theme-color')
-    document.querySelector('html').className = themeColor
+    if (themeColor) {
+        document.querySelector('html').className = themeColor
+    } else {
+        document.querySelector('html').className = 'lavender'
+    }
 } catch (err) {
     console.warn(err)
 }

@@ -1,11 +1,12 @@
 {
-    "name": "lavender",
+    "name": "lavender-new-tab",
     "version": "0.1.0",
     "private": true,
     "scripts": {
         "serve": "vue-cli-service serve",
         "build": "vue-cli-service build",
-        "watch": "NODE_ENV=production vue-cli-service build --watch"
+        "watch": "NODE_ENV=production vue-cli-service build --watch",
+        "watch:dev": "NODE_ENV=development vue-cli-service build --watch"
     },
     "dependencies": {
         "core-js": "^3.6.4",

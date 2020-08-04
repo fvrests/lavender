@@ -6,25 +6,19 @@
         <div v-else class="time">
             <div class="outline">
                 <div class="monospaced">
-                    <span>{{ hour[0] }}</span
-                    ><span>{{ hour[1] }}</span>
+                    <span>{{ hour[0] }}</span>
+                    <span>{{ hour[1] }}</span>
                 </div>
                 <div class="monospaced">
-                    <span>{{ minute[0] }}</span
-                    ><span>{{ minute[1] }}</span>
+                    <span>{{ minute[0] }}</span>
+                    <span>{{ minute[1] }}</span>
                 </div>
             </div>
         </div>
         <div class="space-small" />
-        <div v-if="!store.state.useMilitaryTime" class="italic">
-            {{ descriptor }}
-        </div>
-        <div v-else class="italic">
-            today is
-        </div>
-        <div class="today">
-            {{ today }}
-        </div>
+        <div v-if="!store.state.useMilitaryTime" class="italic">{{ descriptor }}</div>
+        <div v-else class="italic">today is</div>
+        <div class="today">{{ today }}</div>
     </div>
 </template>
 
@@ -39,11 +33,17 @@ export default {
         let store = useStore()
         let newDate = ref(new Date())
         let today = computed(() => format(newDate.value, 'LLLL do, yyyy'))
-        let hour = computed(() =>
-            store.state.useMilitaryTime
-                ? format(newDate.value, 'HH')
-                : format(newDate.value, 'hh')
-        )
+        let hour = computed(() => {
+            let h = ''
+            if (store.state.useMilitaryTime) {
+                h = format(newDate.value, 'HH')
+            } else if (store.state.timeLayout == 'stacked') {
+                h = format(newDate.value, 'hh')
+            } else {
+                h = format(newDate.value, 'h')
+            }
+            return h
+        })
         let minute = computed(() => format(newDate.value, 'mm'))
         let descriptor = computed(() => format(newDate.value, 'B'))
 
@@ -53,7 +53,7 @@ export default {
         return { today, getTime, hour, minute, descriptor, store }
     },
     created() {
-        setCorrectingInterval(() => this.getTime(), 1000, true)
+        setCorrectingInterval(() => this.getTime(), 1000)
     },
 }
 </script>

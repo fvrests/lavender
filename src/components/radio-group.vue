@@ -16,11 +16,12 @@
                     tabindex="0"
                     role="“radio”"
                     aria-checked="selected == n ? 'true' : 'false'"
+                    @keyup.enter="selected = n"
+                    @keyup.space="selected = n"
                 >
                     <div
                         class="dot"
                         :class="selected == n ? 'filled' : null"
-                        aria-hidden="“true”"
                         :alt="selected == n ? 'selected' : 'not-selected'"
                     />
                     <slot :name="n" />
@@ -53,11 +54,9 @@ export default {
         })
 
         watch(selected, () => {
-            console.log(selected.value)
-            console.log('init', storedValue.value)
-            store.commit('changeProperty', {
-                property: props.property,
-                newValue: selected.value,
+            store.commit('update', {
+                key: props.property,
+                value: selected.value,
             })
         })
 
@@ -81,7 +80,7 @@ label {
     position: relative;
     width: 96px;
     height: 124px;
-    border: 2px solid var(--color-soft-gray);
+    border: 2px solid var(--color-dark-gray);
     border-radius: var(--rounded);
     background-color: var(--theme-bg);
     display: flex;
@@ -95,14 +94,14 @@ label {
     left: 8px;
     height: 12px;
     width: 12px;
-    box-shadow: 0px 0px 0px 2px var(--color-soft-gray);
+    box-shadow: 0px 0px 0px 2px var(--color-dark-gray);
     border: 2px solid white;
     border-radius: var(--rounded-full);
     background-color: white;
     cursor: pointer;
 }
 .filled {
-    background-color: var(--color-soft-gray);
+    background-color: var(--color-dark-gray);
 }
 .grid {
     display: grid;

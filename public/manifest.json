@@ -1,6 +1,7 @@
 {
     "name": "lavender | new tab",
-    "version": "1.0",
+    "short_name": "lavender",
+    "version": "1.1",
     "description": "A clean, customizable new tab experience",
     "permissions": ["storage", "geolocation"],
     "page_action": {
@@ -8,7 +9,7 @@
             "16": "./assets/icons/lavender-favicon-16@2x.png",
             "32": "./assets/icons/lavender-favicon-32@2x.png",
             "48": "./assets/icons/lavender-favicon-48@2x.png",
-            "128": "./assets/icons/lavender-favicon-128@2x.png"
+            "128": "./assets/icons/chrome-favicon.png"
         }
     },
     "chrome_url_overrides": {

@@ -1,5 +1,6 @@
 import Vuex from 'vuex'
 import conditions from '../utils/weather-conditions'
+import errorCodes from '../utils/error-codes.json'
 
 const store = new Vuex.Store({
     state: {
@@ -9,26 +10,25 @@ const store = new Vuex.Store({
         timeLayout: 'default',
         isDaytime: true,
         useDescriptiveWeather: false,
-        // themeColor: 'var(--color-rose)',
-        themeColor: 'rose',
+        themeColor: 'lavender',
         position: {
             hasData: false,
             latitude: '',
             longitude: '',
-            timestamp: '',
+            timestamp: null,
+            fetching: false,
+            declined: false,
         },
         weather: {
             hasData: false,
-            timestamp: '',
+            timestamp: null,
+        },
+        errors: {
+            weather: '',
+            location: '',
         },
     },
     mutations: {
-        toggleProperty(state, property) {
-            state[property] = !state[property]
-        },
-        changeProperty(state, { property, newValue }) {
-            state[property] = newValue
-        },
         initializeStore(state) {
             chrome.storage.sync.get(null, (value) => {
                 if (value) {
@@ -37,17 +37,31 @@ const store = new Vuex.Store({
                     )
                 } else {
                     state.init = true
-                    console.log('setting storage w default values')
+                    // console.log('setting storage w default values')
                 }
             })
         },
+        update(state, { key, value }) {
+            state[key] = value
+        },
+        toggleProperty(state, property) {
+            state[property] = !state[property]
+        },
         setPosition(state, coords) {
-            state.position = { ...coords, hasData: true, timestamp: Date.now() }
+            state.position = {
+                ...coords,
+                hasData: true,
+                timestamp: Date.now(),
+            }
         },
         setWeather(state, weather) {
-            state.weather = { ...weather, hasData: true, timestamp: Date.now() }
+            state.weather = {
+                ...weather,
+                hasData: true,
+                timestamp: Date.now(),
+            }
         },
-        setIsDaytime(state, day = Boolean) {
+        setIsDaytime(state, day = true) {
             state.isDaytime = day
         },
     },
@@ -83,6 +97,51 @@ const store = new Vuex.Store({
             } else {
                 return 'No weather data available!'
             }
+        },
+    },
+    actions: {
+        fetchPosition({ commit, state }) {
+            commit('update', {
+                key: 'position',
+                value: { ...state.position, fetching: true },
+            })
+            async function fetchNewPosition() {
+                // console.log('attempting fetch')
+                await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(
+                        (pos) => {
+                            console.log('pos', pos)
+                            let { latitude, longitude } = pos.coords
+                            commit('setPosition', { latitude, longitude })
+                            console.log('position set', store.state.position)
+                            commit('update', {
+                                key: 'position',
+                                value: {
+                                    ...state.position,
+                                    fetching: false,
+                                },
+                            })
+                            resolve()
+                        },
+                        (err) => {
+                            console.log(
+                                errorCodes.position[err.code] ||
+                                    '😱oh no! an unknown error has occurred.'
+                            )
+                            reject(err)
+                        },
+                        { timeout: 5000, enableHighAccuracy: false }
+                    )
+                })
+            }
+            let error = fetchNewPosition().catch((err) => {
+                commit('update', {
+                    key: 'position',
+                    value: { ...state.position, fetching: false },
+                })
+                return err
+            })
+            return error
         },
     },
 })
