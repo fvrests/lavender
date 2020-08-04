@@ -1,6 +1,6 @@
 <template>
     <div class="app-wrapper">
-        <v-time />
+        <v-time v-if="storeInitialized" />
         <v-weather />
         <v-options />
     </div>
@@ -11,7 +11,7 @@ import VWeather from './components/weather.vue'
 import VOptions from './components/options.vue'
 import VTime from './components/time.vue'
 import store from '@/store'
-import { onBeforeUnmount } from 'vue'
+import { onBeforeUnmount, computed } from 'vue'
 import './assets/styles/normalize.css'
 import './assets/styles/weather-icons.min.css'
 import './assets/styles/global.css'
@@ -25,7 +25,8 @@ export default {
     },
     setup() {
         store.commit('initializeStore')
-        console.log('store initialized 🥳', store.state)
+        // console.log('store initialized 🥳', store.state)
+        let storeInitialized = computed(() => store.state.init)
 
         store.subscribe((mutations, state) => {
             if (state.init)
@@ -38,6 +39,10 @@ export default {
         onBeforeUnmount(() => {
             store.unsubscribe()
         })
+
+        return {
+            storeInitialized,
+        }
     },
 }
 </script>
