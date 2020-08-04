@@ -17,5 +17,3 @@ All intellectual property associated with Lavender in the form of promotional ma
 ## Limitation of Liability
 
 The developer of this extension is not liable for any special, incidental or consequential damage caused to the user by using this product.
-
-You must include a link to the Privacy Policy in the Chrome Web Store Dashboard and in the product inline installation page.
