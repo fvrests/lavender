@@ -15,7 +15,7 @@
 
                     <div :class="text.subtitle">theme</div>
                     <div class="row">
-                        <div :class="text.label">Selected:</div>
+                        <div :class="text.label">selected:</div>
                         <div :class="text.sublabel">{{ storedTheme }}</div>
                     </div>
 
@@ -73,7 +73,7 @@
                         label="24 hour format"
                         role="menuitem"
                     />
-                    <div :class="text.label">Layout:</div>
+                    <div :class="text.label">layout:</div>
                     <v-radio-group
                         property="timeLayout"
                         :options="['default', 'stacked']"
@@ -104,11 +104,20 @@
                     <div class="divider" />
 
                     <div :class="text.subtitle">weather</div>
-                    <v-option-toggle option="useCelsius" label="Celsius" />
+                    <v-option-toggle option="useCelsius" label="celsius" />
                     <v-option-toggle
                         option="useDescriptiveWeather"
-                        label="Precise conditions"
+                        label="precise conditions"
                     />
+
+                    <!-- <div class="space-small" /> -->
+
+                    <div class="row">
+                        <div :class="text.base">source:</div>
+                        <v-external-link url="https://openweathermap.org"
+                            >OpenWeather</v-external-link
+                        >
+                    </div>
 
                     <div class="divider" />
 
@@ -145,9 +154,9 @@
                                 v-if="fetchingPosition == false"
                                 :class="text.label"
                             >
-                                Location disabled.
+                                location disabled.
                             </div>
-                            <div v-else :class="text.label">Fetching...</div>
+                            <div v-else :class="text.label">fetching...</div>
                             <div>
                                 <button
                                     :class="button.primary"
@@ -165,32 +174,35 @@
                             location access.
                         </div>
                     </div>
-                    <button @click="toggleDonationModal">
-                        Donate
-                    </button>
-                    <div v-if="isDonationModalOpen" class="donation-modal">
-                        <iframe
-                            src="https://givebutter.com/embed/c/fvrests"
-                            width="100%"
-                            height="615px"
-                            style="max-width: 601px;"
-                            name="givebutter"
-                            frameborder="0"
-                            scrolling="no"
-                            seamless
-                            allowpaymentrequest
-                        ></iframe>
-                        <script src="https://givebutter.com/js/widget.js"></script>
+
+                    <div class="divider" />
+
+                    <div class="row even">
+                        <v-external-link
+                            url="https://github.com/fvrests/lavender/blob/main/privacy-policy.md"
+                            >Privacy Policy</v-external-link
+                        >
+                        <v-external-link
+                            url="https://github.com/fvrests/lavender/blob/main/terms-of-use.md"
+                            >Terms of Use</v-external-link
+                        >
                     </div>
-                    <button class="close">
-                        <div />
-                        <div />
-                    </button>
-                    <div
-                        v-if="isDonationModalOpen"
-                        class="overlay dark"
-                        @click="toggleDonationModal"
-                    />
+
+                    <div class="space-small" />
+
+                    <div class="row even">
+                        <v-external-link
+                            url="https://twitter.com/fvrests"
+                            :underline="true"
+                            >@fvrests</v-external-link
+                        >
+
+                        <v-external-link
+                            url="https://givebutter.com/fvrests"
+                            :underline="true"
+                            >donate ♥</v-external-link
+                        >
+                    </div>
                 </div>
             </div>
         </transition>
@@ -201,6 +213,7 @@
 import VIcon from '../assets/icons/icon.vue'
 import VOptionToggle from './option-toggle.vue'
 import VRadioGroup from './radio-group.vue'
+import VExternalLink from './external-link.vue'
 import button from './button.module.css'
 import text from './text.module.css'
 import { toggleTheme, previewTheme } from '../utils/theme'
@@ -212,6 +225,7 @@ export default {
         VIcon,
         VOptionToggle,
         VRadioGroup,
+        VExternalLink,
     },
     setup() {
         let store = useStore()
@@ -220,7 +234,7 @@ export default {
         let storedTheme = computed(() => store.state.themeColor)
         let timeLayout = computed(() => store.state.timeLayout)
         let fetchingPosition = computed(() => store.state.position.fetching)
-        let isOptionsOpen = ref(true)
+        let isOptionsOpen = ref(false)
         let isDonationModalOpen = ref(false)
         let positionDeclined = computed(() => store.state.position.declined)
         let refreshDisabled = ref(false)

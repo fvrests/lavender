@@ -91,7 +91,7 @@
 .icon:hover,
 .icon:focus {
     background-color: white;
-    border: 2px solid var(--color-soft-gray);
+    border: 2px solid var(--color-dark-gray);
 }
 .icon:focus {
     outline: none;
