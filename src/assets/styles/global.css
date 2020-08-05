@@ -3,7 +3,7 @@
 :root {
     --color-lavender: #dad4e0;
     --color-rose: #f5e0dc;
-    --color-lemon: #fae9ca;
+    --color-lemon: #fce5c4;
     --color-sea: #c6ced3;
     --color-leaf: #ced9cd;
     --color-sand: #e4dcd4;
@@ -13,7 +13,7 @@
     --color-eggplant: #393438;
     --color-dark-gray: #3f3b3b;
     --color-soft-gray: #616161;
-    --color-light-gray: #dddddd;
+    --color-light-gray: hsl(0, 0%, 87%);
 
     --theme-bg: var(--color-lavender);
 
