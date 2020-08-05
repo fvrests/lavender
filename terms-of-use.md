@@ -10,10 +10,10 @@ Misuse of Google features and content may lead to suspension or termination of G
 
 The user is responsible for upholding all applicable laws, regulations and policies of local, national and international jurisdictions while using Lavender.
 
-## Intellectual Property
+## License
 
-All intellectual property associated with Lavender in the form of promotional material, logos & images, UI design and source code are the intellectual property of the developer. Do not redistribute, copy, or otherwise use the contents of this extension without permission.
+This software is published under the MIT license. See full license text at [https://github.com/fvrests/lavender/blob/main/license.md](https://github.com/fvrests/lavender/blob/main/license.md). Please provide attribution & include original copyright if re-using or re-distributing source code.
 
 ## Limitation of Liability
 
-The developer of this extension is not liable for any special, incidental or consequential damage caused to the user by using this product.
+The developer of this extension is not liable for any special, incidental or consequential damage to the user related to use of this product.

@@ -16,7 +16,9 @@
             </div>
         </div>
         <div class="space-small" />
-        <div v-if="!store.state.useMilitaryTime" class="italic">{{ descriptor }}</div>
+        <div v-if="!store.state.useMilitaryTime" class="italic">
+            {{ descriptor }}
+        </div>
         <div v-else class="italic">today is</div>
         <div class="today">{{ today }}</div>
     </div>
