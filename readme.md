@@ -32,4 +32,4 @@ feedback & suggestions are always welcome!
 
 by [@fvrests](https://twitter.com/fvrests)
 
-[donate ♥](https://givebutter.com/fvrests)
+[donate 💕](https://givebutter.com/fvrests)
