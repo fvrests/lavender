@@ -14,7 +14,7 @@ Lavender accesses the user's Local Storage and Chrome Storage.
 
 ### Geolocation Data
 
-The user's location data is stored in the user's chrome browser and is not pre-fetched, indexed, stored, or cached in any way by the developer of Lavender. Location data obtained through Chrome is subject to Google's Privacy Policy, found[here](https://www.google.com/policies/privacy/). The coordinates collected are used to query OpenWeather's Current Weather Data API to obtain weather data for the user's area. The OpenWeather privacy policy can be found [here](https://openweather.co.uk/privacy-policy).
+The user's location data is stored in the user's chrome browser and is not pre-fetched, indexed, stored, or cached in any way by the developer of Lavender. Location data obtained through Chrome is subject to Google's Privacy Policy, found [here](https://www.google.com/policies/privacy/). The coordinates collected are used to query OpenWeather's Current Weather Data API to obtain weather data for the user's area. The OpenWeather privacy policy can be found [here](https://openweather.co.uk/privacy-policy).
 
 ### Local and Chrome Sync Storage
 
