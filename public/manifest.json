@@ -2,14 +2,14 @@
     "name": "lavender | new tab",
     "short_name": "lavender",
     "version": "1.1",
-    "description": "A clean, customizable new tab experience",
+    "description": "soft, minimal new tab for your chrome browser",
     "permissions": ["storage", "geolocation"],
     "page_action": {
         "default_icon": {
-            "16": "./assets/icons/lavender-favicon-16@2x.png",
-            "32": "./assets/icons/lavender-favicon-32@2x.png",
-            "48": "./assets/icons/lavender-favicon-48@2x.png",
-            "128": "./assets/icons/chrome-favicon.png"
+            "16": "./assets/icons/lavender-favicon-16@1x.png",
+            "32": "./assets/icons/lavender-favicon-32@1x.png",
+            "48": "./assets/icons/lavender-favicon-48@1x.png",
+            "128": "128.png"
         }
     },
     "chrome_url_overrides": {
