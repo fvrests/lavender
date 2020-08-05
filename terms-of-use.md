@@ -12,7 +12,7 @@ The user is responsible for upholding all applicable laws, regulations and polic
 
 ## License
 
-This software is published under the MIT license. See full license text at [https://github.com/fvrests/lavender/blob/main/license.md](https://github.com/fvrests/lavender/blob/main/license.md). Please provide attribution & include original copyright if re-using or re-distributing source code.
+This software is published under the MIT license. See full license text at [https://github.com/fvrests/lavender/blob/main/license.md](https://github.com/fvrests/lavender/blob/main/license.md). Please include original copyright if re-using or re-distributing source code.
 
 ## Limitation of Liability
 
