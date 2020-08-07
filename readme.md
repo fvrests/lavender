@@ -15,23 +15,26 @@ lavender is a soft, minimal new tab for your chrome browser featuring:
 
 ## download
 
-> this extension has been submitted to the chrome web store for review
+> this extension has been submitted to the chrome web store for review. to try it out before it's published, see manual installation below!
 
 ## manual installation
 
-clone lavender
+-   clone or download lavender
 
 ```sh
 $ git clone git@github.com:fvrests/lavender.git && cd lavender
 ```
 
-sign up for [OpenWeather API](https://home.openweathermap.org/users/sign_upgenerate) and generate a new API key
+-   sign up for [OpenWeather API](https://home.openweathermap.org/users/sign_upgenerate) and generate a new API key
+
+-   within the .env.example file, paste your key directly after "VUE_APP_WEATHER_KEY=" and rename the file to .env
 
 ```sh
-$ echo VUE_APP_WEATHER_KEY=your api key > .env
+# .env
+VUE_APP_WEATHER_KEY=<api_key>
 ```
 
-install deps and build lavender (generating the necessary **dist** folder)
+-   install dependencies and build lavender (generating the necessary **dist** folder)
 
 ```sh
 $ yarn && yarn build
