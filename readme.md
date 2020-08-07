@@ -1,4 +1,4 @@
-![illustration of a starry landscape with a screencap of the lavender app & the lavender logo](public/assets/images/promo-marquee-1400@2x.png)
+![illustration of a starry landscape with a screencap of the lavender app & the lavender logo](./promo/promo-marquee-1400@2x.png)
 
 # lavender new tab 🌙
 
