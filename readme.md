@@ -13,15 +13,38 @@ lavender is a soft, minimal new tab for your chrome browser featuring:
 -   metric units & 24-hour time formatting
 -   options sync between chrome browsers
 
-## installation
+## download
 
-this extension has been submitted to the chrome web store for review. if you want to try it out before it's published, just do the following:
+> this extension has been submitted to the chrome web store for review. to try it out before it's published, see manual installation below!
 
--   download the source code for lavender
--   sign up for the OpenWeather API [here](https://home.openweathermap.org/users/sign_upgenerate) and generate a new API key for the current weather API
+## manual installation
+
+-   clone or download lavender
+
+```sh
+$ git clone git@github.com:fvrests/lavender.git && cd lavender
+```
+
+-   sign up for [OpenWeather API](https://home.openweathermap.org/users/sign_upgenerate) and generate a new API key
+
 -   within the .env.example file, paste your key directly after "VUE_APP_WEATHER_KEY=" and rename the file to .env
--   go to your chrome extensions page (chrome://extensions) and if you haven't already, turn on Developer mode (in the top right corner)
--   click "load unpacked" at the top and select the dist folder of lavender
+
+```sh
+# .env
+VUE_APP_WEATHER_KEY=<api_key>
+```
+
+-   install dependencies and build lavender (generating the necessary **dist** folder)
+
+```sh
+$ yarn && yarn build
+
+# or using npm
+$ npm install && npm run build
+```
+
+-   navigate to chrome://extensions and turn on developer mode (in the top right corner)
+-   click "load unpacked" at the top and select the **dist** folder of lavender
 -   opening a new tab should now load lavender ✨ enjoy!
 
 ## permissions & licensing
@@ -35,9 +58,7 @@ this app requires the following permissions:
 
 this project is licensed under the MIT license. please feel free to browse the source code or use snippets for your own projects 💛
 
-[privacy policy](https://github.com/fvrests/lavender/blob/main/privacy-policy.md)
-
-[terms of use](https://github.com/fvrests/lavender/blob/main/terms-of-use.md)
+[privacy policy](https://github.com/fvrests/lavender/blob/main/privacy-policy.md) | [terms of use](https://github.com/fvrests/lavender/blob/main/terms-of-use.md)
 
 feedback & suggestions are always welcome!
 
