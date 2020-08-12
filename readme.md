@@ -15,7 +15,7 @@ lavender is a soft, minimal new tab for your chrome browser featuring:
 
 ## download
 
-> this extension has been submitted to the chrome web store for review. to try it out before it's published, see manual installation below!
+[<img alt="Chrome Web Store" src="https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_496x150.png" height="64">](https://chrome.google.com/webstore/detail/lavender-new-tab/ffobepdbanoiodmfimpmanafepclokbc)
 
 ## manual installation
 
