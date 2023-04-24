@@ -8,26 +8,21 @@
     --color-leaf: #ced9cd;
     --color-sand: #e4dcd4;
 
-    --color-white-semi: rgba(255, 255, 255, 0.8);
-    --color-white-demi: rgba(255, 255, 255, 0.4);
-    --color-eggplant: #393438;
-    --color-dark-gray: #3f3b3b;
-    --color-soft-gray: #616161;
-    --color-light-gray: hsl(0, 0%, 87%);
+    --color-gray: #222222;
 
     --theme-bg: var(--color-lavender);
 
     --space-small: 16px;
     --space-medium: 32px;
     --space-large: 64px;
-
     --page-padding: 32px;
 
     --rounded-full: 9999px;
     --rounded: 12px;
-    --border: 2px solid var(--color-dark-gray);
+    --border: 2px solid var(--color-gray);
 
-    --font-serif: 'Lora', serif;
+    --text-color: var(--color-gray);
+    --font: 'Lora', serif;
 
     --text-large: 36px;
 }
@@ -50,6 +45,28 @@
 .sand:root {
     --theme-bg: var(--color-sand);
 }
+.reverse:root {
+    --theme-bg: var(--color-gray);
+}
+
+.reverse.rose:root {
+    --text-color: var(--color-rose);
+}
+.reverse.sea:root {
+    --text-color: var(--color-sea);
+}
+.reverse.leaf:root {
+    --text-color: var(--color-leaf);
+}
+.reverse.lemon:root {
+    --text-color: var(--color-lemon);
+}
+.reverse.lavender:root {
+    --text-color: var(--color-lavender);
+}
+.reverse.sand:root {
+    --text-color: var(--color-sand);
+}
 
 html,
 body {
@@ -57,13 +74,13 @@ body {
 }
 
 body {
-    font-family: var(--font-serif), -apple-system, BlinkMacSystemFont,
-        'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-        'Helvetica Neue', sans-serif;
+    font-family: var(--font), -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+        sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background-color: var(--theme-bg);
-    color: var(--color-dark-gray);
+    color: var(--text-color);
     min-height: 100vh;
 }
 
@@ -76,7 +93,8 @@ body {
 .divider {
     width: 240px;
     height: 1px;
-    background-color: var(--color-light-gray);
+    background-color: var(--color-gray);
+    opacity: 0.1;
     border-radius: var(--rounded-full);
     margin: 12px auto;
 }

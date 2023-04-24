@@ -80,7 +80,7 @@ label {
     position: relative;
     width: 96px;
     height: 124px;
-    border: 2px solid var(--color-dark-gray);
+    border: 2px solid var(--color-gray);
     border-radius: var(--rounded);
     background-color: var(--theme-bg);
     display: flex;
@@ -94,14 +94,14 @@ label {
     left: 8px;
     height: 12px;
     width: 12px;
-    box-shadow: 0px 0px 0px 2px var(--color-dark-gray);
+    box-shadow: 0px 0px 0px 2px var(--color-gray);
     border: 2px solid white;
     border-radius: var(--rounded-full);
     background-color: white;
     cursor: pointer;
 }
 .filled {
-    background-color: var(--color-dark-gray);
+    background-color: var(--color-gray);
 }
 .grid {
     display: grid;

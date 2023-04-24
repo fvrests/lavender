@@ -19,60 +19,23 @@
                         <div :class="text.sublabel">{{ storedTheme }}</div>
                     </div>
 
-                    <div class="row even" style="padding: 6px 0px;">
-                        <!-- use aria label for buttons -->
-                        <button
-                            class="colorToggle"
-                            style="background-color: var(--color-lavender);"
-                            @click="toggleTheme('lavender')"
-                            @mouseenter="previewTheme('lavender')"
-                            @mouseleave="toggleTheme()"
-                        />
-                        <button
-                            class="colorToggle"
-                            style="background-color: var(--color-rose);"
-                            @click="toggleTheme('rose')"
-                            @mouseenter="previewTheme('rose')"
-                            @mouseleave="toggleTheme()"
-                        />
-                        <button
-                            class="colorToggle"
-                            style="background-color: var(--color-lemon);"
-                            @click="toggleTheme('lemon')"
-                            @mouseenter="previewTheme('lemon')"
-                            @mouseleave="toggleTheme()"
-                        />
-                        <button
-                            class="colorToggle"
-                            style="background-color: var(--color-sea);"
-                            @click="toggleTheme('sea')"
-                            @mouseenter="previewTheme('sea')"
-                            @mouseleave="toggleTheme()"
-                        />
-                        <button
-                            class="colorToggle"
-                            style="background-color: var(--color-leaf);"
-                            @click="toggleTheme('leaf')"
-                            @mouseenter="previewTheme('leaf')"
-                            @mouseleave="toggleTheme()"
-                        />
-                        <button
-                            class="colorToggle"
-                            style="background-color: var(--color-sand);"
-                            @click="toggleTheme('sand')"
-                            @mouseenter="previewTheme('sand')"
-                            @mouseleave="toggleTheme()"
-                        />
-                    </div>
+                    <ul class="theme-list" style="padding: 6px 0px;">
+                        <li v-for="theme in themes">
+                            <button
+                                class="color-toggle"
+                                :style="`background-color: var(--color-${theme}`"
+                                :aria-label="theme"
+                                @click="toggleTheme(theme)"
+                                @mouseenter="previewTheme(theme)"
+                                @mouseleave="toggleTheme()"
+                            ></button>
+                            <!-- <span>{{ theme }}</span> -->
+                        </li>
+                    </ul>
 
                     <div class="divider" />
 
                     <div :class="text.subtitle">time</div>
-                    <v-option-toggle
-                        option="useMilitaryTime"
-                        label="24 hour format"
-                        role="menuitem"
-                    />
                     <div :class="text.label">layout:</div>
                     <v-radio-group
                         property="timeLayout"
@@ -100,7 +63,12 @@
                         </template>
                     </v-radio-group>
 
-                    <!-- <div class="space-small" /> -->
+                    <v-option-toggle
+                        option="useMilitaryTime"
+                        label="24 hour format"
+                        role="menuitem"
+                    />
+
                     <div class="divider" />
 
                     <div :class="text.subtitle">weather</div>
@@ -109,8 +77,6 @@
                         option="useDescriptiveWeather"
                         label="precise conditions"
                     />
-
-                    <!-- <div class="space-small" /> -->
 
                     <div class="row">
                         <div :class="text.base">source:</div>
@@ -235,19 +201,16 @@ export default {
         let timeLayout = computed(() => store.state.timeLayout)
         let fetchingPosition = computed(() => store.state.position.fetching)
         let isOptionsOpen = ref(false)
-        let isDonationModalOpen = ref(false)
         let positionDeclined = computed(() => store.state.position.declined)
         let refreshDisabled = ref(false)
 
+        let themes = ['lavender', 'rose', 'lemon', 'sea', 'leaf', 'sand']
+
         function toggleProperty(property) {
             store.commit('toggleProperty', property)
-            // console.log(property, store.state[property])
         }
         function toggleOptionsMenu() {
             isOptionsOpen.value = !isOptionsOpen.value
-        }
-        function toggleDonationModal() {
-            isDonationModalOpen.value = !isDonationModalOpen.value
         }
         function handleFetch() {
             refreshDisabled.value = true
@@ -273,8 +236,7 @@ export default {
             fetchingPosition,
             positionDeclined,
             refreshDisabled,
-            toggleDonationModal,
-            isDonationModalOpen,
+            themes,
         }
     },
 }
@@ -289,22 +251,7 @@ export default {
     flex-direction: column;
     align-items: flex-end;
 }
-/* .options-menu {
-    z-index: 10;
-    width: 320px;
-    height: 640px;
-    max-height: 100%;
-    overflow: scroll;
-    position: fixed;
-    bottom: calc(var(--page-padding) + 36px + var(--space-small));
-    top: var(--page-padding);
-    margin-top: auto;
-    right: var(--page-padding);
-    padding: var(--space-medium);
-    border: var(--border);
-    border-radius: var(--rounded);
-    background-color: white;
-} */
+
 .options-menu {
     padding-top: var(--page-padding);
     width: 320px;
@@ -316,12 +263,7 @@ export default {
     bottom: calc(var(--page-padding) + 36px + var(--space-small));
     z-index: 10;
 }
-.donation-modal {
-    position: fixed;
-    left: calc(50% - 150px);
-    top: calc(50% - 307.5px);
-    z-index: 11;
-}
+
 .close:first-child {
     display: flex;
     position: fixed;
@@ -332,6 +274,7 @@ export default {
     background-color: black;
     z-index: 13;
 }
+
 .close:last-child {
     display: flex;
     position: fixed;
@@ -342,6 +285,7 @@ export default {
     background-color: black;
     z-index: 13;
 }
+
 .options-menu--inner {
     margin-top: auto;
     padding: var(--space-medium);
@@ -359,15 +303,18 @@ export default {
     bottom: var(--page-padding);
     right: var(--page-padding);
 }
+
 .optionsMenu-enter-active,
 .optionsMenu-leave-active {
     transition: ease-in-out all 100ms;
 }
+
 .optionsMenu-enter-from,
 .optionsMenu-leave-to {
     opacity: 0;
     transform: scale(0.95);
 }
+
 .overlay {
     position: fixed;
     top: 0;
@@ -377,22 +324,28 @@ export default {
     background-color: transparent;
     z-index: 9;
 }
-.dark {
-    background-color: var(--color-dark-gray);
-    opacity: 0.6;
+
+.theme-list {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: 24px;
+    gap: 16px;
 }
-.colorToggle {
+
+.color-toggle {
     height: 24px;
     width: 24px;
     border-radius: var(--rounded-full);
     cursor: pointer;
     border: var(--border);
 }
+
 .time {
     font-size: 24px;
     line-height: 24px;
     font-weight: bold;
 }
+
 .outline {
     border: var(--border);
     padding: 4px;

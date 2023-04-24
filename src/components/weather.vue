@@ -167,7 +167,7 @@ export default {
 }
 .wi {
     font-size: var(--text-large);
-    color: var(--color-dark-gray);
+    color: var(--color-gray);
     background-color: var(--theme-bg);
     height: var(--space-large);
     width: var(--space-large);
