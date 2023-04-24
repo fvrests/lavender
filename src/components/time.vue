@@ -80,7 +80,7 @@ export default {
     width: 1ch;
 }
 .outline {
-    border: 3px solid var(--color-dark-gray);
+    border: 3px solid var(--color-gray);
     padding: var(--space-small);
 }
 .italic {
@@ -89,7 +89,6 @@ export default {
     font-style: italic;
 }
 .today {
-    /* text-transform: none; */
     font-weight: bold;
 }
 </style>

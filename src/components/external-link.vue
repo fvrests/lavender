@@ -9,7 +9,7 @@
                     height="24"
                     viewBox="0 0 24 24"
                     fill="none"
-                    stroke="var(--color-soft-gray)"
+                    stroke="var(--color-gray)"
                     stroke-width="3"
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -40,7 +40,7 @@ export default {
 
 <style scoped>
 .text {
-    color: var(--var-dark-gray);
+    color: var(--color-gray);
     font-size: 11px;
     padding: 4px;
     border-radius: var(--rounded-full);
