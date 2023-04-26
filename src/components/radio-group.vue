@@ -80,7 +80,7 @@ label {
     position: relative;
     width: 96px;
     height: 124px;
-    border: 2px solid var(--color-gray);
+    border: var(--border);
     border-radius: var(--rounded);
     background-color: var(--theme-bg);
     display: flex;
@@ -88,21 +88,24 @@ label {
     justify-content: center;
     cursor: pointer;
 }
+
 .dot {
     position: absolute;
     top: 8px;
     left: 8px;
     height: 12px;
     width: 12px;
-    box-shadow: 0px 0px 0px 2px var(--color-gray);
-    border: 2px solid white;
+    box-shadow: 0px 0px 0px 2px var(--ui-fg);
+    border: 2px solid var(--ui-bg);
     border-radius: var(--rounded-full);
-    background-color: white;
+    background-color: var(--ui-bg);
     cursor: pointer;
 }
+
 .filled {
-    background-color: var(--color-gray);
+    background-color: var(--ui-fg);
 }
+
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(96px, max-content));
@@ -110,6 +113,7 @@ label {
     grid-gap: var(--space-small);
     padding: 6px 0px;
 }
+
 input:focus + label,
 input:active + label {
     border: 2px solid var(--theme-bg);

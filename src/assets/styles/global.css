@@ -1,34 +1,52 @@
 @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap');
 
 :root {
+    --border: 2px solid var(--color-gray);
+    --space-small: 16px;
+    --space-medium: 32px;
+    --space-large: 64px;
+    --text-large: 36px;
+    --page-padding: 32px;
+    --rounded-full: 9999px;
+    --rounded: 12px;
+
+    --font: 'Lora', serif;
+
+    /* ui colors*/
+    --color-gray: #222222;
+
+    /* classic theme colors */
     --color-lavender: #dad4e0;
-    --color-rose: #f5e0dc;
+    --color-rose: #edd6d1;
     --color-lemon: #fce5c4;
     --color-sea: #c6ced3;
     --color-leaf: #ced9cd;
     --color-sand: #e4dcd4;
 
-    --color-gray: #222222;
+    /* dark classic theme colors */
+    --color-lavender-dark: #3a3441;
+    --color-rose-dark: #9e746c;
+    --color-lemon-dark: #be7917;
+    --color-sea-dark: #1b2932;
+    --color-leaf-dark: #273126;
+    --color-sand-dark: var(--color-gray);
 
+    /* default fg / bg - light theme */
+    --theme-fg: var(--color-gray);
     --theme-bg: var(--color-lavender);
-
-    --space-small: 16px;
-    --space-medium: 32px;
-    --space-large: 64px;
-    --page-padding: 32px;
-
-    --rounded-full: 9999px;
-    --rounded: 12px;
-    --border: 2px solid var(--color-gray);
-
-    --text-color: var(--color-gray);
-    --font: 'Lora', serif;
-
-    --text-large: 36px;
+    --ui-fg: var(--color-gray);
+    --ui-bg: white;
 }
 
+/* classic themes: with [name] class */
+.lavender:root {
+    --theme-bg: var(--color-lavender);
+}
 .rose:root {
     --theme-bg: var(--color-rose);
+}
+.lemon:root {
+    --theme-bg: var(--color-lemon);
 }
 .sea:root {
     --theme-bg: var(--color-sea);
@@ -36,36 +54,90 @@
 .leaf:root {
     --theme-bg: var(--color-leaf);
 }
-.lemon:root {
-    --theme-bg: var(--color-lemon);
-}
-.lavender:root {
-    --theme-bg: var(--color-lavender);
-}
 .sand:root {
     --theme-bg: var(--color-sand);
 }
-.reverse:root {
-    --theme-bg: var(--color-gray);
+
+/* dark classic themes: with [name]-dark class */
+.lavender-dark:root,
+.rose-dark:root,
+.lemon-dark:root,
+.sea-dark:root,
+.leaf-dark:root,
+.sand-dark:root {
+    --theme-fg: var(--color-sand);
+    --ui-bg: var(--color-sand);
+}
+.lavender-dark:root {
+    --theme-bg: var(--color-lavender-dark);
+}
+.rose-dark:root {
+    --theme-bg: var(--color-rose-dark);
+}
+.lemon-dark:root {
+    --theme-bg: var(--color-lemon-dark);
+}
+.sea-dark:root {
+    --theme-bg: var(--color-sea-dark);
+}
+.leaf-dark:root {
+    --theme-bg: var(--color-leaf-dark);
+}
+.sand-dark:root {
+    --theme-bg: var(--color-sand-dark);
 }
 
-.reverse.rose:root {
-    --text-color: var(--color-rose);
+/* system themes: with [name]-system class */
+.lavender-system:root {
+    --theme-bg: var(--color-lavender);
 }
-.reverse.sea:root {
-    --text-color: var(--color-sea);
+.rose-system:root {
+    --theme-bg: var(--color-rose);
 }
-.reverse.leaf:root {
-    --text-color: var(--color-leaf);
+.lemon-system:root {
+    --theme-bg: var(--color-lemon);
 }
-.reverse.lemon:root {
-    --text-color: var(--color-lemon);
+.sea-system:root {
+    --theme-bg: var(--color-sea);
 }
-.reverse.lavender:root {
-    --text-color: var(--color-lavender);
+.leaf-system:root {
+    --theme-bg: var(--color-leaf);
 }
-.reverse.sand:root {
-    --text-color: var(--color-sand);
+.sand-system:root {
+    --theme-bg: var(--color-sand);
+}
+
+/* system themes: with [name]-system - use dark as preferred by browser */
+@media (prefers-color-scheme: dark) {
+    /* todo: maybe set as data attributes instead of classes */
+    /*[data-theme$="-system"]:root,*/
+    .lavender-system:root,
+    .rose-system:root,
+    .lemon-system:root,
+    .sea-system:root,
+    .leaf-system:root,
+    .sand-system:root {
+        --theme-fg: var(--color-sand);
+        --ui-bg: var(--color-sand);
+    }
+    .lavender-system:root {
+        --theme-bg: var(--color-lavender-dark);
+    }
+    .rose-system:root {
+        --theme-bg: var(--color-rose-dark);
+    }
+    .lemon-system:root {
+        --theme-bg: var(--color-lemon-dark);
+    }
+    .sea-system:root {
+        --theme-bg: var(--color-sea-dark);
+    }
+    .leaf-system:root {
+        --theme-bg: var(--color-leaf-dark);
+    }
+    .sand-system:root {
+        --theme-bg: var(--color-sand-dark);
+    }
 }
 
 html,
@@ -80,7 +152,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background-color: var(--theme-bg);
-    color: var(--text-color);
+    color: var(--theme-fg);
     min-height: 100vh;
 }
 
@@ -93,7 +165,7 @@ body {
 .divider {
     width: 240px;
     height: 1px;
-    background-color: var(--color-gray);
+    background-color: var(--ui-fg);
     opacity: 0.1;
     border-radius: var(--rounded-full);
     margin: 12px auto;

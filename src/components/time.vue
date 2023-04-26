@@ -80,7 +80,7 @@ export default {
     width: 1ch;
 }
 .outline {
-    border: 3px solid var(--color-gray);
+    border: 3px solid var(--theme-fg);
     padding: var(--space-small);
 }
 .italic {

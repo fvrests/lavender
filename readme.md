@@ -15,7 +15,7 @@ lavender is a soft, minimal new tab for your chrome browser featuring:
 
 ## download
 
-[<img alt="Chrome Web Store" src="https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_496x150.png" height="64">](https://chrome.google.com/webstore/detail/lavender-new-tab/ffobepdbanoiodmfimpmanafepclokbc)
+[Chrome Web Store](https://chrome.google.com/webstore/detail/lavender-new-tab/ffobepdbanoiodmfimpmanafepclokbc)
 
 ## manual installation
 
@@ -62,6 +62,6 @@ this project is licensed under the MIT license. please feel free to browse the s
 
 feedback & suggestions are always welcome!
 
-by [@fvrests](https://twitter.com/fvrests)
+by [fvrests](https://fvrests.dev)
 
-[donate 💕](https://givebutter.com/fvrests)
+[donations 💛](https://ko-fi.com/fvrests)

@@ -24,8 +24,7 @@
         "eslint-config-prettier": "^8.8.0",
         "eslint-plugin-prettier": "^4.2.1",
         "eslint-plugin-vue": "^9.11.0",
-        "prettier": "^2.8.8",
-        "vue-cli-plugin-vue-next": "~0.1.4"
+        "prettier": "^2.8.8"
     },
     "prettier": {
         "singleQuote": true,

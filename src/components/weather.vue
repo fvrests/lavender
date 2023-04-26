@@ -1,7 +1,9 @@
 <template>
     <div v-if="storedWeather.hasData" class="wrapper">
         <div class="weather-items">
-            <p class="temp">{{ formattedTemp }}</p>
+            <p class="temp" :class="text.subtitle">
+                {{ formattedTemp }} degrees
+            </p>
             <div class="wi-bg">
                 <i
                     :class="
@@ -167,7 +169,7 @@ export default {
 }
 .wi {
     font-size: var(--text-large);
-    color: var(--color-gray);
+    color: var(--theme-fg);
     background-color: var(--theme-bg);
     height: var(--space-large);
     width: var(--space-large);
@@ -198,7 +200,7 @@ export default {
     top: var(--page-padding);
     left: 50%;
     margin-left: -160px;
-    background-color: white;
+    background-color: var(--ui-bg);
     padding: var(--space-small);
     border-radius: var(--rounded);
     border: var(--border);

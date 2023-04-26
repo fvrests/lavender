@@ -1,11 +1,13 @@
 <template>
+    <!-- todo: consider updating typography-->
+    <!-- todo: consider adding font selection (sans serif, mono) -->
     <div class="options" @keyup.esc="isOptionsOpen = false">
         <button
-            :class="[{ open: isOptionsOpen }, button.icon]"
+            :class="{ open: isOptionsOpen }"
             class="options-button"
             @click="toggleOptionsMenu"
         >
-            <v-icon class="options-icon" style="width: 20px; height: 20px;" />
+            <v-icon class="options-icon" />
         </button>
         <div v-if="isOptionsOpen" class="overlay" @click="toggleOptionsMenu" />
         <transition name="optionsMenu">
@@ -13,25 +15,22 @@
                 <div class="options-menu--inner">
                     <div :class="text.title">Options</div>
 
+                    <!-- todo: separate options by theme collection: lavender, nightshade? classic, dark?-->
                     <div :class="text.subtitle">theme</div>
                     <div class="row">
                         <div :class="text.label">selected:</div>
                         <div :class="text.sublabel">{{ storedTheme }}</div>
                     </div>
 
-                    <ul class="theme-list" style="padding: 6px 0px;">
-                        <li v-for="theme in themes">
-                            <button
-                                class="color-toggle"
-                                :style="`background-color: var(--color-${theme}`"
-                                :aria-label="theme"
-                                @click="toggleTheme(theme)"
-                                @mouseenter="previewTheme(theme)"
-                                @mouseleave="toggleTheme()"
-                            ></button>
-                            <!-- <span>{{ theme }}</span> -->
-                        </li>
-                    </ul>
+                    <div class="theme-list" style="padding: 6px 0px;">
+                        <VThemeList :themes="themes" />
+                        <VThemeList
+                            :themes="themes.map((theme) => theme + '-dark')"
+                        />
+                        <VThemeList
+                            :themes="themes.map((theme) => theme + '-system')"
+                        />
+                    </div>
 
                     <div class="divider" />
 
@@ -158,13 +157,13 @@
 
                     <div class="row even">
                         <v-external-link
-                            url="https://twitter.com/fvrests"
+                            url="https://fvrests.dev"
                             :underline="true"
-                            >@fvrests</v-external-link
+                            >fvrests</v-external-link
                         >
 
                         <v-external-link
-                            url="https://givebutter.com/fvrests"
+                            url="https://ko-fi.com/fvrests"
                             :underline="true"
                             >donate ♥</v-external-link
                         >
@@ -175,70 +174,42 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import VIcon from '../assets/icons/icon.vue'
 import VOptionToggle from './option-toggle.vue'
 import VRadioGroup from './radio-group.vue'
 import VExternalLink from './external-link.vue'
+import VThemeList from './theme-list.vue'
 import button from './button.module.css'
 import text from './text.module.css'
 import { toggleTheme, previewTheme } from '../utils/theme'
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 
-export default {
-    components: {
-        VIcon,
-        VOptionToggle,
-        VRadioGroup,
-        VExternalLink,
-    },
-    setup() {
-        let store = useStore()
-        let storedWeather = computed(() => store.state.weather)
-        let storeInitialized = computed(() => store.state.init)
-        let storedTheme = computed(() => store.state.themeColor)
-        let timeLayout = computed(() => store.state.timeLayout)
-        let fetchingPosition = computed(() => store.state.position.fetching)
-        let isOptionsOpen = ref(false)
-        let positionDeclined = computed(() => store.state.position.declined)
-        let refreshDisabled = ref(false)
+let store = useStore()
+let storedWeather = computed(() => store.state.weather)
+let storeInitialized = computed(() => store.state.init)
+let storedTheme = computed(() => store.state.themeColor)
+let timeLayout = computed(() => store.state.timeLayout)
+let fetchingPosition = computed(() => store.state.position.fetching)
+let isOptionsOpen = ref(false)
+let positionDeclined = computed(() => store.state.position.declined)
+let refreshDisabled = ref(false)
 
-        let themes = ['lavender', 'rose', 'lemon', 'sea', 'leaf', 'sand']
+let themes = ['lavender', 'rose', 'lemon', 'sea', 'leaf', 'sand']
 
-        function toggleProperty(property) {
-            store.commit('toggleProperty', property)
-        }
-        function toggleOptionsMenu() {
-            isOptionsOpen.value = !isOptionsOpen.value
-        }
-        function handleFetch() {
-            refreshDisabled.value = true
-            store.dispatch('fetchPosition')
-            setTimeout(function () {
-                refreshDisabled.value = false
-            }, 15 * 1000)
-        }
-
-        return {
-            toggleProperty,
-            toggleOptionsMenu,
-            handleFetch,
-            storedWeather,
-            isOptionsOpen,
-            toggleTheme,
-            previewTheme,
-            button,
-            text,
-            storeInitialized,
-            storedTheme,
-            timeLayout,
-            fetchingPosition,
-            positionDeclined,
-            refreshDisabled,
-            themes,
-        }
-    },
+function toggleProperty(property) {
+    store.commit('toggleProperty', property)
+}
+function toggleOptionsMenu() {
+    isOptionsOpen.value = !isOptionsOpen.value
+}
+function handleFetch() {
+    refreshDisabled.value = true
+    store.dispatch('fetchPosition')
+    setTimeout(function () {
+        refreshDisabled.value = false
+    }, 15 * 1000)
 }
 </script>
 
@@ -262,28 +233,7 @@ export default {
     right: var(--page-padding);
     bottom: calc(var(--page-padding) + 36px + var(--space-small));
     z-index: 10;
-}
-
-.close:first-child {
-    display: flex;
-    position: fixed;
-    left: calc(50% + 150px + var(--space-small));
-    top: calc(50% - 307.5px - var(--space-small));
-    width: 20px;
-    transform: rotate(45deg);
-    background-color: black;
-    z-index: 13;
-}
-
-.close:last-child {
-    display: flex;
-    position: fixed;
-    left: calc(50% + 150px + var(--space-small));
-    top: calc(50% - 307.5px - var(--space-small));
-    width: 20px;
-    transform: rotate(-45deg);
-    background-color: black;
-    z-index: 13;
+    color: var(--ui-fg);
 }
 
 .options-menu--inner {
@@ -292,16 +242,41 @@ export default {
     width: 100%;
     height: 100%;
     max-height: 640px;
-    background: white;
+    background: var(--ui-bg);
     border: var(--border);
     border-radius: var(--rounded);
     overflow-y: scroll;
 }
 
 .options-button {
+    width: 36px;
+    height: 36px;
+    background: transparent;
     position: fixed;
     bottom: var(--page-padding);
     right: var(--page-padding);
+    color: var(--theme-fg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--rounded-full);
+    user-select: none;
+}
+
+.options-button:hover,
+.options-button:focus {
+    color: var(--ui-fg);
+    background-color: var(--ui-bg);
+    border: 2px solid var(--ui-fg);
+}
+
+.options-button:focus {
+    outline: none;
+}
+
+.options-icon {
+    width: 20px;
+    height: 20px;
 }
 
 .optionsMenu-enter-active,
@@ -325,29 +300,15 @@ export default {
     z-index: 9;
 }
 
-.theme-list {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    grid-auto-rows: 24px;
-    gap: 16px;
-}
-
-.color-toggle {
-    height: 24px;
-    width: 24px;
-    border-radius: var(--rounded-full);
-    cursor: pointer;
-    border: var(--border);
-}
-
 .time {
     font-size: 24px;
     line-height: 24px;
     font-weight: bold;
+    color: var(--theme-fg);
 }
 
 .outline {
-    border: var(--border);
+    border: 2px solid var(--theme-fg);
     padding: 4px;
 }
 </style>
