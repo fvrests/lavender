@@ -18,6 +18,7 @@
             :class="selected ? 'selected' : ''"
         >
             <rect x="1" y="5" width="22" height="14" rx="7" ry="7" />
+
             <circle :cx="selected ? 16 : 8" cy="12" r="4" />
         </svg>
     </button>
@@ -56,18 +57,21 @@ export default {
     width: 100%;
     margin: 0 auto;
 }
+svg.toggle {
+    color: var(--ui-fg);
+}
 svg.toggle > rect,
 svg.toggle > circle {
     transition: all 200ms ease-in-out;
 }
 svg.toggle.selected > circle {
-    fill: white;
+    fill: var(--ui-bg);
 }
 svg.toggle > circle {
     fill: var(--theme-bg);
 }
 svg.toggle > rect {
-    fill: white;
+    fill: var(--ui-bg);
 }
 svg.toggle.selected > rect {
     fill: var(--theme-bg);

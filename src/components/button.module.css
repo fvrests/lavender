@@ -1,13 +1,11 @@
-.primary,
-.icon,
-.card {
+.primary {
     user-select: none;
 }
 
 .primary {
-    background-color: white;
-    color: var(--color-gray);
-    border: 2px solid var(--color-gray);
+    background-color: var(--ui-bg);
+    color: var(--ui-fg);
+    border: 2px solid var(--ui-fg);
     font-weight: bold;
     border-radius: var(--rounded-full);
     padding: 2px 12px;
@@ -17,11 +15,14 @@
 .primary:focus {
     background-color: var(--theme-bg);
 }
+/* fix: use theme fg for text in dark mode */
+.dark > .primary:hover,
+.dark > .primary:focus {
+    color: var(--theme-fg);
+}
 
 .primary[disabled] {
     cursor: not-allowed;
-    color: var(--color-gray);
-    border-color: var(--color-gray);
     opacity: 0.2;
 }
 .primary[disabled]:hover,
@@ -30,7 +31,7 @@
 }
 
 .secondary {
-    color: var(--color-gray);
+    color: var(--ui-fg);
     font-weight: bold;
     font-size: 11px;
     padding: 4px 14px;
@@ -56,6 +57,11 @@
 .secondary:focus {
     font-weight: bold;
 }
+.dark .secondary:hover,
+.secondary:focus {
+    color: var(--theme-fg);
+}
+
 .secondary:hover::after,
 .secondary:focus::after {
     content: '';
@@ -67,33 +73,4 @@
     background-color: var(--theme-bg);
     z-index: -1;
     transition: 0.4s ease all 20ms;
-}
-
-.card {
-    background-color: white;
-    color: var(--color-gray);
-    border: 2px solid var(--color-gray);
-    font-weight: bold;
-    border-radius: var(--rounded);
-    padding: 4px 12px;
-    font-size: 12px;
-}
-
-.icon {
-    width: 36px;
-    height: 36px;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--rounded-full);
-    color: var(--color-gray);
-}
-.icon:hover,
-.icon:focus {
-    background-color: white;
-    border: 2px solid var(--color-gray);
-}
-.icon:focus {
-    outline: none;
 }
