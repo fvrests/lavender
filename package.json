@@ -3,10 +3,10 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "serve": "vue-cli-service serve",
-        "build": "vue-cli-service build",
-        "watch": "NODE_ENV=production vue-cli-service build --watch",
-        "watch:dev": "NODE_ENV=development vue-cli-service build --watch"
+        "dev": "vite",
+        "build": "vite build",
+        "build:watch": "vite build --watch",
+        "preview": "vite preview"
     },
     "dependencies": {
         "core-js": "^3.30.1",
@@ -15,16 +15,9 @@
         "vuex": "^4.1.0"
     },
     "devDependencies": {
-        "@vue/cli-plugin-babel": "~5.0.8",
-        "@vue/cli-plugin-vuex": "~5.0.8",
-        "@vue/cli-service": "~5.0.8",
-        "@vue/compiler-sfc": "^3.2.47",
-        "babel-eslint": "^10.1.0",
-        "eslint": "^8.39.0",
-        "eslint-config-prettier": "^8.8.0",
-        "eslint-plugin-prettier": "^4.2.1",
-        "eslint-plugin-vue": "^9.11.0",
-        "prettier": "^2.8.8"
+        "@vitejs/plugin-vue": "^4.2.1",
+        "prettier": "^2.8.8",
+        "vite": "^4.3.3"
     },
     "prettier": {
         "singleQuote": true,
