@@ -6,12 +6,12 @@
 
 lavender is a soft, minimal new tab for your chrome browser featuring:
 
--   live time & weather updates
--   5 calming background colors
--   alternative UI layouts
--   location-based weather fetching
--   metric units & 24-hour time formatting
--   options sync between chrome browsers
+- live time & weather updates
+- 5 calming background colors
+- alternative UI layouts
+- location-based weather fetching
+- metric units & 24-hour time formatting
+- options sync between chrome browsers
 
 ## download
 
@@ -19,22 +19,22 @@ lavender is a soft, minimal new tab for your chrome browser featuring:
 
 ## manual installation
 
--   clone or download lavender
+- clone or download lavender
 
 ```sh
 $ git clone git@github.com:fvrests/lavender.git && cd lavender
 ```
 
--   sign up for [OpenWeather API](https://home.openweathermap.org/users/sign_upgenerate) and generate a new API key
+- sign up for [OpenWeather API](https://home.openweathermap.org/users/sign_upgenerate) and generate a new API key
 
--   within the .env.example file, paste your key directly after "VUE_APP_WEATHER_KEY=" and rename the file to .env
+- within the .env.example file, paste your key directly after "VUE_APP_WEATHER_KEY=" and rename the file to .env
 
 ```sh
 # .env
 VUE_APP_WEATHER_KEY=<api_key>
 ```
 
--   install dependencies and build lavender (generating the necessary **dist** folder)
+- install dependencies and build lavender (generating the necessary **dist** folder)
 
 ```sh
 $ yarn && yarn build
@@ -43,9 +43,9 @@ $ yarn && yarn build
 $ npm install && npm run build
 ```
 
--   navigate to chrome://extensions and turn on developer mode (in the top right corner)
--   click "load unpacked" at the top and select the **dist** folder of lavender
--   opening a new tab should now load lavender ✨ enjoy!
+- navigate to chrome://extensions and turn on developer mode (in the top right corner)
+- click "load unpacked" at the top and select the **dist** folder of lavender
+- opening a new tab should now load lavender ✨ enjoy!
 
 ## permissions & licensing
 

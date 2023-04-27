@@ -1,32 +1,33 @@
 {
-    "name": "lavender-new-tab",
-    "version": "0.1.0",
-    "private": true,
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build",
-        "build:watch": "vite build --watch",
-        "preview": "vite preview"
-    },
-    "dependencies": {
-        "core-js": "^3.30.1",
-        "date-fns": "^2.29.3",
-        "vue": "^3.2.47",
-        "vuex": "^4.1.0"
-    },
-    "devDependencies": {
-        "@vitejs/plugin-vue": "^4.2.1",
-        "prettier": "^2.8.8",
-        "vite": "^4.3.3"
-    },
-    "prettier": {
-        "singleQuote": true,
-        "semi": false,
-        "tabWidth": 4
-    },
-    "browserslist": [
-        "> 1%",
-        "last 2 versions",
-        "not dead"
-    ]
+	"name": "lavender-new-tab",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"build:watch": "vite build --watch",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"core-js": "^3.30.1",
+		"date-fns": "^2.29.3",
+		"vue": "^3.2.47",
+		"vuex": "^4.1.0"
+	},
+	"devDependencies": {
+		"@vitejs/plugin-vue": "^4.2.1",
+		"prettier": "^2.8.8",
+		"vite": "^4.3.3"
+	},
+	"prettier": {
+		"singleQuote": true,
+		"semi": false,
+		"tabWidth": 2,
+		"useTabs": true
+	},
+	"browserslist": [
+		"> 1%",
+		"last 2 versions",
+		"not dead"
+	]
 }
