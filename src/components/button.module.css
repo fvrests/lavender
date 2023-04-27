@@ -1,76 +1,76 @@
 .primary {
-    user-select: none;
+	user-select: none;
 }
 
 .primary {
-    background-color: var(--ui-bg);
-    color: var(--ui-fg);
-    border: 2px solid var(--ui-fg);
-    font-weight: bold;
-    border-radius: var(--rounded-full);
-    padding: 2px 12px;
-    font-size: 12px;
+	background-color: var(--ui-bg);
+	color: var(--ui-fg);
+	border: 2px solid var(--ui-fg);
+	font-weight: bold;
+	border-radius: var(--rounded-full);
+	padding: 2px 12px;
+	font-size: 12px;
 }
 .primary:hover,
 .primary:focus {
-    background-color: var(--theme-bg);
+	background-color: var(--theme-bg);
+	color: var(--theme-fg);
 }
-/* fix: use theme fg for text in dark mode */
 .dark > .primary:hover,
 .dark > .primary:focus {
-    color: var(--theme-fg);
+	color: var(--theme-fg);
 }
 
 .primary[disabled] {
-    cursor: not-allowed;
-    opacity: 0.2;
+	cursor: not-allowed;
+	opacity: 0.2;
 }
 .primary[disabled]:hover,
 .primary[disabled]:focus {
-    background-color: white;
+	background-color: white;
 }
 
 .secondary {
-    color: var(--ui-fg);
-    font-weight: bold;
-    font-size: 11px;
-    padding: 4px 14px;
-    border-radius: var(--rounded-full);
-    position: relative;
-    display: block;
-    text-align: center;
+	color: var(--ui-fg);
+	font-weight: bold;
+	font-size: 11px;
+	padding: 4px 14px;
+	border-radius: var(--rounded-full);
+	position: relative;
+	display: block;
+	text-align: center;
 }
 .secondary::after,
 .secondary::after {
-    content: '';
-    position: absolute;
-    height: 2px;
-    width: calc(100% - 28px);
-    left: 14px;
-    bottom: 10%;
-    background-color: var(--theme-bg);
-    z-index: -1;
-    transition: 0.4s ease all 20ms;
+	content: '';
+	position: absolute;
+	height: 2px;
+	width: calc(100% - 28px);
+	left: 14px;
+	bottom: 10%;
+	background-color: var(--theme-bg);
+	z-index: -1;
+	transition: 0.4s ease all 20ms;
 }
 
 .secondary:hover,
 .secondary:focus {
-    font-weight: bold;
+	font-weight: bold;
 }
 .dark .secondary:hover,
 .secondary:focus {
-    color: var(--theme-fg);
+	color: var(--theme-fg);
 }
 
 .secondary:hover::after,
 .secondary:focus::after {
-    content: '';
-    position: absolute;
-    height: 4px;
-    width: calc(100% - 28px);
-    left: 14px;
-    bottom: 10%;
-    background-color: var(--theme-bg);
-    z-index: -1;
-    transition: 0.4s ease all 20ms;
+	content: '';
+	position: absolute;
+	height: 4px;
+	width: calc(100% - 28px);
+	left: 14px;
+	bottom: 10%;
+	background-color: var(--theme-bg);
+	z-index: -1;
+	transition: 0.4s ease all 20ms;
 }
