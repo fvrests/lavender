@@ -1,29 +1,24 @@
 <script setup>
-import VIcon from '../assets/icons/icon.vue'
-import VOptionToggle from './option-toggle.vue'
-import VRadioGroup from './radio-group.vue'
-import VExternalLink from './external-link.vue'
-import VThemeSelect from './theme-select.vue'
-import button from './button.module.css'
-import text from './text.module.css'
+import Icon from '../assets/icons/icon.vue'
+import OptionToggle from './option-toggle.vue'
+import RadioGroup from './radio-group.vue'
+import ExternalLink from './external-link.vue'
+import ThemeSelect from './theme-select.vue'
+import Clockface from './clockface.vue'
+import button from '../assets/styles/button.module.css'
+import text from '../assets/styles/text.module.css'
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 
 let store = useStore()
 let storedWeather = computed(() => store.state.weather)
-let storeInitialized = computed(() => store.state.init)
 let storedTheme = computed(() => store.state.themeColor)
-let timeLayout = computed(() => store.state.timeLayout)
 let fetchingPosition = computed(() => store.state.position.fetching)
 let isOptionsOpen = ref(false)
-let positionDeclined = computed(() => store.state.position.declined)
 let refreshDisabled = ref(false)
 
 let themes = ['lavender', 'rose', 'lemon', 'sea', 'leaf', 'sand']
 
-function toggleProperty(property) {
-	store.commit('toggleProperty', property)
-}
 function toggleOptionsMenu() {
 	isOptionsOpen.value = !isOptionsOpen.value
 }
@@ -45,13 +40,16 @@ function handleFetch() {
 			class="options-button"
 			@click="toggleOptionsMenu"
 		>
-			<v-icon class="options-icon" />
+			<Icon class="options-icon" />
 		</button>
 		<div v-if="isOptionsOpen" class="overlay" @click="toggleOptionsMenu" />
 		<transition name="optionsMenu">
 			<div v-show="isOptionsOpen" class="options-menu" role="menu">
 				<div class="options-menu--inner">
 					<div :class="text.title">Options</div>
+
+					<!-- note: test  -->
+					<Clockface layout="default" hour="12" minute="12" />
 
 					<!-- todo: separate options by theme collection: lavender, nightshade? classic, dark?-->
 					<div :class="text.subtitle">theme</div>
@@ -61,15 +59,14 @@ function handleFetch() {
 					</div>
 
 					<div style="padding: 6px 0px">
-						:
 						<ul class="theme-list">
 							<li v-for="theme in themes">
-								<VThemeSelect :theme="theme" :colors="[theme]" />
+								<ThemeSelect :theme="theme" :colors="[theme]" />
 							</li>
 						</ul>
 						<ul class="theme-list">
 							<li v-for="theme in themes">
-								<VThemeSelect
+								<ThemeSelect
 									:theme="theme + '-dark'"
 									:colors="[theme + '-dark']"
 								/>
@@ -77,7 +74,7 @@ function handleFetch() {
 						</ul>
 						<ul class="theme-list">
 							<li v-for="theme in themes">
-								<VThemeSelect
+								<ThemeSelect
 									:theme="theme + '-system'"
 									split
 									:colors="[theme, `${theme}-dark`]"
@@ -90,10 +87,7 @@ function handleFetch() {
 
 					<div :class="text.subtitle">time</div>
 					<div :class="text.label">layout:</div>
-					<v-radio-group
-						property="timeLayout"
-						:options="['default', 'stacked']"
-					>
+					<RadioGroup property="timeLayout" :options="['default', 'stacked']">
 						<template #default>
 							<div class="time">
 								<div>9:41</div>
@@ -114,9 +108,9 @@ function handleFetch() {
 								</div>
 							</div>
 						</template>
-					</v-radio-group>
+					</RadioGroup>
 
-					<v-option-toggle
+					<OptionToggle
 						option="useMilitaryTime"
 						label="24 hour format"
 						role="menuitem"
@@ -125,16 +119,16 @@ function handleFetch() {
 					<div class="divider" />
 
 					<div :class="text.subtitle">weather</div>
-					<v-option-toggle option="useCelsius" label="celsius" />
-					<v-option-toggle
+					<OptionToggle option="useCelsius" label="celsius" />
+					<OptionToggle
 						option="useDescriptiveWeather"
 						label="precise conditions"
 					/>
 
 					<div class="row">
 						<div :class="text.base">source:</div>
-						<v-external-link url="https://openweathermap.org"
-							>OpenWeather</v-external-link
+						<ExternalLink url="https://openweathermap.org"
+							>OpenWeather</ExternalLink
 						>
 					</div>
 
@@ -186,25 +180,25 @@ function handleFetch() {
 					<div class="divider" />
 
 					<div class="row even">
-						<v-external-link
+						<ExternalLink
 							url="https://github.com/fvrests/lavender/blob/main/privacy-policy.md"
-							>Privacy Policy</v-external-link
+							>Privacy Policy</ExternalLink
 						>
-						<v-external-link
+						<ExternalLink
 							url="https://github.com/fvrests/lavender/blob/main/terms-of-use.md"
-							>Terms of Use</v-external-link
+							>Terms of Use</ExternalLink
 						>
 					</div>
 
 					<div class="space-small" />
 
 					<div class="row even">
-						<v-external-link url="https://fvrests.dev" :underline="true"
-							>fvrests</v-external-link
+						<ExternalLink url="https://fvrests.dev" :underline="true"
+							>fvrests</ExternalLink
 						>
 
-						<v-external-link url="https://ko-fi.com/fvrests" :underline="true"
-							>donate ♥</v-external-link
+						<ExternalLink url="https://ko-fi.com/fvrests" :underline="true"
+							>donate ♥</ExternalLink
 						>
 					</div>
 				</div>

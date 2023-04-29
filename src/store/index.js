@@ -31,17 +31,15 @@ const store = createStore({
 	mutations: {
 		initializeStore(state) {
 			// todo: add back functionality
-			// chrome.storage.sync.get(null, (value) => {
-			//     if (value) {
-			//         store.replaceState(
-			//             Object.assign(state, { ...value, init: true })
-			//         )
-			//     } else {
-			//         state.init = true
-			//         // console.log('setting storage w default values')
-			//     }
-			// })
-			state.init = true
+			chrome.storage.sync.get(null, (value) => {
+				if (value) {
+					store.replaceState(Object.assign(state, { ...value, init: true }))
+				} else {
+					state.init = true
+					// console.log('setting storage w default values')
+				}
+			})
+			// state.init = true
 		},
 		update(state, { key, value }) {
 			state[key] = value

@@ -27,20 +27,17 @@ $ git clone git@github.com:fvrests/lavender.git && cd lavender
 
 - sign up for [OpenWeather API](https://home.openweathermap.org/users/sign_upgenerate) and generate a new API key
 
-- within the .env.example file, paste your key directly after "VUE_APP_WEATHER_KEY=" and rename the file to .env
+- within the .env.example file, paste your key directly after "VITE_WEATHER_KEY=" and rename the file to .env
 
 ```sh
 # .env
-VUE_APP_WEATHER_KEY=<api_key>
+VITE_WEATHER_KEY=<api_key>
 ```
 
 - install dependencies and build lavender (generating the necessary **dist** folder)
 
 ```sh
-$ yarn && yarn build
-
-# or using npm
-$ npm install && npm run build
+$ pnpm install && pnpm build
 ```
 
 - navigate to chrome://extensions and turn on developer mode (in the top right corner)

@@ -1,14 +1,12 @@
-<script>
-export default {
-	props: {
-		url: { type: String, required: true },
-		underline: {
-			type: Boolean,
-			required: false,
-			default: false,
-		},
+<script setup>
+const props = defineProps({
+	url: { type: String, required: true },
+	underline: {
+		type: Boolean,
+		required: false,
+		default: false,
 	},
-}
+})
 </script>
 
 <template>

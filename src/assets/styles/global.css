@@ -1,61 +1,61 @@
 @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap');
 
 :root {
-    --border: 2px solid var(--color-gray);
-    --space-small: 16px;
-    --space-medium: 32px;
-    --space-large: 64px;
-    --text-large: 36px;
-    --page-padding: 32px;
-    --rounded-full: 9999px;
-    --rounded: 12px;
+	--border: 2px solid var(--color-gray);
+	--space-small: 16px;
+	--space-medium: 32px;
+	--space-large: 64px;
+	--text-large: 36px;
+	--page-padding: 32px;
+	--rounded-full: 9999px;
+	--rounded: 12px;
 
-    --font: 'Lora', serif;
+	--font: 'Lora', serif;
 
-    /* ui colors*/
-    --color-gray: #222222;
+	/* ui colors*/
+	--color-gray: #222222;
 
-    /* classic theme colors */
-    --color-lavender: #dad4e0;
-    --color-rose: #edd6d1;
-    --color-lemon: #fce5c4;
-    --color-sea: #c6ced3;
-    --color-leaf: #ced9cd;
-    --color-sand: #e4dcd4;
+	/* classic theme colors */
+	--color-lavender: #dad4e0;
+	--color-rose: #edd6d1;
+	--color-lemon: #fce5c4;
+	--color-sea: #c6ced3;
+	--color-leaf: #ced9cd;
+	--color-sand: #e4dcd4;
 
-    /* dark classic theme colors */
-    --color-lavender-dark: #3a3441;
-    --color-rose-dark: #9e746c;
-    --color-lemon-dark: #be7917;
-    --color-sea-dark: #1b2932;
-    --color-leaf-dark: #273126;
-    --color-sand-dark: var(--color-gray);
+	/* dark classic theme colors */
+	--color-lavender-dark: #3a3441;
+	--color-rose-dark: #9e746c;
+	--color-lemon-dark: #be7917;
+	--color-sea-dark: #1b2932;
+	--color-leaf-dark: #273126;
+	--color-sand-dark: var(--color-gray);
 
-    /* default fg / bg - light theme */
-    --theme-fg: var(--color-gray);
-    --theme-bg: var(--color-lavender);
-    --ui-fg: var(--color-gray);
-    --ui-bg: white;
+	/* default fg / bg - light theme */
+	--theme-fg: var(--color-gray);
+	--theme-bg: var(--color-lavender);
+	--ui-fg: var(--color-gray);
+	--ui-bg: white;
 }
 
 /* classic themes: with [name] class */
 .lavender:root {
-    --theme-bg: var(--color-lavender);
+	--theme-bg: var(--color-lavender);
 }
 .rose:root {
-    --theme-bg: var(--color-rose);
+	--theme-bg: var(--color-rose);
 }
 .lemon:root {
-    --theme-bg: var(--color-lemon);
+	--theme-bg: var(--color-lemon);
 }
 .sea:root {
-    --theme-bg: var(--color-sea);
+	--theme-bg: var(--color-sea);
 }
 .leaf:root {
-    --theme-bg: var(--color-leaf);
+	--theme-bg: var(--color-leaf);
 }
 .sand:root {
-    --theme-bg: var(--color-sand);
+	--theme-bg: var(--color-sand);
 }
 
 /* dark classic themes: with [name]-dark class */
@@ -65,126 +65,125 @@
 .sea-dark:root,
 .leaf-dark:root,
 .sand-dark:root {
-    --theme-fg: var(--color-sand);
-    --ui-bg: var(--color-sand);
+	--theme-fg: var(--color-sand);
+	--ui-bg: var(--color-sand);
 }
 .lavender-dark:root {
-    --theme-bg: var(--color-lavender-dark);
+	--theme-bg: var(--color-lavender-dark);
 }
 .rose-dark:root {
-    --theme-bg: var(--color-rose-dark);
+	--theme-bg: var(--color-rose-dark);
 }
 .lemon-dark:root {
-    --theme-bg: var(--color-lemon-dark);
+	--theme-bg: var(--color-lemon-dark);
 }
 .sea-dark:root {
-    --theme-bg: var(--color-sea-dark);
+	--theme-bg: var(--color-sea-dark);
 }
 .leaf-dark:root {
-    --theme-bg: var(--color-leaf-dark);
+	--theme-bg: var(--color-leaf-dark);
 }
 .sand-dark:root {
-    --theme-bg: var(--color-sand-dark);
+	--theme-bg: var(--color-sand-dark);
 }
 
 /* system themes: with [name]-system class */
 .lavender-system:root {
-    --theme-bg: var(--color-lavender);
+	--theme-bg: var(--color-lavender);
 }
 .rose-system:root {
-    --theme-bg: var(--color-rose);
+	--theme-bg: var(--color-rose);
 }
 .lemon-system:root {
-    --theme-bg: var(--color-lemon);
+	--theme-bg: var(--color-lemon);
 }
 .sea-system:root {
-    --theme-bg: var(--color-sea);
+	--theme-bg: var(--color-sea);
 }
 .leaf-system:root {
-    --theme-bg: var(--color-leaf);
+	--theme-bg: var(--color-leaf);
 }
 .sand-system:root {
-    --theme-bg: var(--color-sand);
+	--theme-bg: var(--color-sand);
 }
 
 /* system themes: with [name]-system - use dark as preferred by browser */
 @media (prefers-color-scheme: dark) {
-    /* todo: maybe set as data attributes instead of classes */
-    /*[data-theme$="-system"]:root,*/
-    .lavender-system:root,
-    .rose-system:root,
-    .lemon-system:root,
-    .sea-system:root,
-    .leaf-system:root,
-    .sand-system:root {
-        --theme-fg: var(--color-sand);
-        --ui-bg: var(--color-sand);
-    }
-    .lavender-system:root {
-        --theme-bg: var(--color-lavender-dark);
-    }
-    .rose-system:root {
-        --theme-bg: var(--color-rose-dark);
-    }
-    .lemon-system:root {
-        --theme-bg: var(--color-lemon-dark);
-    }
-    .sea-system:root {
-        --theme-bg: var(--color-sea-dark);
-    }
-    .leaf-system:root {
-        --theme-bg: var(--color-leaf-dark);
-    }
-    .sand-system:root {
-        --theme-bg: var(--color-sand-dark);
-    }
+	/* todo: maybe set as data attributes instead of classes */
+	/*[data-theme$="-system"]:root,*/
+	.lavender-system:root,
+	.rose-system:root,
+	.lemon-system:root,
+	.sea-system:root,
+	.leaf-system:root,
+	.sand-system:root {
+		--theme-fg: var(--color-sand);
+		--ui-bg: var(--color-sand);
+	}
+	.lavender-system:root {
+		--theme-bg: var(--color-lavender-dark);
+	}
+	.rose-system:root {
+		--theme-bg: var(--color-rose-dark);
+	}
+	.lemon-system:root {
+		--theme-bg: var(--color-lemon-dark);
+	}
+	.sea-system:root {
+		--theme-bg: var(--color-sea-dark);
+	}
+	.leaf-system:root {
+		--theme-bg: var(--color-leaf-dark);
+	}
+	.sand-system:root {
+		--theme-bg: var(--color-sand-dark);
+	}
 }
 
 html,
 body {
-    height: 100%;
+	height: 100%;
 }
 
 body {
-    font-family: var(--font), -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
-        sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    background-color: var(--theme-bg);
-    color: var(--theme-fg);
-    min-height: 100vh;
+	font-family: var(--font), -apple-system, BlinkMacSystemFont, 'Segoe UI',
+		Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	background-color: var(--theme-bg);
+	color: var(--theme-fg);
+	min-height: 100vh;
 }
 
 .space-small {
-    height: var(--space-small);
+	height: var(--space-small);
 }
 .space-medium {
-    height: var(--space-medium);
+	height: var(--space-medium);
 }
 .divider {
-    width: 240px;
-    height: 1px;
-    background-color: var(--ui-fg);
-    opacity: 0.1;
-    border-radius: var(--rounded-full);
-    margin: 12px auto;
+	width: 240px;
+	height: 1px;
+	background-color: var(--ui-fg);
+	opacity: 0.1;
+	border-radius: var(--rounded-full);
+	margin: 12px auto;
 }
 .row {
-    display: flex;
-    align-items: center;
+	display: flex;
+	align-items: center;
 }
 .column {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 .even {
-    justify-content: space-evenly;
+	justify-content: space-evenly;
 }
 .separated {
-    justify-content: space-between;
+	justify-content: space-between;
 }
 .centered {
-    justify-content: center;
+	justify-content: center;
 }

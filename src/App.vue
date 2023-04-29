@@ -1,52 +1,36 @@
-<template>
-	<div class="app-wrapper">
-		<v-time v-if="storeInitialized" />
-		<v-weather />
-		<v-options />
-	</div>
-</template>
-
-<script>
-import VWeather from './components/weather.vue'
-import VOptions from './components/options.vue'
-import VTime from './components/time.vue'
+<script setup>
+import Weather from './components/weather.vue'
+import Options from './components/options.vue'
+import Clock from './components/clock.vue'
 import store from '@/store'
 import { onBeforeUnmount, computed } from 'vue'
 import './assets/styles/normalize.css'
 import './assets/styles/weather-icons.min.css'
 import './assets/styles/global.css'
 
-export default {
-	name: 'App',
-	components: {
-		VWeather,
-		VOptions,
-		VTime,
-	},
-	setup() {
-		store.commit('initializeStore')
-		// console.log('store initialized 🥳', store.state)
-		let storeInitialized = computed(() => store.state.init)
+store.commit('initializeStore')
+let storeInitialized = computed(() => store.state.init)
 
-		store.subscribe((mutations, state) => {
-			// todo: add back functionality
-			// if (state.init)
-			// chrome.storage.sync.set({
-			//     ...state,
-			//     lastSynced: Date.now(),
-			// })
+store.subscribe((_, state) => {
+	if (state.init)
+		chrome.storage.sync.set({
+			...state,
+			lastSynced: Date.now(),
 		})
+})
 
-		onBeforeUnmount(() => {
-			store.unsubscribe()
-		})
-
-		return {
-			storeInitialized,
-		}
-	},
-}
+onBeforeUnmount(() => {
+	store.unsubscribe()
+})
 </script>
+
+<template>
+	<div class="app-wrapper">
+		<Clock v-if="storeInitialized" />
+		<Weather />
+		<Options />
+	</div>
+</template>
 
 <style scoped>
 .app-wrapper {

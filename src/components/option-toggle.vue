@@ -1,24 +1,19 @@
-<script>
+<script setup>
 import { computed } from 'vue'
 import { useStore } from 'vuex'
-import text from './text.module.css'
+import text from '../assets/styles/text.module.css'
 
-export default {
-	props: {
-		label: { type: String, required: true },
-		option: { type: String, required: true },
-		sublabel: { type: String, required: false, default: '' },
-	},
-	setup(props) {
-		let store = useStore()
-		let selected = computed(() => store.state[props.option])
+const props = defineProps({
+	label: { type: String, required: true },
+	option: { type: String, required: true },
+	sublabel: { type: String, required: false, default: '' },
+})
 
-		function toggle() {
-			store.commit('toggleProperty', props.option)
-		}
+let store = useStore()
+let selected = computed(() => store.state[props.option])
 
-		return { selected, toggle, text }
-	},
+function toggle() {
+	store.commit('toggleProperty', props.option)
 }
 </script>
 
