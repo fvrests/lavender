@@ -1,33 +1,27 @@
-<script>
+<script setup>
 import { ref, watch, computed } from 'vue'
 import { useStore } from 'vuex'
-import text from './text.module.css'
-export default {
-	props: {
-		property: { type: String, required: true },
-		options: { type: Array, required: true },
-	},
-	setup(props) {
-		let selected = ref('')
-		let store = useStore()
-		let storedValue = ref('')
-		let storeInitialized = computed(() => store.state.init)
+import text from '../assets/styles/text.module.css'
+const props = defineProps({
+	property: { type: String, required: true },
+	options: { type: Array, required: true },
+})
+let selected = ref('')
+let store = useStore()
+let storedValue = ref('')
+let storeInitialized = computed(() => store.state.init)
 
-		watch(storeInitialized, () => {
-			storedValue.value = store.state[props.property]
-			selected.value = store.state[props.property]
-		})
+watch(storeInitialized, () => {
+	storedValue.value = store.state[props.property]
+	selected.value = store.state[props.property]
+})
 
-		watch(selected, () => {
-			store.commit('update', {
-				key: props.property,
-				value: selected.value,
-			})
-		})
-
-		return { selected, storedValue, text }
-	},
-}
+watch(selected, () => {
+	store.commit('update', {
+		key: props.property,
+		value: selected.value,
+	})
+})
 </script>
 
 <template>

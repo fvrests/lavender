@@ -31,7 +31,7 @@ export const setCorrectingInterval = (func, delay) => {
 // fetches current weather info from OpenWeatherMap API - max 60 calls/minute or 1,000,000 calls/month
 export function fetchWeather() {
 	let baseUrl = 'https://api.openweathermap.org/data/2.5/weather'
-	let appid = process.env.VUE_APP_WEATHER_KEY
+	let appid = import.meta.env.VITE_WEATHER_KEY
 	// console.log('stored values', store.state.position)
 	let { latitude, longitude } = store.state.position
 	fetch(`${baseUrl}?lat=${latitude}&lon=${longitude}&appid=${appid}`)

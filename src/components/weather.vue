@@ -1,103 +1,82 @@
-<script>
+<script setup>
 import { computed, watch, ref } from 'vue'
 import { useStore } from 'vuex'
-import text from './text.module.css'
-import button from './button.module.css'
-import VAlert from '../assets/icons/alert.vue'
+import text from '../assets/styles/text.module.css'
+import button from '../assets/styles/button.module.css'
+import Alert from '../assets/icons/alert.vue'
 
 import { setCorrectingInterval, fetchWeather } from '@/utils/helpers'
 
-export default {
-	components: {
-		VAlert,
-	},
-	setup() {
-		let store = useStore()
-		let storeInitialized = computed(() => store.state.init)
-		let positionData = computed(() => store.state.position.hasData)
-		let requestPosition = computed(() => !store.state.position.hasData)
-		let fetchError = ref(null)
-		let storedWeather = computed(() => store.state.weather)
-		let weatherIconClass = computed(() => store.getters.weatherIconClass)
-		let formattedTemp = computed(() => store.getters.formattedTemp)
-		let weatherConditions = computed(() => store.getters.weatherConditions)
-		let fetchingPosition = computed(() => store.state.position.fetching)
-		let positionDeclined = computed(() => store.state.position.declined)
+// create a function, get the value, check if it exists, return value or fallback
 
-		// fetches new weather if needed & waits for new location if none is stored
-		function refreshWeather() {
-			let invalidated =
-				!store.state.weather.timestamp ||
-				Date.now() - store.state.weather.timestamp >= 30 * 60 * 1000
-			if (!invalidated) {
-				return
-				// console.log(
-				//     'weather is recent. using stored weather data.',
-				//     'age of timestamp:',
-				//     (
-				//         (Date.now() - store.state.weather.timestamp) /
-				//         1000
-				//     ).toFixed(),
-				//     'seconds'
-				// )
-			} else if (!store.state.position.hasData) {
-				return
-				// console.log(
-				//     'awaiting user input to fetch location data...'
-				// )
-			} else {
-				fetchWeather()
-				return
-				// console.log(
-				//     'using last known position to fetch weather...'
-				// )
-			}
-		}
+let store = useStore()
+let storeInitialized = computed(() => store.state.init)
+let positionData = computed(() => store.state.position.hasData)
+let requestPosition = computed(() => !store.state.position.hasData)
+let fetchError = ref(null)
+let storedWeather = computed(() => store.state.weather)
+let weatherIconClass = computed(() => store.getters.weatherIconClass)
+let formattedTemp = computed(() => store.getters.formattedTemp)
+let weatherConditions = computed(() => store.getters.weatherConditions)
+let fetchingPosition = computed(() => store.state.position.fetching)
+let positionDeclined = computed(() => store.state.position.declined)
 
-		function startRefreshLoop() {
-			refreshWeather()
-			setCorrectingInterval(() => {
-				refreshWeather()
-			}, 5 * 60 * 1000)
-		}
-		watch(storeInitialized, () => {
-			startRefreshLoop()
-		})
-		watch(positionData, () => {
-			refreshWeather()
-		})
+// fetches new weather if needed & waits for new location if none is stored
+function refreshWeather() {
+	let invalidated =
+		!store.state.weather.timestamp ||
+		Date.now() - store.state.weather.timestamp >= 30 * 60 * 1000
+	if (!invalidated) {
+		return
+		// console.log(
+		//     'weather is recent. using stored weather data.',
+		//     'age of timestamp:',
+		//     (
+		//         (Date.now() - store.state.weather.timestamp) /
+		//         1000
+		//     ).toFixed(),
+		//     'seconds'
+		// )
+	} else if (!store.state.position.hasData) {
+		return
+		// console.log(
+		//     'awaiting user input to fetch location data...'
+		// )
+	} else {
+		fetchWeather()
+		return
+		// console.log(
+		//     'using last known position to fetch weather...'
+		// )
+	}
+}
 
-		function handleFetch() {
-			fetchError = store.dispatch('fetchPosition')
-		}
-		function handleDecline() {
-			store.commit('update', {
-				key: 'position',
-				value: { ...store.state.position, declined: true },
-			})
-		}
+function startRefreshLoop() {
+	refreshWeather()
+	setCorrectingInterval(() => {
+		refreshWeather()
+	}, 5 * 60 * 1000)
+}
+watch(storeInitialized, () => {
+	startRefreshLoop()
+})
+watch(positionData, () => {
+	refreshWeather()
+})
 
-		return {
-			storedWeather,
-			weatherIconClass,
-			formattedTemp,
-			weatherConditions,
-			text,
-			button,
-			store,
-			requestPosition,
-			handleFetch,
-			handleDecline,
-			fetchError,
-			fetchingPosition,
-			storeInitialized,
-			positionDeclined,
-		}
-	},
+function handleFetch() {
+	fetchError = store.dispatch('fetchPosition')
+}
+function handleDecline() {
+	store.commit('update', {
+		key: 'position',
+		value: { ...store.state.position, declined: true },
+	})
 }
 </script>
 
 <template>
+	<!--fix: improve storedWeather.hasData to make sure formattedTemp etc exist -->
 	<div v-if="storedWeather.hasData" class="wrapper">
 		<div class="weather-items">
 			<p class="temp" :class="text.subtitle">{{ formattedTemp }} degrees</p>
@@ -125,7 +104,7 @@ export default {
 		>
 			<div class="row">
 				<div class="alert-container" style="margin-right: var(--space-small)">
-					<v-alert style="width: 24px; height: 24px; color: var(--theme-fg)" />
+					<Alert style="width: 24px; height: 24px; color: var(--theme-fg)" />
 				</div>
 
 				<p :class="text.label">
