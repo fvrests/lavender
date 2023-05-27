@@ -1,18 +1,19 @@
-<script setup>
-const props = defineProps({
-	url: { type: String, required: true },
-	underline: {
-		type: Boolean,
-		required: false,
-		default: false,
-	},
-})
+<script setup lang="ts">
+const props = withDefaults(
+	defineProps<{ url: string; underline?: boolean }>(),
+	{
+		underline: false,
+	}
+)
+const { url, underline } = props
 </script>
 
 <template>
-	<a :href="url" target="_blank"
-		><div class="row">
-			<div class="text" :class="{ underline: underline }"><slot /></div>
+	<a :href="url" target="_blank">
+		<div class="row">
+			<div class="text" :class="{ underline: underline }">
+				<slot />
+			</div>
 			<div>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -33,8 +34,9 @@ const props = defineProps({
 					<polyline points="15 3 21 3 21 9"></polyline>
 					<line x1="10" y1="14" x2="21" y2="3"></line>
 				</svg>
-			</div></div
-	></a>
+			</div>
+		</div>
+	</a>
 </template>
 
 <style scoped>
@@ -46,9 +48,11 @@ const props = defineProps({
 	display: block;
 	text-align: center;
 }
+
 .text.underline {
 	font-weight: bold;
 }
+
 .text.underline::after {
 	content: '';
 	position: absolute;
@@ -59,16 +63,17 @@ const props = defineProps({
 	background-color: var(--theme-bg);
 	transition: ease all 20ms;
 }
+
 .text.underline:hover::after,
 .text.underline:focus::after {
 	content: '';
 	position: absolute;
-	height: 4px;
+	height: 3px;
 	width: calc(100% - 8px);
 	left: 4px;
 	bottom: 10%;
 	background-color: var(--theme-bg);
-	transition: ease all 20ms;
+	transition: ease all 40ms;
 	visibility: visible;
 }
 </style>

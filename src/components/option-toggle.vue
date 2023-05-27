@@ -1,27 +1,22 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
-import { useStore } from 'vuex'
 import text from '../assets/styles/text.module.css'
+import { useOptionsStore } from '../store/options'
+const optionsStore = useOptionsStore()
 
-const props = defineProps({
-	label: { type: String, required: true },
-	option: { type: String, required: true },
-	sublabel: { type: String, required: false, default: '' },
-})
+const props = withDefaults(
+	defineProps<{ label: string; option: string; sublabel: string }>(),
+	{ sublabel: '' }
+)
 
-let store = useStore()
-let selected = computed(() => store.state[props.option])
-
-function toggle() {
-	store.commit('toggleProperty', props.option)
-}
+let selected = computed(() => optionsStore[props.option])
 </script>
 
 <template>
-	<button class="item-wrapper" @click="toggle">
+	<button class="item-wrapper" @click="optionsStore.toggleOption(props.option)">
 		<div class="row">
-			<div :class="text.label">{{ label }}</div>
-			<div :class="text.sublabel">{{ sublabel }}</div>
+			<div :class="text.label">{{ props.label }}</div>
+			<div :class="text.sublabel">{{ props.sublabel }}</div>
 		</div>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"

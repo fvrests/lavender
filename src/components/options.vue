@@ -1,19 +1,16 @@
-<script setup>
+<script setup lang="ts">
 import Icon from '../assets/icons/icon.vue'
 import OptionToggle from './option-toggle.vue'
 import RadioGroup from './radio-group.vue'
 import ExternalLink from './external-link.vue'
 import ThemeSelect from './theme-select.vue'
-import Clockface from './clockface.vue'
+// import Clockface from './clockface.vue'
 import button from '../assets/styles/button.module.css'
 import text from '../assets/styles/text.module.css'
-import { computed, ref } from 'vue'
-import { useStore } from 'vuex'
+import { ref } from 'vue'
+import { useOptionsStore } from '../store/options'
 
-let store = useStore()
-let storedWeather = computed(() => store.state.weather)
-let storedTheme = computed(() => store.state.themeColor)
-let fetchingPosition = computed(() => store.state.position.fetching)
+const optionsStore = useOptionsStore()
 let isOptionsOpen = ref(false)
 let refreshDisabled = ref(false)
 
@@ -24,7 +21,8 @@ function toggleOptionsMenu() {
 }
 function handleFetch() {
 	refreshDisabled.value = true
-	store.dispatch('fetchPosition')
+	optionsStore.fetchPosition()
+	optionsStore.refreshWeather()
 	setTimeout(function () {
 		refreshDisabled.value = false
 	}, 15 * 1000)
@@ -48,36 +46,33 @@ function handleFetch() {
 				<div class="options-menu--inner">
 					<div :class="text.title">Options</div>
 
-					<!-- note: test  -->
-					<Clockface layout="default" hour="12" minute="12" />
-
-					<!-- todo: separate options by theme collection: lavender, nightshade? classic, dark?-->
 					<div :class="text.subtitle">theme</div>
-					<div class="row">
-						<div :class="text.label">selected:</div>
-						<div :class="text.sublabel">{{ storedTheme }}</div>
-					</div>
 
 					<div style="padding: 6px 0px">
+						<div :class="text.label">Classic</div>
 						<ul class="theme-list">
 							<li v-for="theme in themes">
 								<ThemeSelect :theme="theme" :colors="[theme]" />
 							</li>
 						</ul>
+						<div :class="text.label">Nightshade</div>
 						<ul class="theme-list">
 							<li v-for="theme in themes">
 								<ThemeSelect
 									:theme="theme + '-dark'"
 									:colors="[theme + '-dark']"
+									dark
 								/>
 							</li>
 						</ul>
+						<div :class="text.label">Responsive (follows system)</div>
 						<ul class="theme-list">
 							<li v-for="theme in themes">
 								<ThemeSelect
 									:theme="theme + '-system'"
 									split
 									:colors="[theme, `${theme}-dark`]"
+									dark
 								/>
 							</li>
 						</ul>
@@ -136,10 +131,13 @@ function handleFetch() {
 
 					<div :class="text.subtitle">location</div>
 
-					<div v-if="storedWeather.hasData" class="row separated">
-						<div v-if="fetchingPosition == false" :class="text.label">
-							{{ storedWeather.name }},
-							{{ storedWeather.sys.country }}
+					<div v-if="optionsStore.weather.hasData" class="row separated">
+						<div
+							v-if="optionsStore.position.fetching == false"
+							:class="text.label"
+						>
+							{{ optionsStore.weather.name }},
+							{{ optionsStore.weather.sys.country }}
 						</div>
 
 						<div v-else :class="text.label">Fetching...</div>
@@ -156,7 +154,10 @@ function handleFetch() {
 					</div>
 					<div v-else>
 						<div class="row separated">
-							<div v-if="fetchingPosition == false" :class="text.label">
+							<div
+								v-if="optionsStore.position.fetching == false"
+								:class="text.label"
+							>
 								location disabled.
 							</div>
 							<div v-else :class="text.label">fetching...</div>
@@ -309,6 +310,5 @@ function handleFetch() {
 .theme-list {
 	display: grid;
 	grid-template-columns: repeat(6, 1fr);
-	gap: 12px;
 }
 </style>

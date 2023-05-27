@@ -1,11 +1,6 @@
-import store from '../store'
-
 // correcting interval - corrects compounding variation in time between ticks that would occur using setInterval
 export const setCorrectingInterval = (func, delay) => {
 	var instance = {}
-
-	// if (init) func()
-
 	function tick(func, delay) {
 		if (!instance.started) {
 			instance.func = func
@@ -29,16 +24,25 @@ export const setCorrectingInterval = (func, delay) => {
 }
 
 // fetches current weather info from OpenWeatherMap API - max 60 calls/minute or 1,000,000 calls/month
-export function fetchWeather() {
+export function fetchWeather(latitude: string, longitude: string) {
+	console.log('fetching weather')
 	let baseUrl = 'https://api.openweathermap.org/data/2.5/weather'
 	let appid = import.meta.env.VITE_WEATHER_KEY
-	// console.log('stored values', store.state.position)
-	let { latitude, longitude } = store.state.position
 	fetch(`${baseUrl}?lat=${latitude}&lon=${longitude}&appid=${appid}`)
 		.then((res) => res.json())
 		.then((json) => {
 			let weather = json
-			store.commit('setWeather', weather)
-			// console.log('weather set!', weather)
+			return weather
 		})
 }
+
+// function fetchWeather(latitude, longitude) {
+// 	// do stuff with lat and long
+// 	const data = {
+// 		temp: 10000degrees ouch.
+// 	}
+// 	return data
+// }
+//
+// const weather = fetchWeather(3141, 12342)
+// store.weather = weather
