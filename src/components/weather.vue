@@ -1,104 +1,52 @@
-<script setup>
-import { computed, watch, ref } from 'vue'
-import { useStore } from 'vuex'
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useOptionsStore } from '../store/options'
 import text from '../assets/styles/text.module.css'
 import button from '../assets/styles/button.module.css'
 import Alert from '../assets/icons/alert.vue'
 
-import { setCorrectingInterval, fetchWeather } from '@/utils/helpers'
-
-// create a function, get the value, check if it exists, return value or fallback
-
-let store = useStore()
-let storeInitialized = computed(() => store.state.init)
-let positionData = computed(() => store.state.position.hasData)
-let requestPosition = computed(() => !store.state.position.hasData)
-let fetchError = ref(null)
-let storedWeather = computed(() => store.state.weather)
-let weatherIconClass = computed(() => store.getters.weatherIconClass)
-let formattedTemp = computed(() => store.getters.formattedTemp)
-let weatherConditions = computed(() => store.getters.weatherConditions)
-let fetchingPosition = computed(() => store.state.position.fetching)
-let positionDeclined = computed(() => store.state.position.declined)
-
-// fetches new weather if needed & waits for new location if none is stored
-function refreshWeather() {
-	let invalidated =
-		!store.state.weather.timestamp ||
-		Date.now() - store.state.weather.timestamp >= 30 * 60 * 1000
-	if (!invalidated) {
-		return
-		// console.log(
-		//     'weather is recent. using stored weather data.',
-		//     'age of timestamp:',
-		//     (
-		//         (Date.now() - store.state.weather.timestamp) /
-		//         1000
-		//     ).toFixed(),
-		//     'seconds'
-		// )
-	} else if (!store.state.position.hasData) {
-		return
-		// console.log(
-		//     'awaiting user input to fetch location data...'
-		// )
-	} else {
-		fetchWeather()
-		return
-		// console.log(
-		//     'using last known position to fetch weather...'
-		// )
-	}
-}
-
-function startRefreshLoop() {
-	refreshWeather()
-	setCorrectingInterval(() => {
-		refreshWeather()
-	}, 5 * 60 * 1000)
-}
-watch(storeInitialized, () => {
-	startRefreshLoop()
-})
-watch(positionData, () => {
-	refreshWeather()
-})
+const optionsStore = useOptionsStore()
+let fetchError = ref('')
 
 function handleFetch() {
-	fetchError = store.dispatch('fetchPosition')
+	console.log('handleFetch')
+	fetchError.value = optionsStore.refreshWeather()
 }
 function handleDecline() {
-	store.commit('update', {
-		key: 'position',
-		value: { ...store.state.position, declined: true },
+	optionsStore.$patch({
+		position: { ...optionsStore.position, declined: true },
 	})
 }
 </script>
 
+<!--todo: EITHER check for focused tab before requesting (prevent inactive tabs / windows from rrefreshing) or add external API to keep track of requests per minute (firebase etc)-->
 <template>
-	<!--fix: improve storedWeather.hasData to make sure formattedTemp etc exist -->
-	<div v-if="storedWeather.hasData" class="wrapper">
+	<div v-if="optionsStore.weather.hasData" class="wrapper">
 		<div class="weather-items">
-			<p class="temp" :class="text.subtitle">{{ formattedTemp }} degrees</p>
+			<p class="temp" :class="text.subtitle">
+				{{ optionsStore.formattedTemp }} degrees
+			</p>
 			<div class="wi-bg">
 				<i
 					:class="
-						storedWeather.hasData ? weatherIconClass : 'wi wi-cloud-refresh'
+						optionsStore.weather.hasData
+							? optionsStore.weatherIconClass
+							: 'wi wi-cloud-refresh'
 					"
 				/>
 			</div>
 			<p class="conditions" :class="text.subtitle">
-				{{ weatherConditions }}
+				{{ optionsStore.weatherConditions }}
 			</p>
 		</div>
 	</div>
 	<transition name="prompt">
 		<div
 			v-if="
-				storeInitialized &&
-				requestPosition &&
-				!fetchingPosition &&
-				!positionDeclined
+				optionsStore.init &&
+				!optionsStore.position.hasData &&
+				!optionsStore.position.fetching &&
+				!optionsStore.position.declined
 			"
 			class="location-prompt"
 		>
@@ -139,6 +87,7 @@ function handleDecline() {
 	grid-area: bottom;
 	text-align: center;
 }
+
 .wi {
 	font-size: var(--text-large);
 	color: var(--theme-fg);
@@ -148,25 +97,30 @@ function handleDecline() {
 	border-radius: var(--rounded-full);
 	line-height: 64px;
 }
+
 .weather-items {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	grid-gap: 8px;
 	align-items: center;
 }
+
 .temp {
 	grid-column: 1;
 	justify-self: right;
 }
+
 .wi-bg {
 	display: flex;
 	grid-column: 2;
 	justify-self: center;
 }
+
 .conditions {
 	grid-column: 3;
 	justify-self: left;
 }
+
 .location-prompt {
 	position: fixed;
 	top: var(--page-padding);
@@ -179,20 +133,24 @@ function handleDecline() {
 	border: var(--border);
 	width: 320px;
 }
+
 .prompt-enter-active,
 .prompt-leave-active {
 	transition: ease-in-out all 200ms;
 }
+
 .prompt-enter-from,
 .prompt-leave-to {
 	opacity: 0;
 	top: -20%;
 }
+
 .prompt-enter-to,
 .prompt-leave-from {
 	opacity: 1;
 	top: var(--page-padding);
 }
+
 .alert-container {
 	display: flex;
 	align-items: center;

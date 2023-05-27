@@ -1,17 +1,21 @@
-<script setup>
-const props = defineProps({
-	layout: { type: String, required: true },
-	hour: { type: String, required: true },
-	minute: { type: String, required: true },
-	date: { type: Date, required: true },
-})
+<script setup lang="ts">
+const props = defineProps<{
+	layout: string
+	hour: string
+	minute: string
+	time: Date
+}>()
 </script>
 
 <template>
-	<time v-if="props.layout == 'default'" :datetime="props.date">
+	<time v-if="props.layout == 'default'" :datetime="new Date(props.time)">
 		<div>{{ props.hour }}:{{ props.minute }}</div>
 	</time>
-	<time v-if="props.layout == 'stacked'" :datetime="props.date" class="outline">
+	<time
+		v-if="props.layout == 'stacked'"
+		:datetime="new Date(props.time)"
+		class="outline"
+	>
 		<div>
 			<span>{{ props.hour[0] }}</span>
 			<span>{{ props.hour[1] }}</span>
@@ -33,8 +37,13 @@ time {
 
 .outline {
 	display: flex;
+	flex-direction: column;
 	border: 3px solid var(--theme-fg);
 	padding: var(--space-small);
+}
+
+.outline div {
+	display: flex;
 }
 
 .outline span {

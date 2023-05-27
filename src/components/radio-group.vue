@@ -1,26 +1,16 @@
-<script setup>
-import { ref, watch, computed } from 'vue'
-import { useStore } from 'vuex'
+<script setup lang="ts">
+import { ref, watch } from 'vue'
+import { useOptionsStore } from '../store/options'
 import text from '../assets/styles/text.module.css'
-const props = defineProps({
-	property: { type: String, required: true },
-	options: { type: Array, required: true },
-})
-let selected = ref('')
-let store = useStore()
-let storedValue = ref('')
-let storeInitialized = computed(() => store.state.init)
+const props = defineProps<{ property: string; options: string[] }>()
 
-watch(storeInitialized, () => {
-	storedValue.value = store.state[props.property]
-	selected.value = store.state[props.property]
-})
+let selected = ref('')
+let optionsStore = useOptionsStore()
+
+selected.value = optionsStore[props.property]
 
 watch(selected, () => {
-	store.commit('update', {
-		key: props.property,
-		value: selected.value,
-	})
+	optionsStore[props.property] = selected.value
 })
 </script>
 
@@ -33,7 +23,7 @@ watch(selected, () => {
 				:name="property"
 				type="radio"
 				:value="n"
-				:checked="storedValue == n"
+				:checked="selected == n"
 			/>
 			<div class="column" role="“radiogroup”">
 				<label
@@ -41,7 +31,7 @@ watch(selected, () => {
 					:class="n"
 					tabindex="0"
 					role="“radio”"
-					aria-checked="selected == n ? 'true' : 'false'"
+					:aria-checked="selected == n ? 'true' : 'false'"
 					@keyup.enter="selected = n"
 					@keyup.space="selected = n"
 				>
