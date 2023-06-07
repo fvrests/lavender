@@ -2,6 +2,7 @@
 
 :root {
 	--border: 2px solid var(--color-gray);
+	--space-xsmall: 8px;
 	--space-small: 16px;
 	--space-medium: 32px;
 	--space-large: 64px;
@@ -155,6 +156,9 @@ body {
 	min-height: 100vh;
 }
 
+.space-xsmall {
+	height: var(--space-xsmall);
+}
 .space-small {
 	height: var(--space-small);
 }

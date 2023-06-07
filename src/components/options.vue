@@ -49,13 +49,16 @@ function handleFetch() {
 					<div :class="text.subtitle">theme</div>
 
 					<div style="padding: 6px 0px">
-						<div :class="text.label">Classic</div>
+						<div :class="text.label">Lavender collection</div>
+						<div class="space-xsmall" />
 						<ul class="theme-list">
 							<li v-for="theme in themes">
 								<ThemeSelect :theme="theme" :colors="[theme]" />
 							</li>
 						</ul>
-						<div :class="text.label">Nightshade</div>
+						<div class="space-xsmall" />
+						<div :class="text.label">Nightshade collection</div>
+						<div class="space-xsmall" />
 						<ul class="theme-list">
 							<li v-for="theme in themes">
 								<ThemeSelect
@@ -65,7 +68,9 @@ function handleFetch() {
 								/>
 							</li>
 						</ul>
-						<div :class="text.label">Responsive (follows system)</div>
+						<div class="space-xsmall" />
+						<div :class="text.label">Responsive (follow system theme)</div>
+						<div class="space-xsmall" />
 						<ul class="theme-list">
 							<li v-for="theme in themes">
 								<ThemeSelect
