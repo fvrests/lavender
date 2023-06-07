@@ -16,38 +16,66 @@ const props = withDefaults(
 
 <template>
 	<button
-		class="color-toggle"
-		:class="optionsStore.themeColor === props.theme ? 'selected' : null"
+		v-bind:class="[
+			optionsStore.themeColor === props.theme ? 'selected' : '',
+			dark ? 'dark' : '',
+			split ? 'split' : '',
+		]"
 		:style="{
 			background: props.split
-				? `linear-gradient(to right, var(--color-${props.colors[0]}) 50%, var(--color-${props.colors[1]}) 50%)`
+				? `linear-gradient(to right, var(--color-${props.colors[0]}) 50%, transparent 50%), repeating-linear-gradient(to right, var(--color-${props.colors[0]}), var(--color-${props.colors[0]}) 1px, var(--color-${props.colors[1]}) 1px, var(--color-${props.colors[1]}) 2px)`
 				: `var(--color-${props.colors[0]})`,
 		}"
 		:aria-label="props.theme"
 		@click="optionsStore.toggleTheme(props.theme)"
 		@mouseenter="optionsStore.previewTheme(props.theme)"
 		@mouseleave="optionsStore.toggleTheme(optionsStore.themeColor)"
-	></button>
+	>
+		<svg
+			v-if="optionsStore.themeColor === props.theme"
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			stroke-width="4"
+			stroke="currentColor"
+			fill="none"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			class="check"
+		>
+			<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+			<path d="M5 12l5 5l10 -10"></path>
+		</svg>
+	</button>
 </template>
 <style scoped>
 button {
-	height: 26px;
-	width: 26px;
+	height: 30px;
+	width: 30px;
 	border-radius: var(--rounded-full);
 	cursor: pointer;
 	border: var(--border);
 	position: relative;
 }
-
-/* todo: add checkmark or other active style*/
-button.selected::after {
-	content: '';
-	position: absolute;
-	top: -6px;
-	right: -6px;
-	height: 34px;
-	width: 34px;
-	border: var(--border);
-	border-radius: var(--rounded-full);
+button:hover,
+button:focus {
+	outline: none;
+	box-shadow: 0px 0px 0px 2px var(--ui-bg), 0px 0px 0px 4px var(--ui-fg);
+	opacity: 1;
+}
+button.selected:hover,
+button.selected:focus {
+	box-shadow: 0px 0px 0px 2px var(--ui-bg), 0px 0px 0px 4px var(--ui-fg);
+}
+.check {
+	color: var(--ui-fg);
+	scale: 60%;
+}
+.dark .check {
+	color: var(--ui-bg);
+}
+.split .check {
+	color: var(--ui-fg);
 }
 </style>
