@@ -17,7 +17,7 @@ const props = withDefaults(
 <template>
 	<button
 		v-bind:class="[
-			optionsStore.themeColor === props.theme ? 'selected' : '',
+			optionsStore.theme.color === props.theme ? 'selected' : '',
 			dark ? 'dark' : '',
 			split ? 'split' : '',
 		]"
@@ -29,10 +29,10 @@ const props = withDefaults(
 		:aria-label="props.theme"
 		@click="optionsStore.toggleTheme(props.theme)"
 		@mouseenter="optionsStore.previewTheme(props.theme)"
-		@mouseleave="optionsStore.toggleTheme(optionsStore.themeColor)"
+		@mouseleave="optionsStore.toggleTheme(optionsStore.theme.color)"
 	>
 		<svg
-			v-if="optionsStore.themeColor === props.theme"
+			v-if="optionsStore.theme.color === props.theme"
 			xmlns="http://www.w3.org/2000/svg"
 			width="24"
 			height="24"
@@ -58,15 +58,9 @@ button {
 	border: var(--border);
 	position: relative;
 }
-button:hover,
 button:focus {
 	outline: none;
-	box-shadow: 0px 0px 0px 2px var(--ui-bg), 0px 0px 0px 4px var(--ui-fg);
-	opacity: 1;
-}
-button.selected:hover,
-button.selected:focus {
-	box-shadow: 0px 0px 0px 2px var(--ui-bg), 0px 0px 0px 4px var(--ui-fg);
+	box-shadow: var(--ui-focus-box);
 }
 .check {
 	color: var(--ui-fg);

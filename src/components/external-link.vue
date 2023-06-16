@@ -68,12 +68,12 @@ const { url, underline } = props
 .text.underline:focus::after {
 	content: '';
 	position: absolute;
-	height: 3px;
+	height: 4px;
 	width: calc(100% - 8px);
 	left: 4px;
 	bottom: 10%;
 	background-color: var(--theme-bg);
-	transition: ease all 40ms;
+	transition: ease all 100ms;
 	visibility: visible;
 }
 </style>

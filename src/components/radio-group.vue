@@ -73,7 +73,10 @@ label {
 	justify-content: center;
 	cursor: pointer;
 }
-
+label:focus {
+	outline: none;
+	box-shadow: var(--ui-focus-box);
+}
 .dot {
 	position: absolute;
 	top: 8px;
@@ -99,8 +102,8 @@ label {
 	padding: 6px 0px;
 }
 
-input:focus + label,
-input:active + label {
-	border: 2px solid var(--theme-bg);
-}
+/* input:focus + label, */
+/* input:active + label { */
+/* 	border: 2px solid var(--theme-bg); */
+/* } */
 </style>

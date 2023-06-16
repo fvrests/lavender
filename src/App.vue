@@ -7,26 +7,28 @@ import { onBeforeUnmount, computed } from 'vue'
 import './assets/styles/normalize.css'
 import './assets/styles/weather-icons.min.css'
 import './assets/styles/global.css'
+import { pinia } from './main.js'
 
-store.commit('initializeStore')
-let storeInitialized = computed(() => store.state.init)
+// fix: remove if not needed, ensure functionality -- maybe contain in main.js
+import { useOptionsStore } from './store/options'
+let optionsStore = useOptionsStore()
+optionsStore.initializeStore()
 
-store.subscribe((_, state) => {
-	if (state.init)
-		chrome.storage.sync.set({
-			...state,
-			lastSynced: Date.now(),
-		})
-})
-
-onBeforeUnmount(() => {
-	store.unsubscribe()
-})
+// fix: doesn't set into chrome storage?
+// optionsStore.$subscribe((_, state) => {
+// 	if (state.init)
+// 		chrome.storage.sync.set({
+// 			...state,
+// 			lastSynced: Date.now(),
+// 		})
+// fix: ? - updating state every second as time changes
+// console.log('sync set', state)
+// })
 </script>
 
 <template>
 	<div class="app-wrapper">
-		<Clock v-if="storeInitialized" />
+		<Clock v-if="optionsStore.init" />
 		<Weather />
 		<Options />
 	</div>

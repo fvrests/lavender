@@ -21,14 +21,13 @@ let selected = computed(() => optionsStore[props.option])
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			width="24"
-			height="24"
-			viewBox="0 0 24 24"
+			height="16"
+			viewBox="4 4 16 16"
 			fill="none"
 			stroke="currentColor"
 			stroke-width="2"
 			stroke-linecap="round"
 			stroke-linejoin="round"
-			class="toggle"
 			:class="selected ? 'selected' : ''"
 		>
 			<rect x="1" y="5" width="22" height="14" rx="7" ry="7" />
@@ -46,24 +45,32 @@ let selected = computed(() => optionsStore[props.option])
 	justify-content: space-between;
 	width: 100%;
 	margin: 0 auto;
+	border-radius: var(--rounded);
 }
-svg.toggle {
+svg {
 	color: var(--ui-fg);
+	border-radius: var(--rounded);
 }
-svg.toggle > rect,
-svg.toggle > circle {
+.item-wrapper:focus {
+	outline: none;
+}
+.item-wrapper:focus svg {
+	box-shadow: var(--ui-focus-box);
+}
+svg > rect,
+svg > circle {
 	transition: all 200ms ease-in-out;
 }
-svg.toggle.selected > circle {
+svg.selected > circle {
 	fill: var(--ui-bg);
 }
-svg.toggle > circle {
+svg > circle {
 	fill: var(--theme-bg);
 }
-svg.toggle > rect {
+svg > rect {
 	fill: var(--ui-bg);
 }
-svg.toggle.selected > rect {
+svg.selected > rect {
 	fill: var(--theme-bg);
 }
 </style>

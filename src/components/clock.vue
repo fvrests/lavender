@@ -13,16 +13,16 @@ onMounted(() => {
 <template>
 	<div class="wrapper">
 		<Clockface
-			:layout="optionsStore.timeLayout"
+			:layout="optionsStore.time.layout"
 			:hour="optionsStore.formattedDate.hour"
 			:minute="optionsStore.formattedDate.minute"
-			:time="optionsStore.date"
+			:time="optionsStore.data.date"
 		/>
 		<div class="space-small" />
-		<div v-if="!optionsStore.use24HourTime" class="descriptor">
+		<div class="context-label" v-if="!optionsStore.time.use24Hour">
 			{{ optionsStore.formattedDate.descriptor }}
 		</div>
-		<div v-else class="italic">today is</div>
+		<div v-else class="context-label">today is</div>
 		<div class="date">{{ optionsStore.formattedDate.today }}</div>
 	</div>
 </template>
@@ -33,7 +33,7 @@ onMounted(() => {
 	text-align: center;
 }
 
-.descriptor {
+.context-label {
 	text-transform: uppercase;
 	font-size: 14px;
 	font-style: italic;

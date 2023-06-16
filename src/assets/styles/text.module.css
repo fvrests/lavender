@@ -5,6 +5,8 @@
 }
 .subtitle {
 	text-transform: uppercase;
+	font-weight: bold;
+	letter-spacing: 0.01rem;
 	font-size: 12px;
 	padding: 8px 0px;
 }

@@ -1,7 +1,7 @@
 window.themeColor = 'lavender'
 try {
-	const themeColor = window.localStorage.getItem('theme-color')
-	if (themeColor) {
+	const storedColor = window.localStorage.getItem('options/theme/color')
+	if (storedColor) {
 		document.querySelector('html').className = themeColor
 	} else {
 		document.querySelector('html').className = 'lavender'
