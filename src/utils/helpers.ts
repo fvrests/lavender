@@ -24,16 +24,14 @@ export const setCorrectingInterval = (func, delay) => {
 }
 
 // fetches current weather info from OpenWeatherMap API - max 60 calls/minute or 1,000,000 calls/month
-export function fetchWeather(latitude: string, longitude: string) {
+export async function fetchWeather(latitude: string, longitude: string) {
 	console.log('fetching weather')
 	let baseUrl = 'https://api.openweathermap.org/data/2.5/weather'
-	let appid = import.meta.env.VITE_WEATHER_KEY
-	fetch(`${baseUrl}?lat=${latitude}&lon=${longitude}&appid=${appid}`)
-		.then((res) => res.json())
-		.then((json) => {
-			let weather = json
-			return weather
-		})
+	let appid = import.meta.env.VITE_WEATHER_KEY_DEV
+	const res = await fetch(
+		`${baseUrl}?lat=${latitude}&lon=${longitude}&appid=${appid}`
+	)
+	return await res.json()
 }
 
 // function fetchWeather(latitude, longitude) {

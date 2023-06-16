@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 import conditions from '../utils/weather-conditions'
-import errorCodes from '../utils/error-codes.json'
+// import errorCodes from '../utils/error-codes.json'
 
 const store = createStore({
 	state: {
@@ -125,8 +125,8 @@ const store = createStore({
 						},
 						(err) => {
 							console.log(
-								errorCodes.position[err.code] ||
-									'😱oh no! an unknown error has occurred.'
+								// errorCodes.position[err.code] ||
+								'😱oh no! an unknown error has occurred.'
 							)
 							reject(err)
 						},

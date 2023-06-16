@@ -37,6 +37,8 @@
 	--theme-bg: var(--color-lavender);
 	--ui-fg: var(--color-gray);
 	--ui-bg: white;
+
+	--ui-focus-box: 0px 0px 0px 2px var(--ui-bg), 0px 0px 0px 4px var(--ui-fg);
 }
 
 /* classic themes: with [name] class */

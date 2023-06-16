@@ -87,7 +87,7 @@ function handleFetch() {
 
 					<div :class="text.subtitle">time</div>
 					<div :class="text.label">layout:</div>
-					<RadioGroup property="timeLayout" :options="['default', 'stacked']">
+					<RadioGroup property="time.layout" :options="['default', 'stacked']">
 						<template #default>
 							<div class="time">
 								<div>9:41</div>
@@ -111,17 +111,17 @@ function handleFetch() {
 					</RadioGroup>
 
 					<OptionToggle
-						option="useMilitaryTime"
-						label="24 hour format"
+						option="time.use24Hour"
+						label="24-hour format"
 						role="menuitem"
 					/>
 
 					<div class="divider" />
 
 					<div :class="text.subtitle">weather</div>
-					<OptionToggle option="useCelsius" label="celsius" />
+					<OptionToggle option="weather.useCelsius" label="celsius" />
 					<OptionToggle
-						option="useDescriptiveWeather"
+						option="weather.descriptive"
 						label="precise conditions"
 					/>
 
@@ -136,13 +136,13 @@ function handleFetch() {
 
 					<div :class="text.subtitle">location</div>
 
-					<div v-if="optionsStore.weather.hasData" class="row separated">
+					<div v-if="optionsStore.data.weather.hasData" class="row separated">
 						<div
-							v-if="optionsStore.position.fetching == false"
+							v-if="optionsStore.data.position.fetching == false"
 							:class="text.label"
 						>
-							{{ optionsStore.weather.name }},
-							{{ optionsStore.weather.sys.country }}
+							{{ optionsStore.data.weather.name }},
+							{{ optionsStore.data.weather.sys.country }}
 						</div>
 
 						<div v-else :class="text.label">Fetching...</div>
@@ -160,7 +160,7 @@ function handleFetch() {
 					<div v-else>
 						<div class="row separated">
 							<div
-								v-if="optionsStore.position.fetching == false"
+								v-if="optionsStore.data.position.fetching == false"
 								:class="text.label"
 							>
 								location disabled.
@@ -179,7 +179,7 @@ function handleFetch() {
 
 						<div :class="text.base">
 							Lavender will never access your location without your permission.
-							Please click 'enable' to enable location access.
+							Please click 'enable' to allow location access.
 						</div>
 					</div>
 
@@ -188,8 +188,8 @@ function handleFetch() {
 					<div class="row even">
 						<ExternalLink
 							url="https://github.com/fvrests/lavender/blob/main/privacy-policy.md"
-							>Privacy Policy</ExternalLink
-						>
+							>Privacy Policy
+						</ExternalLink>
 						<ExternalLink
 							url="https://github.com/fvrests/lavender/blob/main/terms-of-use.md"
 							>Terms of Use</ExternalLink

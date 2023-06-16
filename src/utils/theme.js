@@ -1,9 +1,9 @@
 export function toggleTheme(newTheme) {
 	if (!newTheme) {
-		newTheme = window.localStorage.getItem('theme-color') || 'lavender'
+		newTheme = window.localStorage.getItem('options/theme/color') || 'lavender'
 	}
 	document.querySelector('html').className = newTheme
-	window.localStorage.setItem('theme-color', newTheme)
+	window.localStorage.setItem('options/theme/color', newTheme)
 	// fix: is this needed?
 	window.theme = newTheme
 }
