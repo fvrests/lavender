@@ -111,6 +111,7 @@ function handleFetch() {
 					</RadioGroup>
 
 					<OptionToggle
+						:selected="optionsStore.time.use24Hour"
 						option="time.use24Hour"
 						label="24-hour format"
 						role="menuitem"
@@ -119,7 +120,11 @@ function handleFetch() {
 					<div class="divider" />
 
 					<div :class="text.subtitle">weather</div>
-					<OptionToggle option="weather.useCelsius" label="celsius" />
+					<OptionToggle
+						:selected="optionsStore.weather.useCelsius"
+						option="weather.useCelsius"
+						label="celsius"
+					/>
 					<OptionToggle
 						option="weather.descriptive"
 						label="precise conditions"
