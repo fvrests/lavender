@@ -41,6 +41,9 @@ export const useOptionsStore = defineStore('options', {
 		},
 	}),
 	getters: {
+		getState(state) {
+			return state
+		},
 		formattedDate(state) {
 			let hour = ''
 			if (state.time.use24Hour) {
@@ -72,7 +75,6 @@ export const useOptionsStore = defineStore('options', {
 		},
 		formattedTemp: (state) => {
 			if (state.data.weather.hasData) {
-				console.log('WEATHER', state.data.weather)
 				let celsiusTemp = (state.data.weather?.main.temp - 273.15).toFixed()
 				let fahrenheitTemp = (Number(celsiusTemp) * (9 / 5) + 32).toFixed()
 				return state.weather.useCelsius ? celsiusTemp : fahrenheitTemp
@@ -117,9 +119,6 @@ export const useOptionsStore = defineStore('options', {
 		getTime() {
 			setCorrectingInterval(() => (this.data.date = new Date()), 1000)
 		},
-		toggleOption(option) {
-			this[option] = !this[option]
-		},
 		async fetchPosition() {
 			this.$patch({
 				data: { position: { fetching: true } },
@@ -138,6 +137,7 @@ export const useOptionsStore = defineStore('options', {
 			getPosition.then((pos) => {
 				// todo: make position update conditional (only if promise resolved)
 				if (pos) {
+					console.log('pos found', pos)
 					this.$patch({
 						data: {
 							position: {
@@ -150,7 +150,13 @@ export const useOptionsStore = defineStore('options', {
 						},
 					})
 				}
-				console.log({ pos, fromState: this.data.position })
+				console.log({
+					pos,
+					fromState: [
+						this.data.position.latitude,
+						this.data.position.longitude,
+					],
+				})
 			})
 		},
 		async refreshWeather() {
@@ -163,16 +169,18 @@ export const useOptionsStore = defineStore('options', {
 				return
 			}
 			// fetch new weather using last known position
-			const weather = await fetchWeather(
-				this.data.position.latitude,
-				this.data.position.longitude
+			fetchWeather(
+				JSON.stringify(this.data.position.latitude),
+				JSON.stringify(this.data.position.longitude)
+			).then(
+				(weatherData) =>
+					(this.data.weather = {
+						...this.data.weather,
+						...weatherData,
+						hasData: true,
+						timestamp: Date.now(),
+					})
 			)
-			this.data.weather = {
-				...this.data.weather,
-				...weather,
-				hasData: true,
-				timestamp: Date.now(),
-			}
 			setCorrectingInterval(() => {
 				this.refreshWeather()
 			}, 5 * 60 * 1000)

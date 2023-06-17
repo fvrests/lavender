@@ -5,15 +5,28 @@ import { useOptionsStore } from '../store/options'
 const optionsStore = useOptionsStore()
 
 const props = withDefaults(
-	defineProps<{ label: string; option: string; sublabel: string }>(),
+	defineProps<{
+		label: string
+		option: string
+		sublabel: string
+		selected: boolean
+	}>(),
 	{ sublabel: '' }
 )
 
-let selected = computed(() => optionsStore[props.option])
+const optionNodes = props.option.split('.')
+const handleOption = (toggle = false) =>
+	optionNodes.reduce((prev, cur, index) => {
+		if (toggle && index === optionNodes.length - 1) {
+			prev[cur] = !prev[cur]
+		}
+		return prev ? prev[cur] : null
+	}, optionsStore)
+const selected = computed(() => handleOption())
 </script>
 
 <template>
-	<button class="item-wrapper" @click="optionsStore.toggleOption(props.option)">
+	<button class="item-wrapper" @click="() => handleOption(true)">
 		<div class="row">
 			<div :class="text.label">{{ props.label }}</div>
 			<div :class="text.sublabel">{{ props.sublabel }}</div>
