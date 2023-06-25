@@ -8,9 +8,9 @@ const props = withDefaults(
 		theme: string
 		colors: string[]
 		split?: boolean
-		dark: boolean
+		dark?: boolean
 	}>(),
-	{ split: false }
+	{ split: false, dark: false }
 )
 </script>
 

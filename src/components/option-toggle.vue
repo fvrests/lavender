@@ -8,8 +8,7 @@ const props = withDefaults(
 	defineProps<{
 		label: string
 		option: string
-		sublabel: string
-		selected: boolean
+		sublabel?: string
 	}>(),
 	{ sublabel: '' }
 )
