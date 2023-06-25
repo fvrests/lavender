@@ -2,25 +2,34 @@
 import { ref, watch } from 'vue'
 import { useOptionsStore } from '../store/options'
 import text from '../assets/styles/text.module.css'
-const props = defineProps<{ property: string; options: string[] }>()
+const props = defineProps<{ option: string; choices: string[] }>()
 
-let selected = ref('')
+// let selected = ref('')
 let optionsStore = useOptionsStore()
 
-selected.value = optionsStore[props.property]
+const optionNodes = props.option.split('.')
+const handleOption = (newValue = null) =>
+	optionNodes.reduce((prev, cur, index) => {
+		if (newValue && index === optionNodes.length - 1) {
+			prev[cur] = newValue
+		}
+		return prev ? prev[cur] : null
+	}, optionsStore)
+
+let selected = ref(handleOption())
 
 watch(selected, () => {
-	optionsStore[props.property] = selected.value
+	handleOption(selected.value)
 })
 </script>
 
 <template>
 	<div class="grid">
-		<div v-for="n in options" :key="n">
+		<div v-for="n in choices" :key="n">
 			<input
 				:id="n"
 				v-model="selected"
-				:name="property"
+				:name="option"
 				type="radio"
 				:value="n"
 				:checked="selected == n"
@@ -32,8 +41,8 @@ watch(selected, () => {
 					tabindex="0"
 					role="“radio”"
 					:aria-checked="selected == n ? 'true' : 'false'"
-					@keyup.enter="selected = n"
-					@keyup.space="selected = n"
+					@keyup.enter="handleOption(n)"
+					@keyup.space="handleOption(n)"
 				>
 					<div
 						class="dot"
@@ -77,6 +86,7 @@ label:focus {
 	outline: none;
 	box-shadow: var(--ui-focus-box);
 }
+
 .dot {
 	position: absolute;
 	top: 8px;
@@ -101,9 +111,4 @@ label:focus {
 	grid-gap: var(--space-small);
 	padding: 6px 0px;
 }
-
-/* input:focus + label, */
-/* input:active + label { */
-/* 	border: 2px solid var(--theme-bg); */
-/* } */
 </style>

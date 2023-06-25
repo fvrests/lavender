@@ -23,14 +23,12 @@ export const useOptionsStore = defineStore('options', {
 		data: {
 			date: new Date(),
 			weather: {
-				hasData: false,
-				timestamp: null,
+				timestamp: null as number | null,
 			},
 			position: {
-				hasData: true,
-				latitude: 0,
-				longitude: 0,
-				timestamp: 0,
+				latitude: null as number | null,
+				longitude: null as number | null,
+				timestamp: null as number | null,
 				fetching: false,
 				declined: false,
 			},
@@ -61,7 +59,7 @@ export const useOptionsStore = defineStore('options', {
 			}
 		},
 		weatherIconClass: (state) => {
-			if (state.data.weather.hasData) {
+			if (state.data.weather.timestamp) {
 				let day = true
 				day = !!(
 					Number(state.data.date) / 1000 > state.data.weather.sys.sunrise &&
@@ -74,7 +72,7 @@ export const useOptionsStore = defineStore('options', {
 			}
 		},
 		formattedTemp: (state) => {
-			if (state.data.weather.hasData) {
+			if (state.data.weather.timestamp) {
 				let celsiusTemp = (state.data.weather?.main.temp - 273.15).toFixed()
 				let fahrenheitTemp = (Number(celsiusTemp) * (9 / 5) + 32).toFixed()
 				return state.weather.useCelsius ? celsiusTemp : fahrenheitTemp
@@ -83,7 +81,7 @@ export const useOptionsStore = defineStore('options', {
 			}
 		},
 		weatherConditions: (state) => {
-			if (state.data.weather.hasData) {
+			if (state.data.weather.timestamp) {
 				let condition = state.weather.descriptive
 					? conditions[state.data.weather.weather[0].id][0]
 					: conditions[state.data.weather.weather[0].id][1]
@@ -134,8 +132,7 @@ export const useOptionsStore = defineStore('options', {
 					}
 				)
 			})
-			getPosition.then((pos) => {
-				// todo: make position update conditional (only if promise resolved)
+			return getPosition.then((pos) => {
 				if (pos) {
 					console.log('pos found', pos)
 					this.$patch({
@@ -143,7 +140,6 @@ export const useOptionsStore = defineStore('options', {
 							position: {
 								latitude: pos.coords.latitude,
 								longitude: pos.coords.longitude,
-								hasData: true,
 								timestamp: Date.now(),
 								fetching: false,
 							},
@@ -155,32 +151,34 @@ export const useOptionsStore = defineStore('options', {
 					fromState: [
 						this.data.position.latitude,
 						this.data.position.longitude,
+						this.data.position.fetching,
 					],
 				})
+				return pos
 			})
 		},
-		async refreshWeather() {
+		refreshWeather(lat: number, long: number) {
 			console.log('refreshing weather')
 			let invalidated =
 				!this.data.weather.timestamp ||
 				Date.now() - this.data.weather.timestamp >= 30 * 60 * 1000
 			// don't fetch if recent data exists or no location data
-			if (!invalidated || !this.data.position.hasData) {
+			console.log({ invalidated })
+			if (!invalidated) {
 				return
 			}
 			// fetch new weather using last known position
-			fetchWeather(
-				JSON.stringify(this.data.position.latitude),
-				JSON.stringify(this.data.position.longitude)
-			).then(
-				(weatherData) =>
-					(this.data.weather = {
+			// no state
+			console.log('state', this.data.position)
+			if (this.data.position.latitude && this.data.position.longitude)
+				fetchWeather(lat, long).then((data) => {
+					console.log('raw weather', data)
+					return (this.data.weather = {
 						...this.data.weather,
-						...weatherData,
-						hasData: true,
+						...data,
 						timestamp: Date.now(),
 					})
-			)
+				})
 			setCorrectingInterval(() => {
 				this.refreshWeather()
 			}, 5 * 60 * 1000)

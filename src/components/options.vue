@@ -19,10 +19,16 @@ let themes = ['lavender', 'rose', 'lemon', 'sea', 'leaf', 'sand']
 function toggleOptionsMenu() {
 	isOptionsOpen.value = !isOptionsOpen.value
 }
-function handleFetch() {
+async function handleFetch() {
 	refreshDisabled.value = true
-	optionsStore.fetchPosition()
-	optionsStore.refreshWeather()
+	console.log('before pos')
+	await optionsStore.fetchPosition().then((pos) => {
+		console.log('pos used', pos)
+		optionsStore.refreshWeather(pos.coords.latitude, pos.coords.longitude)
+	})
+	console.log('after pos')
+	// optionsStore.refreshWeather()
+	console.log('after after pos')
 	setTimeout(function () {
 		refreshDisabled.value = false
 	}, 15 * 1000)
@@ -87,7 +93,7 @@ function handleFetch() {
 
 					<div :class="text.subtitle">time</div>
 					<div :class="text.label">layout:</div>
-					<RadioGroup property="time.layout" :options="['default', 'stacked']">
+					<RadioGroup option="time.layout" :choices="['default', 'stacked']">
 						<template #default>
 							<div class="time">
 								<div>9:41</div>
@@ -111,7 +117,6 @@ function handleFetch() {
 					</RadioGroup>
 
 					<OptionToggle
-						:selected="optionsStore.time.use24Hour"
 						option="time.use24Hour"
 						label="24-hour format"
 						role="menuitem"
@@ -120,11 +125,7 @@ function handleFetch() {
 					<div class="divider" />
 
 					<div :class="text.subtitle">weather</div>
-					<OptionToggle
-						:selected="optionsStore.weather.useCelsius"
-						option="weather.useCelsius"
-						label="celsius"
-					/>
+					<OptionToggle option="weather.useCelsius" label="celsius" />
 					<OptionToggle
 						option="weather.descriptive"
 						label="precise conditions"
@@ -141,7 +142,7 @@ function handleFetch() {
 
 					<div :class="text.subtitle">location</div>
 
-					<div v-if="optionsStore.data.weather.hasData" class="row separated">
+					<div v-if="optionsStore.data.weather.timestamp" class="row separated">
 						<div
 							v-if="optionsStore.data.position.fetching == false"
 							:class="text.label"

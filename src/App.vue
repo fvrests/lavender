@@ -2,7 +2,6 @@
 import Weather from './components/weather.vue'
 import Options from './components/options.vue'
 import Clock from './components/clock.vue'
-import store from '@/store'
 import { onBeforeUnmount, computed } from 'vue'
 import './assets/styles/normalize.css'
 import './assets/styles/weather-icons.min.css'
