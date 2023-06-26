@@ -1,12 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import Weather from './components/weather.vue'
 import Options from './components/options.vue'
 import Clock from './components/clock.vue'
-import { onBeforeUnmount, computed } from 'vue'
 import './assets/styles/normalize.css'
 import './assets/styles/weather-icons.min.css'
 import './assets/styles/global.css'
-import { pinia } from './main.js'
 
 // fix: remove if not needed, ensure functionality -- maybe contain in main.js
 import { useOptionsStore } from './store/options'
