@@ -11,12 +11,14 @@ const optionNodes = props.option.split('.')
 const handleOption = (newValue = null) =>
 	optionNodes.reduce((prev, cur, index) => {
 		if (newValue && index === optionNodes.length - 1) {
+			// @ts-expect-error cannot index cur
 			prev[cur] = newValue
 		}
+		// @ts-expect-error cannot index cur
 		return prev ? prev[cur] : null
 	}, optionsStore)
 
-let selected = ref(handleOption())
+let selected: any = ref(handleOption())
 
 watch(selected, () => {
 	handleOption(selected.value)
@@ -32,7 +34,7 @@ watch(selected, () => {
 				:name="option"
 				type="radio"
 				:value="n"
-				:checked="selected == n"
+				:checked="selected === n"
 			/>
 			<div class="column" role="“radiogroup”">
 				<label
@@ -40,7 +42,7 @@ watch(selected, () => {
 					:class="n"
 					tabindex="0"
 					role="“radio”"
-					:aria-checked="selected == n ? 'true' : 'false'"
+					:aria-checked="selected === n ? 'true' : 'false'"
 					@keyup.enter="handleOption(n)"
 					@keyup.space="handleOption(n)"
 				>

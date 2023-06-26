@@ -1,52 +1,54 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useOptionsStore } from '../store/options'
+import { useDataStore } from '../store/data'
 import text from '../assets/styles/text.module.css'
 import button from '../assets/styles/button.module.css'
 import Alert from '../assets/icons/alert.vue'
 
 const optionsStore = useOptionsStore()
+const dataStore = useDataStore()
 let fetchError = ref('')
 
 function handleFetch() {
 	console.log('handleFetch')
-	fetchError.value = optionsStore.refreshWeather()
+	fetchError.value = dataStore.refreshWeather()
 }
 function handleDecline() {
 	optionsStore.$patch({
-		data: { position: { declined: true } },
+		position: { declined: true },
 	})
 }
 </script>
 
 <!--todo: EITHER check for focused tab before requesting (prevent inactive tabs / windows from refreshing) or add external API to keep track of requests per minute (firebase etc)-->
 <template>
-	<div v-if="optionsStore.data.weather.timestamp" class="wrapper">
+	<div v-if="dataStore.data.weather.timestamp" class="wrapper">
 		<div class="weather-items">
 			<p class="temp" :class="text.subtitle">
-				{{ optionsStore.formattedTemp }} degrees
+				{{ dataStore.formattedTemp }} degrees
 			</p>
 			<div class="wi-bg">
 				<i
 					:class="
-						optionsStore.data.weather.timestamp
-							? optionsStore.weatherIconClass
+						dataStore.data.weather.timestamp
+							? dataStore.weatherIconClass
 							: 'wi wi-cloud-refresh'
 					"
 				/>
 			</div>
 			<p class="conditions" :class="text.subtitle">
-				{{ optionsStore.weatherConditions }}
+				{{ dataStore.weatherConditions }}
 			</p>
 		</div>
 	</div>
 	<transition name="prompt">
 		<div
 			v-if="
-				optionsStore.init &&
-				!optionsStore.data.position.fetching &&
-				!optionsStore.data.position.declined &&
-				!optionsStore.data.position.latitude
+				dataStore.init &&
+				!dataStore.data.position.fetching &&
+				!optionsStore.position.declined &&
+				!dataStore.data.position.latitude
 			"
 			class="location-prompt"
 		>

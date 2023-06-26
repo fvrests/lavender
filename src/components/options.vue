@@ -9,8 +9,10 @@ import button from '../assets/styles/button.module.css'
 import text from '../assets/styles/text.module.css'
 import { ref } from 'vue'
 import { useOptionsStore } from '../store/options'
+import { useDataStore } from '../store/data'
 
 const optionsStore = useOptionsStore()
+const dataStore = useDataStore()
 let isOptionsOpen = ref(false)
 let refreshDisabled = ref(false)
 
@@ -22,9 +24,9 @@ function toggleOptionsMenu() {
 async function handleFetch() {
 	refreshDisabled.value = true
 	console.log('before pos')
-	await optionsStore.fetchPosition().then((pos) => {
+	await dataStore.fetchPosition().then((pos) => {
 		console.log('pos used', pos)
-		optionsStore.refreshWeather(pos.coords.latitude, pos.coords.longitude)
+		dataStore.refreshWeather(pos.coords.latitude, pos.coords.longitude)
 	})
 	console.log('after pos')
 	// optionsStore.refreshWeather()
@@ -142,13 +144,13 @@ async function handleFetch() {
 
 					<div :class="text.subtitle">location</div>
 
-					<div v-if="optionsStore.data.weather.timestamp" class="row separated">
+					<div v-if="dataStore.data.weather.timestamp" class="row separated">
 						<div
-							v-if="optionsStore.data.position.fetching == false"
+							v-if="dataStore.data.position.fetching == false"
 							:class="text.label"
 						>
-							{{ optionsStore.data.weather.name }},
-							{{ optionsStore.data.weather.sys.country }}
+							{{ dataStore.data.weather.name }},
+							{{ dataStore.data.weather.sys.country }}
 						</div>
 
 						<div v-else :class="text.label">Fetching...</div>
@@ -166,7 +168,7 @@ async function handleFetch() {
 					<div v-else>
 						<div class="row separated">
 							<div
-								v-if="optionsStore.data.position.fetching == false"
+								v-if="dataStore.data.position.fetching == false"
 								:class="text.label"
 							>
 								location disabled.
