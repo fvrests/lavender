@@ -23,7 +23,7 @@ function handleDecline() {
 
 <!--todo: EITHER check for focused tab before requesting (prevent inactive tabs / windows from refreshing) or add external API to keep track of requests per minute (firebase etc)-->
 <template>
-	<div v-if="dataStore.data.weather.timestamp" class="wrapper">
+	<div v-if="dataStore.weather.timestamp" class="wrapper">
 		<div class="weather-items">
 			<p class="temp" :class="text.subtitle">
 				{{ dataStore.formattedTemp }} degrees
@@ -31,7 +31,7 @@ function handleDecline() {
 			<div class="wi-bg">
 				<i
 					:class="
-						dataStore.data.weather.timestamp
+						dataStore.weather.timestamp
 							? dataStore.weatherIconClass
 							: 'wi wi-cloud-refresh'
 					"
@@ -46,9 +46,9 @@ function handleDecline() {
 		<div
 			v-if="
 				dataStore.init &&
-				!dataStore.data.position.fetching &&
+				!dataStore.position.fetching &&
 				!optionsStore.position.declined &&
-				!dataStore.data.position.latitude
+				!dataStore.position.latitude
 			"
 			class="location-prompt"
 		>

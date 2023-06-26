@@ -18,7 +18,7 @@ onMounted(() => {
 			:layout="optionsStore.time.layout"
 			:hour="dataStore.formattedDate.hour"
 			:minute="dataStore.formattedDate.minute"
-			:time="dataStore.data.date"
+			:time="dataStore.date"
 		/>
 		<div class="space-small" />
 		<div class="context-label" v-if="!optionsStore.time.use24Hour">

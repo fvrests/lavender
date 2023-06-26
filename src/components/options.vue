@@ -144,13 +144,13 @@ async function handleFetch() {
 
 					<div :class="text.subtitle">location</div>
 
-					<div v-if="dataStore.data.weather.timestamp" class="row separated">
+					<div v-if="dataStore.weather.timestamp" class="row separated">
 						<div
-							v-if="dataStore.data.position.fetching == false"
+							v-if="dataStore.position.fetching == false"
 							:class="text.label"
 						>
-							{{ dataStore.data.weather.name }},
-							{{ dataStore.data.weather.sys.country }}
+							{{ dataStore.weather.name }},
+							{{ dataStore.weather.sys.country }}
 						</div>
 
 						<div v-else :class="text.label">Fetching...</div>
@@ -168,7 +168,7 @@ async function handleFetch() {
 					<div v-else>
 						<div class="row separated">
 							<div
-								v-if="dataStore.data.position.fetching == false"
+								v-if="dataStore.position.fetching == false"
 								:class="text.label"
 							>
 								location disabled.
