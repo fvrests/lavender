@@ -11,6 +11,8 @@
 	--rounded-full: 9999px;
 	--rounded: 12px;
 
+	--transition: var(--transition);
+
 	--font: 'Lora', serif;
 
 	/* ui colors*/

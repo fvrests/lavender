@@ -61,7 +61,7 @@ const { url, underline } = props
 	left: 4px;
 	bottom: 10%;
 	background-color: var(--theme-bg);
-	transition: ease all 20ms;
+	transition: var(--transition);
 }
 
 .text.underline:hover::after,
@@ -73,7 +73,7 @@ const { url, underline } = props
 	left: 4px;
 	bottom: 10%;
 	background-color: var(--theme-bg);
-	transition: ease all 100ms;
+	transition: var(--transition);
 	visibility: visible;
 }
 </style>
