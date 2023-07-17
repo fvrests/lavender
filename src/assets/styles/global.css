@@ -26,8 +26,8 @@
 
 	/* dark classic theme colors */
 	--color-lavender-dark: #3a3441;
-	--color-rose-dark: #9e746c;
-	--color-lemon-dark: #be7917;
+	--color-rose-dark: #5a3c36;
+	--color-lemon-dark: #985c07;
 	--color-sea-dark: #1b2932;
 	--color-leaf-dark: #273126;
 	--color-sand-dark: var(--color-gray);
@@ -155,7 +155,6 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 	background-color: var(--theme-bg);
 	color: var(--theme-fg);
-	min-height: 100vh;
 }
 
 .space-xsmall {
