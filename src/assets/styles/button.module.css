@@ -50,7 +50,7 @@
 	bottom: 10%;
 	background-color: var(--theme-bg);
 	z-index: -1;
-	transition: 0.4s ease all 20ms;
+	transition: var(--transition);
 }
 
 .secondary:hover,
@@ -72,5 +72,5 @@
 	bottom: 10%;
 	background-color: var(--theme-bg);
 	z-index: -1;
-	transition: 0.4s ease all 20ms;
+	transition: var(--transition);
 }
