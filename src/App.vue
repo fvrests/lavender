@@ -5,27 +5,20 @@ import Clock from './components/clock.vue'
 import './assets/styles/normalize.css'
 import './assets/styles/weather-icons.min.css'
 import './assets/styles/global.css'
-
-// fix: remove if not needed, ensure functionality -- maybe contain in main.js
 import { useOptionsStore } from './store/options'
-let optionsStore = useOptionsStore()
-optionsStore.initializeStore()
+import { useDataStore } from './store/data'
 
-// fix: doesn't set into chrome storage?
-// optionsStore.$subscribe((_, state) => {
-// 	if (state.init)
-// 		chrome.storage.sync.set({
-// 			...state,
-// 			lastSynced: Date.now(),
-// 		})
-// fix: ? - updating state every second as time changes
-// console.log('sync set', state)
-// })
+let optionsStore = useOptionsStore()
+let dataStore = useDataStore()
+
+optionsStore.initializeStore()
+optionsStore.initializeChromeStore()
+dataStore.initializeStore()
 </script>
 
 <template>
 	<div class="app-wrapper">
-		<Clock v-if="optionsStore.init" />
+		<Clock v-if="optionsStore.init && dataStore.init" />
 		<Weather />
 		<Options />
 	</div>

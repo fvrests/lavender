@@ -4,14 +4,11 @@ import OptionToggle from './option-toggle.vue'
 import RadioGroup from './radio-group.vue'
 import ExternalLink from './external-link.vue'
 import ThemeSelect from './theme-select.vue'
-// import Clockface from './clockface.vue'
 import button from '../assets/styles/button.module.css'
 import text from '../assets/styles/text.module.css'
 import { ref } from 'vue'
-import { useOptionsStore } from '../store/options'
 import { useDataStore } from '../store/data'
 
-const optionsStore = useOptionsStore()
 const dataStore = useDataStore()
 let isOptionsOpen = ref(false)
 let refreshDisabled = ref(false)
@@ -21,16 +18,10 @@ let themes = ['lavender', 'rose', 'lemon', 'sea', 'leaf', 'sand']
 function toggleOptionsMenu() {
 	isOptionsOpen.value = !isOptionsOpen.value
 }
-async function handleFetch() {
+
+function handleFetch() {
 	refreshDisabled.value = true
-	console.log('before pos')
-	await dataStore.fetchPosition().then((pos) => {
-		console.log('pos used', pos)
-		dataStore.refreshWeather(pos.coords.latitude, pos.coords.longitude)
-	})
-	console.log('after pos')
-	// optionsStore.refreshWeather()
-	console.log('after after pos')
+	dataStore.handleFetch()
 	setTimeout(function () {
 		refreshDisabled.value = false
 	}, 15 * 1000)
@@ -40,6 +31,7 @@ async function handleFetch() {
 <template>
 	<!-- todo: consider updating typography-->
 	<!-- todo: consider adding font selection (sans serif, mono) -->
+	<!-- todo: options menu should still display if other errors in options-->
 	<div class="options" @keyup.esc="isOptionsOpen = false">
 		<button
 			:class="{ open: isOptionsOpen }"
@@ -159,7 +151,7 @@ async function handleFetch() {
 								:class="button.primary"
 								style="margin: 0 auto"
 								:disabled="refreshDisabled"
-								@click="handleFetch"
+								@click="handleFetch()"
 							>
 								{{ !refreshDisabled ? 'Refresh' : 'Please wait 15s' }}
 							</button>
@@ -192,6 +184,19 @@ async function handleFetch() {
 					</div>
 
 					<div class="divider" />
+
+					<!-- todo: section should appears in prod chrome app but not on web -->
+					<div v-if="typeof chrome !== undefined">
+						<div :class="text.subtitle">Data sync</div>
+
+						<OptionToggle
+							option="useChromeStorage"
+							label="Sync options with Chrome"
+							role="menuitem"
+						/>
+
+						<div class="divider" />
+					</div>
 
 					<div class="row even">
 						<ExternalLink

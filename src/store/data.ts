@@ -79,19 +79,7 @@ export const useDataStore = defineStore('data', {
 		},
 	},
 	actions: {
-		// fix: wip finish setup of store initialization
-		// maybe don't even need this? see https://pinia.vuejs.org/cookbook/composables.html#option-stores
 		initializeStore() {
-			if (useOptionsStore().useChromeStorage) {
-				// fix: can't find chrome
-				// chrome.storage.sync.get(null, (value) => {
-				// 	if (value) {
-				// 		this.$state = { ...value, init: true }
-				// 	} else {
-				// 		this.init = true
-				// 	}
-				// })
-			}
 			this.init = true
 		},
 		getTime() {
@@ -135,7 +123,7 @@ export const useDataStore = defineStore('data', {
 				return pos
 			})
 		},
-		refreshWeather(lat: number, long: number) {
+		refreshWeather(lat?: number, long?: number) {
 			console.log('refreshing weather')
 			let invalidated =
 				!this.weather.timestamp ||
@@ -148,8 +136,11 @@ export const useDataStore = defineStore('data', {
 			// fetch new weather using last known position
 			// no state
 			console.log('state', this.position)
-			if (this.position.latitude && this.position.longitude)
-				fetchWeather(lat, long).then((res) => {
+			if ((lat && long) || (this.position.latitude && this.position.longitude))
+				fetchWeather(
+					lat || this.position.latitude,
+					long || this.position.longitude
+				).then((res) => {
 					console.log('raw weather', res)
 					return (this.weather = {
 						...this.weather,
@@ -158,8 +149,16 @@ export const useDataStore = defineStore('data', {
 					})
 				})
 			setCorrectingInterval(() => {
-				this.refreshWeather()
+				if (this.position.latitude && this.position.longitude)
+					this.refreshWeather(this.position.latitude, this.position.longitude)
 			}, 5 * 60 * 1000)
+		},
+		async handleInitialFetch() {
+			console.log('before pos')
+			await this.fetchPosition().then((pos) => {
+				console.log('pos used', pos)
+				this.refreshWeather(pos.coords.latitude, pos.coords.longitude)
+			})
 		},
 	},
 })

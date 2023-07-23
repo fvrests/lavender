@@ -10,10 +10,11 @@ const optionsStore = useOptionsStore()
 const dataStore = useDataStore()
 let fetchError = ref('')
 
-function handleFetch() {
-	console.log('handleFetch')
-	fetchError.value = dataStore.refreshWeather()
-}
+// function handleFetch() {
+// 	console.log('handleFetch')
+// 	fetchError.value = dataStore.refreshWeather()
+// }
+
 function handleDecline() {
 	optionsStore.$patch({
 		position: { declined: true },
@@ -68,7 +69,7 @@ function handleDecline() {
 			</p>
 			<div class="space-small"></div>
 			<div class="row" style="justify-content: center">
-				<button :class="button.primary" @click="handleFetch">
+				<button :class="button.primary" @click="dataStore.handleFetch()">
 					Fetch location
 				</button>
 				<button :class="button.secondary" @click="handleDecline">
