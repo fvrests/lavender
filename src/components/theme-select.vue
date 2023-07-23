@@ -29,7 +29,7 @@ const props = withDefaults(
 		:aria-label="props.theme"
 		@click="optionsStore.toggleTheme(props.theme)"
 		@mouseenter="optionsStore.previewTheme(props.theme)"
-		@mouseleave="optionsStore.toggleTheme(optionsStore.theme.color)"
+		@mouseleave="optionsStore.previewTheme(optionsStore.theme.color)"
 	>
 		<svg
 			v-if="optionsStore.theme.color === props.theme"

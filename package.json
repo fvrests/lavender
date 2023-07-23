@@ -9,6 +9,7 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
+		"@types/chrome": "^0.0.241",
 		"@vueuse/core": "^10.2.0",
 		"core-js": "^3.30.1",
 		"date-fns": "^2.29.3",

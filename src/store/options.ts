@@ -1,11 +1,10 @@
 import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
-import { setTheme, applyTheme } from '../utils/theme'
 
 export const useOptionsStore = defineStore('options', {
 	state: () => ({
 		init: false,
-		useChromeStorage: false,
+		useChromeStorage: useLocalStorage('options/useChromeStorage', false),
 		theme: {
 			color: useLocalStorage('options/theme/color', 'lavender'),
 		},
@@ -18,31 +17,49 @@ export const useOptionsStore = defineStore('options', {
 			descriptive: useLocalStorage('options/weather/descriptive', false),
 		},
 		position: {
-			declined: false,
+			declined: useLocalStorage('options/position/declined', false),
 		},
 	}),
 	actions: {
 		// fix: wip finish setup of store initialization
-		// maybe don't even need this? see https://pinia.vuejs.org/cookbook/composables.html#option-stores
+		// re-initialize if chrome storage turned on
 		initializeStore() {
-			// if (this.useChromeStorage) {
-			// fix: can't find chrome
-			// chrome.storage.sync.get(null, (value) => {
-			// 	if (value) {
-			// 		this.$state = { ...value, init: true }
-			// 	} else {
-			// 		this.init = true
-			// 	}
-			// })
-			// }
 			this.init = true
 		},
+		initializeChromeStore() {
+			if (chrome !== undefined && this.useChromeStorage) {
+				chrome.storage.sync.get(null, (value) => {
+					if (value) {
+						this.$patch({ ...value, init: true })
+					} else {
+						this.init = true
+					}
+				})
+				// todo: localStorage is set before mutation is incorporated - out of sync
+				this.$subscribe(
+					(mutation, state) => {
+						console.log('mut', mutation)
+						if (
+							this.init &&
+							typeof chrome !== undefined &&
+							this.useChromeStorage
+						) {
+							chrome.storage.sync.set({
+								...localStorage,
+								lastSynced: Date.now(),
+							})
+							console.log('chrome sync', state)
+						}
+					},
+					{ sync: true }
+				)
+			}
+		},
 		toggleTheme(theme: string) {
-			setTheme(theme)
 			this.$patch({ theme: { color: theme } })
 		},
 		previewTheme(theme: string) {
-			applyTheme(theme)
+			document.documentElement.className = theme
 		},
 	},
 })
