@@ -1,61 +1,99 @@
 import { defineStore } from 'pinia'
-import { useLocalStorage } from '@vueuse/core'
+import { useDataStore } from './data'
+// import { useLocalStorage } from '@vueuse/core'
 
 export const useOptionsStore = defineStore('options', {
 	state: () => ({
 		init: false,
-		useChromeStorage: useLocalStorage('options/useChromeStorage', false),
+		useChromeStorage: false,
 		theme: {
-			color: useLocalStorage('options/theme/color', 'lavender'),
+			color: 'lavender',
 		},
 		time: {
-			layout: useLocalStorage('options/time/layout', 'default'),
-			use24Hour: useLocalStorage('options/time/use-24-hour', false),
+			layout: 'default',
+			use24Hour: false,
 		},
 		weather: {
-			useCelsius: useLocalStorage('options/weather/use-celsius', false),
-			descriptive: useLocalStorage('options/weather/descriptive', false),
+			useCelsius: false,
+			descriptive: false,
 		},
 		position: {
-			declined: useLocalStorage('options/position/declined', false),
+			declined: false,
 		},
 	}),
 	actions: {
-		// fix: wip finish setup of store initialization
-		// re-initialize if chrome storage turned on
 		initializeStore() {
-			this.init = true
-		},
-		initializeChromeStore() {
-			if (chrome !== undefined && this.useChromeStorage) {
-				chrome.storage.sync.get(null, (value) => {
-					if (value) {
-						this.$patch({ ...value, init: true })
-					} else {
-						this.init = true
+			async function getLocalData() {
+				return localStorage.getItem('lavender')
+			}
+			getLocalData().then(
+				(data) => {
+					if (data) {
+						const localOptions = JSON.parse(data)
+						this.$patch(localOptions)
 					}
-				})
-				// todo: localStorage is set before mutation is incorporated - out of sync
-				this.$subscribe(
-					(mutation, state) => {
-						console.log('mut', mutation)
-						if (
-							this.init &&
-							typeof chrome !== undefined &&
-							this.useChromeStorage
-						) {
-							chrome.storage.sync.set({
-								...localStorage,
-								lastSynced: Date.now(),
-							})
-							console.log('chrome sync', state)
-						}
-					},
-					{ sync: true }
-				)
+					this.init = true
+				},
+				(err) => {
+					console.log(err)
+				}
+			)
+			this.init = true
+			this.$subscribe((_, state) => {
+				if (this.init) {
+					localStorage.setItem('lavender', JSON.stringify(state))
+				}
+			})
+		},
+		initializeTheme() {
+			window.themeColor = 'lavender'
+			try {
+				const storedOptions =
+					JSON.parse(window.localStorage.getItem('lavender')) ?? null
+				const storedColor = (storedOptions && storedOptions.theme.color) ?? null
+				if (storedColor) {
+					document.querySelector('html').className = storedColor
+				} else {
+					document.querySelector('html').className = 'lavender'
+				}
+			} catch (err) {
+				console.warn(err)
 			}
 		},
-		toggleTheme(theme: string) {
+		readChromeStorage() {
+			chrome.storage.sync.get().then(
+				(value) => {
+					if (value) {
+						const syncOptions = JSON.parse(value.lavender)
+						this.$patch({ ...syncOptions, init: true })
+						document.querySelector('html').className = syncOptions.theme.color
+					}
+				},
+				(err) => {
+					console.log(err)
+				}
+			)
+		},
+		initializeChromeStorage() {
+			// pull options on app load
+			if (this.init && useDataStore().isChrome && this.useChromeStorage) {
+				this.readChromeStorage()
+			}
+
+			this.$subscribe(() => {
+				if (this.init && useDataStore().isChrome && this.useChromeStorage) {
+					// push options on change
+					chrome.storage.sync.set({
+						...localStorage,
+						lastSynced: Date.now(),
+					})
+				}
+			})
+		},
+		clearChromeStorage() {
+			chrome.storage.sync.clear()
+		},
+		setTheme(theme: string) {
 			this.$patch({ theme: { color: theme } })
 		},
 		previewTheme(theme: string) {

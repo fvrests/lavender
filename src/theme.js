@@ -1,11 +1,12 @@
-window.themeColor = 'lavender'
-try {
-	const storedColor = window.localStorage.getItem('options/theme/color')
-	if (storedColor) {
-		document.querySelector('html').className = storedColor
-	} else {
-		document.querySelector('html').className = 'lavender'
-	}
-} catch (err) {
-	console.warn(err)
-}
+// window.themeColor = 'lavender'
+// try {
+// 	const storedOptions = JSON.parse(window.localStorage.getItem('lavender'))
+// 	const storedColor = storedOptions.theme.color ?? null
+// 	if (storedColor) {
+// 		document.querySelector('html').className = storedColor
+// 	} else {
+// 		document.querySelector('html').className = 'lavender'
+// 	}
+// } catch (err) {
+// 	console.warn(err)
+// }

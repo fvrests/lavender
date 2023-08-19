@@ -9,23 +9,34 @@ const props = withDefaults(
 		label: string
 		option: string
 		sublabel?: string
+		onChange?: () => void
 	}>(),
-	{ sublabel: '' }
+	{ sublabel: '', onChange: () => {} }
 )
 
+// fix: doesn't properly load selected option on render
 const optionNodes = props.option.split('.')
-const handleOption = (toggle = false) =>
-	optionNodes.reduce((prev, cur, index) => {
+const handleOption = (toggle = false) => {
+	return optionNodes.reduce((prev, cur, index) => {
 		if (toggle && index === optionNodes.length - 1) {
 			prev[cur] = !prev[cur]
 		}
 		return prev ? prev[cur] : null
 	}, optionsStore)
+}
 const selected = computed(() => handleOption())
 </script>
 
 <template>
-	<button class="item-wrapper" @click="() => handleOption(true)">
+	<button
+		class="item-wrapper"
+		@click="
+			() => {
+				props.onChange && props.onChange()
+				handleOption(true)
+			}
+		"
+	>
 		<div class="row">
 			<div :class="text.label">{{ props.label }}</div>
 			<div :class="text.sublabel">{{ props.sublabel }}</div>

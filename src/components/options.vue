@@ -8,8 +8,10 @@ import button from '../assets/styles/button.module.css'
 import text from '../assets/styles/text.module.css'
 import { ref } from 'vue'
 import { useDataStore } from '../store/data'
+import { useOptionsStore } from '../store/options'
 
 const dataStore = useDataStore()
+const optionsStore = useOptionsStore()
 let isOptionsOpen = ref(false)
 let refreshDisabled = ref(false)
 
@@ -185,16 +187,32 @@ function handleFetch() {
 
 					<div class="divider" />
 
-					<!-- todo: section should appears in prod chrome app but not on web -->
-					<div v-if="typeof chrome !== undefined">
+					<div v-if="optionsStore.init && dataStore.isChrome">
 						<div :class="text.subtitle">Data sync</div>
 
 						<OptionToggle
 							option="useChromeStorage"
-							label="Sync options with Chrome"
+							label="Sync with Chrome"
 							role="menuitem"
+							:onChange="
+								() =>
+									!optionsStore.useChromeStorage &&
+									optionsStore.readChromeStorage()
+							"
 						/>
-
+						<div :class="text.base">
+							Persist options across your Chrome browsers (overrides local
+							options). Your location is not synced and will remain on-device.
+						</div>
+						<div class="row">
+							<!-- <div :class="text.base">Erase:</div> -->
+							<button
+								:class="button.tertiary"
+								@click="optionsStore.clearChromeStorage()"
+							>
+								Clear Chrome storage
+							</button>
+						</div>
 						<div class="divider" />
 					</div>
 
