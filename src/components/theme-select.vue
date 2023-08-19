@@ -27,7 +27,7 @@ const props = withDefaults(
 				: `var(--color-${props.colors[0]})`,
 		}"
 		:aria-label="props.theme"
-		@click="optionsStore.toggleTheme(props.theme)"
+		@click="optionsStore.setTheme(props.theme)"
 		@mouseenter="optionsStore.previewTheme(props.theme)"
 		@mouseleave="optionsStore.previewTheme(optionsStore.theme.color)"
 	>

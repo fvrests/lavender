@@ -8,6 +8,7 @@ export const useDataStore = defineStore('data', {
 	state: () => ({
 		init: false,
 		date: new Date(),
+		isChrome: false,
 		weather: {
 			timestamp: null as number | null,
 		},
@@ -81,6 +82,11 @@ export const useDataStore = defineStore('data', {
 	actions: {
 		initializeStore() {
 			this.init = true
+			this.isChrome =
+				!!navigator.userAgentData &&
+				navigator.userAgentData.brands.some(
+					(data) => data.brand == 'Google Chrome'
+				)
 		},
 		getTime() {
 			setCorrectingInterval(() => (this.date = new Date()), 1000)

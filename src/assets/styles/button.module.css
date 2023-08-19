@@ -34,7 +34,9 @@
 	color: var(--ui-fg);
 	font-weight: bold;
 	font-size: 11px;
-	padding: 4px 14px;
+	/* padding: 4px 14px; */
+	/* padding: 4px; */
+	padding: 4px 0;
 	border-radius: var(--rounded-full);
 	position: relative;
 	display: block;
@@ -45,8 +47,8 @@
 	content: '';
 	position: absolute;
 	height: 2px;
-	width: calc(100% - 28px);
-	left: 14px;
+	width: 100%;
+	left: 0;
 	bottom: 10%;
 	background-color: var(--theme-bg);
 	z-index: -1;
@@ -67,10 +69,16 @@
 	content: '';
 	position: absolute;
 	height: 4px;
-	width: calc(100% - 28px);
-	left: 14px;
+	width: 100%;
+	left: 0;
 	bottom: 10%;
 	background-color: var(--theme-bg);
 	z-index: -1;
 	transition: var(--transition);
+}
+
+/* todo: focus style */
+.tertiary {
+	font-weight: bold;
+	font-size: 11px;
 }

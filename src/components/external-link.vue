@@ -8,6 +8,7 @@ const props = withDefaults(
 const { url, underline } = props
 </script>
 
+<!--todo: focus style-->
 <template>
 	<a :href="url" target="_blank">
 		<div class="row">

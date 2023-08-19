@@ -12,7 +12,8 @@ let optionsStore = useOptionsStore()
 let dataStore = useDataStore()
 
 optionsStore.initializeStore()
-optionsStore.initializeChromeStore()
+optionsStore.initializeTheme()
+optionsStore.initializeChromeStorage()
 dataStore.initializeStore()
 </script>
 

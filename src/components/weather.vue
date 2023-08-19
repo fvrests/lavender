@@ -68,7 +68,7 @@ function handleDecline() {
 				later in settings.
 			</p>
 			<div class="space-small"></div>
-			<div class="row" style="justify-content: center">
+			<div class="row" style="justify-content: center; gap: 14px">
 				<button :class="button.primary" @click="dataStore.handleFetch()">
 					Fetch location
 				</button>
