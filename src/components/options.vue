@@ -23,7 +23,7 @@ function toggleOptionsMenu() {
 
 function handleFetch() {
 	refreshDisabled.value = true
-	dataStore.handleFetch()
+	dataStore.handleInitialFetch()
 	setTimeout(function () {
 		refreshDisabled.value = false
 	}, 15 * 1000)
@@ -59,7 +59,7 @@ function handleFetch() {
 							</li>
 						</ul>
 						<div class="space-xsmall" />
-						<div :class="text.label">Nightshade collection</div>
+						<div :class="text.label">Night collection</div>
 						<div class="space-xsmall" />
 						<ul class="theme-list">
 							<li v-for="theme in themes">
@@ -149,6 +149,8 @@ function handleFetch() {
 
 						<div v-else :class="text.label">Fetching...</div>
 						<div>
+							<!--fix: button should be disabled on click  -->
+							<!--fix: handle error if fetch hangs (e.g. not enabled in browser) -->
 							<button
 								:class="button.primary"
 								style="margin: 0 auto"
@@ -172,7 +174,7 @@ function handleFetch() {
 								<button
 									:class="button.primary"
 									style="margin: 0 auto"
-									@click="handleFetch"
+									@click="handleFetch()"
 								>
 									Enable
 								</button>
@@ -204,13 +206,21 @@ function handleFetch() {
 							Persist options across your Chrome browsers (overrides local
 							options). Your location is not synced and will remain on-device.
 						</div>
-						<div class="row">
-							<!-- <div :class="text.base">Erase:</div> -->
+						<div class="divider" />
+					</div>
+					<div>
+						<div :class="text.subtitle">Reset data</div>
+						<div :class="text.base">
+							Erase everything, including location and weather data, and restore
+							default options.
+						</div>
+						<div class="row separated">
+							<!--todo: clear local storage and chrome storage-->
 							<button
 								:class="button.tertiary"
 								@click="optionsStore.clearChromeStorage()"
 							>
-								Clear Chrome storage
+								Reset all data
 							</button>
 						</div>
 						<div class="divider" />
