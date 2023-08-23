@@ -41,40 +41,53 @@ const { url, underline } = props
 </template>
 
 <style scoped>
+a {
+	padding: 0px 4px;
+}
+a:focus {
+	outline: none;
+}
+a:focus .text {
+	box-shadow: var(--ui-focus-box);
+}
+
 .text {
 	font-size: 11px;
-	padding: 4px;
-	border-radius: var(--rounded-full);
+	padding: 1px 1px;
+	border-radius: var(--rounded-slight);
 	position: relative;
 	display: block;
 	text-align: center;
 }
-
 .text.underline {
 	font-weight: bold;
+	margin-bottom: -4px;
+	padding-bottom: 4px;
 }
-
 .text.underline::after {
 	content: '';
 	position: absolute;
 	height: 2px;
-	width: calc(100% - 8px);
-	left: 4px;
+	width: calc(100% - 4px);
+	left: 2px;
 	bottom: 10%;
 	background-color: var(--theme-bg);
 	transition: var(--transition);
 }
-
 .text.underline:hover::after,
 .text.underline:focus::after {
 	content: '';
 	position: absolute;
 	height: 4px;
-	width: calc(100% - 8px);
-	left: 4px;
+	width: calc(100% - 4px);
+	left: 2px;
 	bottom: 10%;
 	background-color: var(--theme-bg);
 	transition: var(--transition);
 	visibility: visible;
+}
+
+svg {
+	margin-left: 6px;
 }
 </style>

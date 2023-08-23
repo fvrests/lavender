@@ -1,50 +1,59 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed } from 'vue'
 import { useOptionsStore } from '../store/options'
 import text from '../assets/styles/text.module.css'
 const props = defineProps<{ option: string; choices: string[] }>()
 
-// let selected = ref('')
 let optionsStore = useOptionsStore()
 
+// convert option prop string to a store reference & set the new value into the store at that reference
 const optionNodes = props.option.split('.')
 const handleOption = (newValue = null) =>
 	optionNodes.reduce((prev, cur, index) => {
 		if (newValue && index === optionNodes.length - 1) {
 			// @ts-expect-error cannot index cur
 			prev[cur] = newValue
+			console.log('setting', prev[cur], 'to', newValue)
 		}
+		// returns the store reference
 		// @ts-expect-error cannot index cur
 		return prev ? prev[cur] : null
 	}, optionsStore)
 
-let selected: any = ref(handleOption())
-
-watch(selected, () => {
-	handleOption(selected.value)
+let selected = computed({
+	// writable computed https://vuejs.org/guide/essentials/computed.html#writable-computed
+	get() {
+		return handleOption()
+	},
+	set(newValue) {
+		handleOption(newValue)
+	},
 })
 </script>
 
 <template>
 	<div class="grid">
-		<div v-for="n in choices" :key="n">
+		<div
+			v-for="n in choices"
+			:key="n"
+			@keydown.enter="selected = n"
+			@keydown.space="selected = n"
+		>
 			<input
+				:value="n"
+				:name="option"
+				:checked="selected === n"
 				:id="n"
 				v-model="selected"
-				:name="option"
 				type="radio"
-				:value="n"
-				:checked="selected === n"
 			/>
 			<div class="column" role="“radiogroup”">
 				<label
 					:for="n"
 					:class="n"
 					tabindex="0"
-					role="“radio”"
+					role="radio"
 					:aria-checked="selected === n ? 'true' : 'false'"
-					@keyup.enter="handleOption(n)"
-					@keyup.space="handleOption(n)"
 				>
 					<div
 						class="dot"

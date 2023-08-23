@@ -1,7 +1,6 @@
 .primary {
 	user-select: none;
 }
-
 .primary {
 	background-color: var(--ui-bg);
 	color: var(--ui-fg);
@@ -16,11 +15,6 @@
 	background-color: var(--theme-bg);
 	color: var(--theme-fg);
 }
-.dark > .primary:hover,
-.dark > .primary:focus {
-	color: var(--theme-fg);
-}
-
 .primary[disabled] {
 	cursor: not-allowed;
 	opacity: 0.2;
@@ -34,51 +28,42 @@
 	color: var(--ui-fg);
 	font-weight: bold;
 	font-size: 11px;
-	/* padding: 4px 14px; */
-	/* padding: 4px; */
-	padding: 4px 0;
-	border-radius: var(--rounded-full);
+	padding: 4px 2px;
 	position: relative;
 	display: block;
 	text-align: center;
+	border-radius: var(--rounded-slight);
 }
-.secondary::after,
 .secondary::after {
 	content: '';
 	position: absolute;
 	height: 2px;
 	width: 100%;
 	left: 0;
-	bottom: 10%;
+	bottom: 0px;
 	background-color: var(--theme-bg);
 	z-index: -1;
 	transition: var(--transition);
 }
-
-.secondary:hover,
-.secondary:focus {
-	font-weight: bold;
-}
-.dark .secondary:hover,
-.secondary:focus {
-	color: var(--theme-fg);
-}
-
-.secondary:hover::after,
-.secondary:focus::after {
-	content: '';
-	position: absolute;
+.secondary:hover::after {
 	height: 4px;
-	width: 100%;
-	left: 0;
-	bottom: 10%;
-	background-color: var(--theme-bg);
-	z-index: -1;
-	transition: var(--transition);
 }
 
-/* todo: focus style */
 .tertiary {
 	font-weight: bold;
 	font-size: 11px;
+	padding: 1px 2px;
+	margin: -1px -2px;
+	border-radius: var(--rounded-slight);
+}
+.tertiary:hover {
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.primary:focus,
+.secondary:focus,
+.tertiary:focus {
+	outline: none;
+	box-shadow: var(--ui-focus-box);
 }

@@ -10,6 +10,7 @@
 	--page-padding: 32px;
 	--rounded-full: 9999px;
 	--rounded: 12px;
+	--rounded-slight: 2px;
 
 	--transition: var(--transition);
 
