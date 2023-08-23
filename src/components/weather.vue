@@ -10,11 +10,6 @@ const optionsStore = useOptionsStore()
 const dataStore = useDataStore()
 let fetchError = ref('')
 
-// function handleFetch() {
-// 	console.log('handleFetch')
-// 	fetchError.value = dataStore.refreshWeather()
-// }
-
 function handleDecline() {
 	optionsStore.$patch({
 		position: { declined: true },
@@ -69,12 +64,15 @@ function handleDecline() {
 			</p>
 			<div class="space-small"></div>
 			<div class="row" style="justify-content: center; gap: 14px">
-				<button :class="button.primary" @click="dataStore.handleFetch()">
+				<button :class="button.primary" @click="dataStore.handleInitialFetch()">
 					Fetch location
 				</button>
-				<button :class="button.secondary" @click="handleDecline">
-					Not now
-				</button>
+				<div>
+					<!--todo: look at bottom padding / gap -- too big compared to other secondary buttons?  -->
+					<button :class="button.secondary" @click="handleDecline">
+						Not now
+					</button>
+				</div>
 			</div>
 
 			<div class="space-small"></div>
