@@ -8,13 +8,11 @@ const props = withDefaults(
 	defineProps<{
 		label: string
 		option: string
-		sublabel?: string
 		onChange?: () => void
 	}>(),
-	{ sublabel: '', onChange: () => {} }
+	{ onChange: () => {} }
 )
 
-// fix: doesn't properly load selected option on render
 const optionNodes = props.option.split('.')
 const handleOption = (toggle = false) => {
 	return optionNodes.reduce((prev, cur, index) => {
@@ -37,10 +35,7 @@ const selected = computed(() => handleOption())
 			}
 		"
 	>
-		<div class="row">
-			<div :class="text.label">{{ props.label }}</div>
-			<div :class="text.sublabel">{{ props.sublabel }}</div>
-		</div>
+		<div :class="text.label">{{ props.label }}</div>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			width="24"
@@ -61,7 +56,6 @@ const selected = computed(() => handleOption())
 </template>
 
 <style scoped>
-/* general styling */
 .item-wrapper {
 	display: flex;
 	align-items: center;
@@ -69,6 +63,8 @@ const selected = computed(() => handleOption())
 	width: 100%;
 	margin: 0 auto;
 	border-radius: var(--rounded);
+	/* prevent cutoff of svg shadow on safari */
+	outline: 4px solid transparent;
 }
 svg {
 	color: var(--ui-fg);

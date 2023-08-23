@@ -95,6 +95,7 @@ export const useOptionsStore = defineStore('options', {
 		},
 		setTheme(theme: string) {
 			this.$patch({ theme: { color: theme } })
+			document.documentElement.className = theme
 		},
 		previewTheme(theme: string) {
 			document.documentElement.className = theme
