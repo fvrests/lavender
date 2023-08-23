@@ -15,17 +15,17 @@
 	font-weight: bold;
 	padding: 6px 0px;
 }
-.label::first-letter {
-	text-transform: uppercase;
-}
+/* .label::first-letter { */
+/* 	text-transform: uppercase; */
+/* } */
 .base {
 	padding: 6px 0px;
 	font-weight: normal;
 	font-size: 11px;
 }
-.base::first-letter {
-	text-transform: uppercase;
-}
+/* .base::first-letter { */
+/* 	text-transform: uppercase; */
+/* } */
 .monospaced {
 	display: flex;
 }

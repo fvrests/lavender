@@ -48,7 +48,7 @@ function handleFetch() {
 				<div class="options-menu--inner">
 					<div :class="text.title">Options</div>
 
-					<div :class="text.subtitle">theme</div>
+					<div :class="text.subtitle">Theme</div>
 
 					<div style="padding: 6px 0px">
 						<div :class="text.label">Lavender collection</div>
@@ -87,8 +87,8 @@ function handleFetch() {
 
 					<div class="divider" />
 
-					<div :class="text.subtitle">time</div>
-					<div :class="text.label">layout:</div>
+					<div :class="text.subtitle">Time</div>
+					<div :class="text.label">Layout:</div>
 					<RadioGroup option="time.layout" :choices="['default', 'stacked']">
 						<template #default>
 							<div class="time">
@@ -120,15 +120,15 @@ function handleFetch() {
 
 					<div class="divider" />
 
-					<div :class="text.subtitle">weather</div>
-					<OptionToggle option="weather.useCelsius" label="celsius" />
+					<div :class="text.subtitle">Weather</div>
+					<OptionToggle option="weather.useCelsius" label="Celsius" />
 					<OptionToggle
 						option="weather.descriptive"
-						label="precise conditions"
+						label="Precise conditions"
 					/>
 
 					<div class="row">
-						<div :class="text.base">source:</div>
+						<div :class="text.base">Source:</div>
 						<ExternalLink url="https://openweathermap.org"
 							>OpenWeather</ExternalLink
 						>
@@ -136,7 +136,7 @@ function handleFetch() {
 
 					<div class="divider" />
 
-					<div :class="text.subtitle">location</div>
+					<div :class="text.subtitle">Location</div>
 
 					<div v-if="dataStore.weather.timestamp" class="row separated">
 						<div
@@ -167,7 +167,7 @@ function handleFetch() {
 								v-if="dataStore.position.fetching == false"
 								:class="text.label"
 							>
-								location disabled.
+								Location disabled.
 							</div>
 							<div v-else :class="text.label">fetching...</div>
 							<div>
