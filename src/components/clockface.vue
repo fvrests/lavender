@@ -3,7 +3,7 @@ const props = defineProps<{
 	layout: string
 	hour: string
 	minute: string
-	time: Date
+	time: string
 }>()
 </script>
 

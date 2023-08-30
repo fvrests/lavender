@@ -13,7 +13,6 @@ const handleOption = (newValue = null) =>
 		if (newValue && index === optionNodes.length - 1) {
 			// @ts-expect-error cannot index cur
 			prev[cur] = newValue
-			console.log('setting', prev[cur], 'to', newValue)
 		}
 		// returns the store reference
 		// @ts-expect-error cannot index cur
@@ -62,7 +61,7 @@ let selected = computed({
 					/>
 					<slot :name="n" />
 				</label>
-				<div :class="selected == n ? text.label : text.base">
+				<div class="text" :class="selected == n ? text.label : text.base">
 					{{ n }}
 				</div>
 			</div>
@@ -121,5 +120,8 @@ label:focus {
 	justify-content: center;
 	grid-gap: var(--space-small);
 	padding: 6px 0px;
+}
+.text {
+	text-transform: capitalize;
 }
 </style>

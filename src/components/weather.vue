@@ -42,6 +42,7 @@ function handleDecline() {
 		<div
 			v-if="
 				dataStore.init &&
+				optionsStore.init &&
 				!dataStore.position.fetching &&
 				!optionsStore.position.declined &&
 				!dataStore.position.latitude

@@ -11,10 +11,8 @@ import { useDataStore } from './store/data'
 let optionsStore = useOptionsStore()
 let dataStore = useDataStore()
 
-optionsStore.initializeStore()
-optionsStore.initializeTheme()
-optionsStore.initializeChromeStorage()
-dataStore.initializeStore()
+optionsStore.initialize()
+dataStore.initialize()
 </script>
 
 <template>

@@ -7,7 +7,7 @@ import { useOptionsStore } from './options'
 export const useDataStore = defineStore('data', {
 	state: () => ({
 		init: false,
-		date: new Date(),
+		date: new Date().toString(),
 		isChrome: false,
 		weather: {
 			timestamp: null as number | null,
@@ -30,18 +30,19 @@ export const useDataStore = defineStore('data', {
 		},
 		formattedDate(state) {
 			let hour = ''
+			let date = new Date(state.date)
 			if (useOptionsStore().time.use24Hour) {
-				hour = format(state.date, 'HH')
+				hour = format(date, 'HH')
 			} else if (useOptionsStore().time.layout == 'stacked') {
-				hour = format(state.date, 'hh')
+				hour = format(date, 'hh')
 			} else {
-				hour = format(state.date, 'h')
+				hour = format(date, 'h')
 			}
 			return {
-				today: format(state.date, 'LLLL do, yyyy'),
+				today: format(date, 'LLLL do, yyyy'),
 				hour: hour,
-				minute: format(state.date, 'mm'),
-				descriptor: format(state.date, 'B'),
+				minute: format(date, 'mm'),
+				descriptor: format(date, 'B'),
 			}
 		},
 		weatherIconClass: (state) => {
@@ -80,16 +81,36 @@ export const useDataStore = defineStore('data', {
 		},
 	},
 	actions: {
-		initializeStore() {
-			this.init = true
+		startClock() {
+			setCorrectingInterval(() => (this.date = new Date().toString()), 1000)
+		},
+		initialize() {
+			this.startClock()
+			async function getLocalData() {
+				return localStorage.getItem('data')
+			}
+			getLocalData().then(
+				(data) => {
+					if (data) {
+						const localData = JSON.parse(data)
+						this.$patch(localData)
+					}
+				},
+				(err) => {
+					console.warn(err)
+				}
+			)
 			this.isChrome =
 				!!navigator.userAgentData &&
 				navigator.userAgentData.brands.some(
 					(data) => data.brand == 'Google Chrome'
 				)
-		},
-		getTime() {
-			setCorrectingInterval(() => (this.date = new Date()), 1000)
+			this.init = true
+			this.$subscribe((_, state) => {
+				if (this.init) {
+					localStorage.setItem('data', JSON.stringify(state))
+				}
+			})
 		},
 		async fetchPosition() {
 			this.$patch({
@@ -108,7 +129,6 @@ export const useDataStore = defineStore('data', {
 			})
 			return getPosition.then((pos) => {
 				if (pos) {
-					console.log('pos found', pos)
 					this.$patch({
 						position: {
 							latitude: pos.coords.latitude,
@@ -118,14 +138,6 @@ export const useDataStore = defineStore('data', {
 						},
 					})
 				}
-				console.log({
-					pos,
-					fromState: [
-						this.position.latitude,
-						this.position.longitude,
-						this.position.fetching,
-					],
-				})
 				return pos
 			})
 		},
@@ -147,7 +159,6 @@ export const useDataStore = defineStore('data', {
 					lat || this.position.latitude,
 					long || this.position.longitude
 				).then((res) => {
-					console.log('raw weather', res)
 					return (
 						(this.weather = {
 							...this.weather,
@@ -155,7 +166,7 @@ export const useDataStore = defineStore('data', {
 							timestamp: Date.now(),
 						}),
 						(err: any) => {
-							console.log('error fetching weather', err)
+							console.warn('error fetching weather', err)
 						}
 					)
 				})
@@ -165,10 +176,8 @@ export const useDataStore = defineStore('data', {
 			}, 5 * 60 * 1000)
 		},
 		async handleInitialFetch() {
-			console.log('before pos')
 			await this.fetchPosition().then(
 				(pos) => {
-					console.log('pos used', pos)
 					this.refreshWeather(pos.coords.latitude, pos.coords.longitude)
 				},
 				(err) => {

@@ -1,6 +1,11 @@
 import { defineStore } from 'pinia'
 import { useDataStore } from './data'
-// import { useLocalStorage } from '@vueuse/core'
+
+declare global {
+	interface Window {
+		themeColor: any
+	}
+}
 
 export const useOptionsStore = defineStore('options', {
 	state: () => ({
@@ -23,25 +28,24 @@ export const useOptionsStore = defineStore('options', {
 	}),
 	actions: {
 		initializeStore() {
-			async function getLocalData() {
-				return localStorage.getItem('lavender')
+			async function getLocalOptions() {
+				return localStorage.getItem('options')
 			}
-			getLocalData().then(
-				(data) => {
-					if (data) {
-						const localOptions = JSON.parse(data)
+			getLocalOptions().then(
+				(options) => {
+					if (options) {
+						const localOptions = JSON.parse(options)
 						this.$patch(localOptions)
 					}
-					this.init = true
 				},
 				(err) => {
-					console.log(err)
+					console.warn(err)
 				}
 			)
 			this.init = true
 			this.$subscribe((_, state) => {
 				if (this.init) {
-					localStorage.setItem('lavender', JSON.stringify(state))
+					localStorage.setItem('options', JSON.stringify(state))
 				}
 			})
 		},
@@ -49,12 +53,12 @@ export const useOptionsStore = defineStore('options', {
 			window.themeColor = 'lavender'
 			try {
 				const storedOptions =
-					JSON.parse(window.localStorage.getItem('lavender')) ?? null
+					JSON.parse(window.localStorage.getItem('options')) ?? null
 				const storedColor = (storedOptions && storedOptions.theme.color) ?? null
 				if (storedColor) {
-					document.querySelector('html').className = storedColor
+					document.documentElement.className = storedColor
 				} else {
-					document.querySelector('html').className = 'lavender'
+					document.documentElement.className = 'options'
 				}
 			} catch (err) {
 				console.warn(err)
@@ -64,13 +68,13 @@ export const useOptionsStore = defineStore('options', {
 			chrome.storage.sync.get().then(
 				(value) => {
 					if (value) {
-						const syncOptions = JSON.parse(value.lavender)
+						const syncOptions = JSON.parse(value.options)
 						this.$patch({ ...syncOptions, init: true })
-						document.querySelector('html').className = syncOptions.theme.color
+						document.documentElement.className = syncOptions.theme.color
 					}
 				},
 				(err) => {
-					console.log(err)
+					console.warn(err)
 				}
 			)
 		},
@@ -80,18 +84,23 @@ export const useOptionsStore = defineStore('options', {
 				this.readChromeStorage()
 			}
 
+			// todo: can push value of store or only localStorage?
 			this.$subscribe(() => {
 				if (this.init && useDataStore().isChrome && this.useChromeStorage) {
+					// const localOptions = localStorage.getItem('options')
 					// push options on change
 					chrome.storage.sync.set({
-						...localStorage,
+						// options: localOptions?.toString() ?? null,
+						options: this.toString() ?? null,
 						lastSynced: Date.now(),
 					})
 				}
 			})
 		},
-		clearChromeStorage() {
-			chrome.storage.sync.clear()
+		initialize() {
+			this.initializeStore()
+			this.initializeTheme()
+			this.initializeChromeStorage()
 		},
 		setTheme(theme: string) {
 			this.$patch({ theme: { color: theme } })
@@ -99,6 +108,15 @@ export const useOptionsStore = defineStore('options', {
 		},
 		previewTheme(theme: string) {
 			document.documentElement.className = theme
+		},
+		clearData() {
+			// todo: prevent error on chrome undefined
+			localStorage.clear()
+			if (useDataStore().isChrome) chrome?.storage.sync.clear()
+			this.$reset()
+			useDataStore().$reset()
+			this.initialize()
+			useDataStore().initialize()
 		},
 	},
 })
