@@ -146,7 +146,6 @@ function handleFetch() {
 							{{ dataStore.weather.name }},
 							{{ dataStore.weather.sys.country }}
 						</div>
-
 						<div v-else :class="text.label">Fetching...</div>
 						<div>
 							<!--fix: button should be disabled on click  -->
@@ -169,7 +168,7 @@ function handleFetch() {
 							>
 								Location disabled.
 							</div>
-							<div v-else :class="text.label">fetching...</div>
+							<div v-else :class="text.label">Fetching...</div>
 							<div>
 								<button
 									:class="button.primary"
@@ -218,7 +217,7 @@ function handleFetch() {
 							<!--todo: clear local storage and chrome storage-->
 							<button
 								:class="button.tertiary"
-								@click="optionsStore.clearChromeStorage()"
+								@click="optionsStore.clearData()"
 							>
 								Reset all data
 							</button>

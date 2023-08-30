@@ -1,15 +1,10 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
 import { useOptionsStore } from '../store/options'
 import { useDataStore } from '../store/data'
 import Clockface from './clockface.vue'
 
 const optionsStore = useOptionsStore()
 const dataStore = useDataStore()
-
-onMounted(() => {
-	dataStore.getTime()
-})
 </script>
 
 <template>
@@ -19,6 +14,7 @@ onMounted(() => {
 			:hour="dataStore.formattedDate.hour"
 			:minute="dataStore.formattedDate.minute"
 			:time="dataStore.date"
+			v-if="dataStore.init && optionsStore.init"
 		/>
 		<div class="space-small" />
 		<div class="context-label" v-if="!optionsStore.time.use24Hour">
