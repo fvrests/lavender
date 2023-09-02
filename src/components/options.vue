@@ -272,11 +272,11 @@ function handleFetch() {
 	top: 0;
 	right: var(--page-padding);
 	bottom: calc(var(--page-padding) + 36px + var(--space-small));
-	z-index: 10;
 	color: var(--ui-fg);
 }
 
 .options-menu--inner {
+	z-index: 10;
 	margin-top: auto;
 	padding: var(--space-medium);
 	width: 100%;
