@@ -45,208 +45,197 @@ function handleFetch() {
 		<div v-if="isOptionsOpen" class="overlay" @click="toggleOptionsMenu" />
 		<transition name="optionsMenu">
 			<div v-show="isOptionsOpen" class="options-menu" role="menu">
-				<div class="options-menu--inner">
-					<div :class="text.title">Options</div>
+				<div :class="text.title">Options</div>
 
-					<div :class="text.subtitle">Theme</div>
+				<div :class="text.subtitle">Theme</div>
 
-					<div style="padding: 6px 0px">
-						<div :class="text.label">Lavender collection</div>
-						<div class="space-xsmall" />
-						<ul class="theme-list">
-							<li v-for="theme in themes">
-								<ThemeSelect :theme="theme" :colors="[theme]" />
-							</li>
-						</ul>
-						<div class="space-xsmall" />
-						<div :class="text.label">Night collection</div>
-						<div class="space-xsmall" />
-						<ul class="theme-list">
-							<li v-for="theme in themes">
-								<ThemeSelect
-									:theme="theme + '-dark'"
-									:colors="[theme + '-dark']"
-									dark
-								/>
-							</li>
-						</ul>
-						<div class="space-xsmall" />
-						<div :class="text.label">Responsive (follow system theme)</div>
-						<div class="space-xsmall" />
-						<ul class="theme-list">
-							<li v-for="theme in themes">
-								<ThemeSelect
-									:theme="theme + '-system'"
-									split
-									:colors="[theme, `${theme}-dark`]"
-									dark
-								/>
-							</li>
-						</ul>
-					</div>
+				<div style="padding: 6px 0px">
+					<div :class="text.label">Lavender collection</div>
+					<div class="space-xsmall" />
+					<ul class="theme-list">
+						<li v-for="theme in themes">
+							<ThemeSelect :theme="theme" :colors="[theme]" />
+						</li>
+					</ul>
+					<div class="space-xsmall" />
+					<div :class="text.label">Night collection</div>
+					<div class="space-xsmall" />
+					<ul class="theme-list">
+						<li v-for="theme in themes">
+							<ThemeSelect
+								:theme="theme + '-dark'"
+								:colors="[theme + '-dark']"
+								dark
+							/>
+						</li>
+					</ul>
+					<div class="space-xsmall" />
+					<div :class="text.label">Responsive (follow system theme)</div>
+					<div class="space-xsmall" />
+					<ul class="theme-list">
+						<li v-for="theme in themes">
+							<ThemeSelect
+								:theme="theme + '-system'"
+								split
+								:colors="[theme, `${theme}-dark`]"
+								dark
+							/>
+						</li>
+					</ul>
+				</div>
 
-					<div class="divider" />
+				<div class="divider" />
 
-					<div :class="text.subtitle">Time</div>
-					<div :class="text.label">Layout:</div>
-					<RadioGroup option="time.layout" :choices="['default', 'stacked']">
-						<template #default>
-							<div class="time">
-								<div>9:41</div>
-							</div>
-						</template>
+				<div :class="text.subtitle">Time</div>
+				<div :class="text.label">Layout:</div>
+				<RadioGroup option="time.layout" :choices="['default', 'stacked']">
+					<template #default>
+						<div class="time">
+							<div>9:41</div>
+						</div>
+					</template>
 
-						<template #stacked>
-							<div class="time">
-								<div class="outline">
-									<div :class="text.monospaced">
-										<span>0</span>
-										<span>9</span>
-									</div>
-									<div :class="text.monospaced">
-										<span>4</span>
-										<span>1</span>
-									</div>
+					<template #stacked>
+						<div class="time">
+							<div class="outline">
+								<div :class="text.monospaced">
+									<span>0</span>
+									<span>9</span>
+								</div>
+								<div :class="text.monospaced">
+									<span>4</span>
+									<span>1</span>
 								</div>
 							</div>
-						</template>
-					</RadioGroup>
+						</div>
+					</template>
+				</RadioGroup>
 
-					<OptionToggle
-						option="time.use24Hour"
-						label="24-hour format"
-						role="menuitem"
-					/>
+				<OptionToggle
+					option="time.use24Hour"
+					label="24-hour format"
+					role="menuitem"
+				/>
 
-					<div class="divider" />
+				<div class="divider" />
 
-					<div :class="text.subtitle">Weather</div>
-					<OptionToggle option="weather.useCelsius" label="Celsius" />
-					<OptionToggle
-						option="weather.descriptive"
-						label="Precise conditions"
-					/>
+				<div :class="text.subtitle">Weather</div>
+				<OptionToggle option="weather.useCelsius" label="Celsius" />
+				<OptionToggle option="weather.descriptive" label="Precise conditions" />
 
-					<div class="row">
-						<div :class="text.base">Source:</div>
-						<ExternalLink url="https://openweathermap.org"
-							>OpenWeather</ExternalLink
-						>
+				<div class="row">
+					<div :class="text.base">Source:</div>
+					<ExternalLink url="https://openweathermap.org"
+						>OpenWeather</ExternalLink
+					>
+				</div>
+
+				<div class="divider" />
+
+				<div :class="text.subtitle">Location</div>
+
+				<div v-if="dataStore.weather.timestamp" class="row separated">
+					<div v-if="dataStore.position.fetching == false" :class="text.label">
+						{{ dataStore.weather.name }},
+						{{ dataStore.weather.sys.country }}
 					</div>
-
-					<div class="divider" />
-
-					<div :class="text.subtitle">Location</div>
-
-					<div v-if="dataStore.weather.timestamp" class="row separated">
+					<div v-else :class="text.label">Fetching...</div>
+					<div>
+						<!--fix: button should be disabled on click  -->
+						<!--fix: handle error if fetch hangs (e.g. not enabled in browser) -->
+						<button
+							:class="button.primary"
+							style="margin: 0 auto"
+							:disabled="refreshDisabled"
+							@click="handleFetch()"
+						>
+							{{ !refreshDisabled ? 'Refresh' : 'Please wait 15s' }}
+						</button>
+					</div>
+				</div>
+				<div v-else>
+					<div class="row separated">
 						<div
 							v-if="dataStore.position.fetching == false"
 							:class="text.label"
 						>
-							{{ dataStore.weather.name }},
-							{{ dataStore.weather.sys.country }}
+							Location disabled.
 						</div>
 						<div v-else :class="text.label">Fetching...</div>
 						<div>
-							<!--fix: button should be disabled on click  -->
-							<!--fix: handle error if fetch hangs (e.g. not enabled in browser) -->
 							<button
 								:class="button.primary"
 								style="margin: 0 auto"
-								:disabled="refreshDisabled"
 								@click="handleFetch()"
 							>
-								{{ !refreshDisabled ? 'Refresh' : 'Please wait 15s' }}
+								Enable
 							</button>
 						</div>
 					</div>
-					<div v-else>
-						<div class="row separated">
-							<div
-								v-if="dataStore.position.fetching == false"
-								:class="text.label"
-							>
-								Location disabled.
-							</div>
-							<div v-else :class="text.label">Fetching...</div>
-							<div>
-								<button
-									:class="button.primary"
-									style="margin: 0 auto"
-									@click="handleFetch()"
-								>
-									Enable
-								</button>
-							</div>
-						</div>
 
-						<div :class="text.base">
-							Lavender will never access your location without your permission.
-							Please click 'enable' to allow location access.
-						</div>
+					<div :class="text.base">
+						Lavender will never access your location without your permission.
+						Please click 'enable' to allow location access.
 					</div>
+				</div>
 
+				<div class="divider" />
+
+				<div v-if="optionsStore.init && dataStore.isChrome">
+					<div :class="text.subtitle">Data sync</div>
+
+					<OptionToggle
+						option="useChromeStorage"
+						label="Sync with Chrome"
+						role="menuitem"
+						:onChange="
+							() =>
+								!optionsStore.useChromeStorage &&
+								optionsStore.readChromeStorage()
+						"
+					/>
+					<div :class="text.base">
+						Persist options across your Chrome browsers (overrides local
+						options). Your location is not synced and will remain on-device.
+					</div>
 					<div class="divider" />
-
-					<div v-if="optionsStore.init && dataStore.isChrome">
-						<div :class="text.subtitle">Data sync</div>
-
-						<OptionToggle
-							option="useChromeStorage"
-							label="Sync with Chrome"
-							role="menuitem"
-							:onChange="
-								() =>
-									!optionsStore.useChromeStorage &&
-									optionsStore.readChromeStorage()
-							"
-						/>
-						<div :class="text.base">
-							Persist options across your Chrome browsers (overrides local
-							options). Your location is not synced and will remain on-device.
-						</div>
-						<div class="divider" />
+				</div>
+				<div>
+					<div :class="text.subtitle">Reset data</div>
+					<div :class="text.base">
+						Erase everything, including location and weather data, and restore
+						default options.
 					</div>
-					<div>
-						<div :class="text.subtitle">Reset data</div>
-						<div :class="text.base">
-							Erase everything, including location and weather data, and restore
-							default options.
-						</div>
-						<div class="row separated">
-							<!--todo: clear local storage and chrome storage-->
-							<button
-								:class="button.tertiary"
-								@click="optionsStore.clearData()"
-							>
-								Reset all data
-							</button>
-						</div>
-						<div class="divider" />
+					<div class="row separated">
+						<!--todo: clear local storage and chrome storage-->
+						<button :class="button.tertiary" @click="optionsStore.clearData()">
+							Reset all data
+						</button>
 					</div>
+					<div class="divider" />
+				</div>
 
-					<div class="row even">
-						<ExternalLink
-							url="https://github.com/fvrests/lavender/blob/main/privacy-policy.md"
-							>Privacy Policy
-						</ExternalLink>
-						<ExternalLink
-							url="https://github.com/fvrests/lavender/blob/main/terms-of-use.md"
-							>Terms of Use</ExternalLink
-						>
-					</div>
+				<div class="row even">
+					<ExternalLink
+						url="https://github.com/fvrests/lavender/blob/main/privacy-policy.md"
+						>Privacy Policy
+					</ExternalLink>
+					<ExternalLink
+						url="https://github.com/fvrests/lavender/blob/main/terms-of-use.md"
+						>Terms of Use</ExternalLink
+					>
+				</div>
 
-					<div class="space-small" />
+				<div class="space-small" />
 
-					<div class="row even">
-						<ExternalLink url="https://fvrests.dev" :underline="true"
-							>fvrests</ExternalLink
-						>
+				<div class="row even">
+					<ExternalLink url="https://fvrests.dev" :underline="true"
+						>fvrests</ExternalLink
+					>
 
-						<ExternalLink url="https://ko-fi.com/fvrests" :underline="true"
-							>donate ♥</ExternalLink
-						>
-					</div>
+					<ExternalLink url="https://ko-fi.com/fvrests" :underline="true"
+						>donate ♥</ExternalLink
+					>
 				</div>
 			</div>
 		</transition>
@@ -256,6 +245,7 @@ function handleFetch() {
 <style scoped>
 .options {
 	position: fixed;
+	top: var(--page-padding);
 	right: var(--page-padding);
 	bottom: var(--page-padding);
 	display: flex;
@@ -264,28 +254,26 @@ function handleFetch() {
 }
 
 .options-menu {
-	padding-top: var(--page-padding);
-	width: 320px;
-	display: flex;
-	justify-content: flex-end;
-	position: fixed;
-	top: 0;
-	right: var(--page-padding);
-	bottom: calc(var(--page-padding) + 36px + var(--space-small));
-	color: var(--ui-fg);
-}
+	--_space-around: var(--page-padding);
+	--_space-around-bottom: calc(
+		var(--_space-around) + 36px + var(--space-small)
+	);
 
-.options-menu--inner {
+	margin-top: var(--_space-around);
+	color: var(--ui-fg);
+	position: fixed;
+	right: var(--page-padding);
+	bottom: var(--_space-around-bottom);
 	z-index: 10;
-	margin-top: auto;
+	max-width: 320px;
 	padding: var(--space-medium);
 	width: 100%;
-	height: 100%;
-	max-height: 640px;
+	height: 640px;
+	max-height: calc(100vh - var(--_space-around) - var(--_space-around-bottom));
 	background: var(--ui-bg);
 	border: var(--border);
 	border-radius: var(--rounded);
-	overflow-y: scroll;
+	overflow-y: auto;
 }
 
 .options-button {
