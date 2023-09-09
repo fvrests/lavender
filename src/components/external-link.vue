@@ -3,12 +3,11 @@ const props = withDefaults(
 	defineProps<{ url: string; underline?: boolean }>(),
 	{
 		underline: false,
-	}
+	},
 )
 const { url, underline } = props
 </script>
 
-<!--todo: focus style-->
 <template>
 	<a :href="url" target="_blank">
 		<div class="row">
