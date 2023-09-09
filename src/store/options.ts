@@ -31,39 +31,45 @@ export const useOptionsStore = defineStore('options', {
 			async function getLocalOptions() {
 				return localStorage.getItem('options')
 			}
-			getLocalOptions().then(
-				(options) => {
-					if (options) {
-						const localOptions = JSON.parse(options)
-						this.$patch(localOptions)
-					}
-				},
-				(err) => {
-					console.warn(err)
-				}
-			)
-			this.init = true
-			this.$subscribe((_, state) => {
-				if (this.init) {
-					localStorage.setItem('options', JSON.stringify(state))
-				}
-			})
+			getLocalOptions()
+				.then(
+					// set localStore options into store
+					(options) => {
+						if (options) {
+							const localOptions = JSON.parse(options)
+							this.$patch(localOptions)
+						}
+					},
+					(err) => {
+						console.warn(err)
+					},
+				)
+				.then(() => {
+					this.init = true
+					this.initializeChromeStorage()
+				})
+				.then(() => {
+					this.setTheme(this.theme.color)
+					this.$subscribe((_, state) => {
+						localStorage.setItem('options', JSON.stringify(state))
+					})
+				})
 		},
-		initializeTheme() {
-			window.themeColor = 'lavender'
-			try {
-				const storedOptions =
-					JSON.parse(window.localStorage.getItem('options')) ?? null
-				const storedColor = (storedOptions && storedOptions.theme.color) ?? null
-				if (storedColor) {
-					document.documentElement.className = storedColor
-				} else {
-					document.documentElement.className = 'options'
-				}
-			} catch (err) {
-				console.warn(err)
-			}
-		},
+		// initializeTheme() {
+		// 	window.themeColor = 'lavender'
+		// 	try {
+		// 		const storedOptions =
+		// 			JSON.parse(window.localStorage.getItem('options')) ?? null
+		// 		const storedColor = (storedOptions && storedOptions.theme.color) ?? null
+		// 		if (storedColor) {
+		// 			document.documentElement.className = storedColor
+		// 		} else {
+		// 			document.documentElement.className = 'options'
+		// 		}
+		// 	} catch (err) {
+		// 		console.warn(err)
+		// 	}
+		// },
 		readChromeStorage() {
 			chrome.storage.sync.get().then(
 				(value) => {
@@ -75,7 +81,7 @@ export const useOptionsStore = defineStore('options', {
 				},
 				(err) => {
 					console.warn(err)
-				}
+				},
 			)
 		},
 		initializeChromeStorage() {
@@ -83,15 +89,16 @@ export const useOptionsStore = defineStore('options', {
 			if (this.init && useDataStore().isChrome && this.useChromeStorage) {
 				this.readChromeStorage()
 			}
-
-			// todo: can push value of store or only localStorage?
 			this.$subscribe(() => {
 				if (this.init && useDataStore().isChrome && this.useChromeStorage) {
-					// const localOptions = localStorage.getItem('options')
 					// push options on change
+					console.log(
+						'options will be set into chrome store',
+						window.localStorage.getItem('options'),
+					)
 					chrome.storage.sync.set({
-						// options: localOptions?.toString() ?? null,
-						options: this.toString() ?? null,
+						// options: window.localStorage.getItem('options'),
+						options: JSON.stringify(this.$state),
 						lastSynced: Date.now(),
 					})
 				}
@@ -99,7 +106,7 @@ export const useOptionsStore = defineStore('options', {
 		},
 		initialize() {
 			this.initializeStore()
-			this.initializeTheme()
+			// this.initializeTheme()
 			this.initializeChromeStorage()
 		},
 		setTheme(theme: string) {
