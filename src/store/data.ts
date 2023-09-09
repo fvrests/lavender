@@ -98,12 +98,12 @@ export const useDataStore = defineStore('data', {
 				},
 				(err) => {
 					console.warn(err)
-				}
+				},
 			)
 			this.isChrome =
 				!!navigator.userAgentData &&
 				navigator.userAgentData.brands.some(
-					(data) => data.brand == 'Google Chrome'
+					(data) => data.brand == 'Google Chrome',
 				)
 			this.init = true
 			this.$subscribe((_, state) => {
@@ -124,7 +124,7 @@ export const useDataStore = defineStore('data', {
 					(err) => {
 						console.warn(err)
 						reject(err)
-					}
+					},
 				)
 			})
 			return getPosition.then((pos) => {
@@ -157,7 +157,7 @@ export const useDataStore = defineStore('data', {
 			if ((lat && long) || (this.position.latitude && this.position.longitude))
 				fetchWeather(
 					lat || this.position.latitude,
-					long || this.position.longitude
+					long || this.position.longitude,
 				).then((res) => {
 					return (
 						(this.weather = {
@@ -170,10 +170,13 @@ export const useDataStore = defineStore('data', {
 						}
 					)
 				})
-			setCorrectingInterval(() => {
-				if (this.position.latitude && this.position.longitude)
-					this.refreshWeather(this.position.latitude, this.position.longitude)
-			}, 5 * 60 * 1000)
+			setCorrectingInterval(
+				() => {
+					if (this.position.latitude && this.position.longitude)
+						this.refreshWeather(this.position.latitude, this.position.longitude)
+				},
+				5 * 60 * 1000,
+			)
 		},
 		async handleInitialFetch() {
 			await this.fetchPosition().then(
@@ -182,7 +185,7 @@ export const useDataStore = defineStore('data', {
 				},
 				(err) => {
 					console.log('error fetching location', err)
-				}
+				},
 			)
 		},
 	},
