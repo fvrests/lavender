@@ -207,7 +207,6 @@ function handleFetch() {
 						default options.
 					</div>
 					<div class="row separated">
-						<!--todo: clear local storage and chrome storage-->
 						<button :class="button.tertiary" @click="optionsStore.clearData()">
 							Reset all data
 						</button>

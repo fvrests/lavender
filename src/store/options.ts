@@ -55,21 +55,6 @@ export const useOptionsStore = defineStore('options', {
 					})
 				})
 		},
-		// initializeTheme() {
-		// 	window.themeColor = 'lavender'
-		// 	try {
-		// 		const storedOptions =
-		// 			JSON.parse(window.localStorage.getItem('options')) ?? null
-		// 		const storedColor = (storedOptions && storedOptions.theme.color) ?? null
-		// 		if (storedColor) {
-		// 			document.documentElement.className = storedColor
-		// 		} else {
-		// 			document.documentElement.className = 'options'
-		// 		}
-		// 	} catch (err) {
-		// 		console.warn(err)
-		// 	}
-		// },
 		readChromeStorage() {
 			chrome.storage.sync.get().then(
 				(value) => {
@@ -97,7 +82,6 @@ export const useOptionsStore = defineStore('options', {
 						window.localStorage.getItem('options'),
 					)
 					chrome.storage.sync.set({
-						// options: window.localStorage.getItem('options'),
 						options: JSON.stringify(this.$state),
 						lastSynced: Date.now(),
 					})
@@ -106,7 +90,6 @@ export const useOptionsStore = defineStore('options', {
 		},
 		initialize() {
 			this.initializeStore()
-			// this.initializeTheme()
 			this.initializeChromeStorage()
 		},
 		setTheme(theme: string) {
