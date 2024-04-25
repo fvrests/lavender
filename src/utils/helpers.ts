@@ -17,7 +17,6 @@ export const setCorrectingInterval = (func: () => {}, delay: number) => {
 	}
 	function tick(func: () => {}, delay: number) {
 		if (!instance.started) {
-			console.log('tick starting')
 			instance = {
 				func: func,
 				delay: delay,
@@ -28,7 +27,6 @@ export const setCorrectingInterval = (func: () => {}, delay: number) => {
 
 			setTimeout(tick, delay)
 		} else {
-			console.log('tick running')
 			var elapsed = new Date().valueOf() - instance.startTime!,
 				adjust = instance.target! - elapsed
 
