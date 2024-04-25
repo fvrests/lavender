@@ -61,7 +61,7 @@ function handleFetch() {
 						</li>
 					</ul>
 					<div class="space-xsmall" />
-					<div :class="text.label">Night collection</div>
+					<div :class="text.label">Nightshade collection</div>
 					<div class="space-xsmall" />
 					<ul class="theme-list">
 						<li v-for="theme in themes">
