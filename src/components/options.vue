@@ -23,6 +23,9 @@ function toggleOptionsMenu() {
 
 function handleFetch() {
 	refreshDisabled.value = true
+	optionsStore.$patch({
+		position: { declined: false },
+	})
 	dataStore.handleInitialFetch()
 	setTimeout(function () {
 		refreshDisabled.value = false
@@ -134,7 +137,7 @@ function handleFetch() {
 
 				<div :class="text.subtitle">Location</div>
 
-				<div v-if="dataStore.weather.timestamp" class="row separated">
+				<div v-if="dataStore.weather?.timestamp" class="row separated">
 					<div v-if="dataStore.position.fetching == false" :class="text.label">
 						{{ dataStore.weather.name }},
 						{{ dataStore.weather.sys.country }}
@@ -155,13 +158,13 @@ function handleFetch() {
 				</div>
 				<div v-else>
 					<div class="row separated">
-						<div
-							v-if="dataStore.position.fetching == false"
-							:class="text.label"
-						>
-							Location disabled.
+						<div :class="text.label">
+							{{
+								!dataStore.position.fetching
+									? 'Location disabled.'
+									: 'Fetching...'
+							}}
 						</div>
-						<div v-else :class="text.label">Fetching...</div>
 						<div>
 							<button
 								:class="button.primary"

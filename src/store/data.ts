@@ -4,20 +4,21 @@ import { setCorrectingInterval, fetchWeather } from '../utils/helpers'
 import conditions from '../utils/weather-conditions'
 import { useOptionsStore } from './options'
 
+interface Weather extends OpenWeatherResponse {
+	timestamp: number
+}
+
 export const useDataStore = defineStore('data', {
 	state: () => ({
 		init: false,
 		date: new Date().toString(),
 		isChrome: false,
-		weather: {
-			timestamp: null as number | null,
-		},
+		weather: null as Weather | null,
 		position: {
 			latitude: null as number | null,
 			longitude: null as number | null,
 			timestamp: null as number | null,
 			fetching: false,
-			declined: false,
 		},
 		errors: {
 			weather: '',
@@ -46,31 +47,40 @@ export const useDataStore = defineStore('data', {
 			}
 		},
 		weatherIconClass: (state) => {
-			if (state.weather.timestamp) {
+			let iconClass = 'wi wi-cloud-refresh'
+			if (state.weather?.timestamp) {
+				console.log(
+					'current',
+					Number(new Date(state.date)) / 1000,
+					'sunrise',
+					state.weather.sys.sunrise,
+					'sunset',
+					state.weather.sys.sunset,
+				)
 				let day = true
 				day = !!(
-					Number(state.date) / 1000 > state.weather.sys.sunrise &&
-					Number(state.date) / 1000 < state.weather.sys.sunset
+					Number(new Date(state.date)) / 1000 > state.weather.sys.sunrise &&
+					Number(new Date(state.date)) / 1000 < state.weather.sys.sunset
 				)
-				let iconClass = day
+				iconClass = day
 					? `wi wi-owm-day-${state.weather.weather[0].id}`
 					: `wi wi-owm-night-${state.weather.weather[0].id}`
-				return iconClass
 			}
+			return iconClass
 		},
 		formattedTemp: (state) => {
-			if (state.weather.timestamp) {
-				let celsiusTemp = (state.weather?.main.temp - 273.15).toFixed()
+			if (state.weather?.timestamp) {
+				let celsiusTemp = (state.weather.main.temp - 273.15).toFixed()
 				let fahrenheitTemp = (Number(celsiusTemp) * (9 / 5) + 32).toFixed()
 				return useOptionsStore().weather.useCelsius
 					? celsiusTemp
 					: fahrenheitTemp
 			} else {
-				return 'Please click the cloud to get data!'
+				return 'Please click the cloud to get data'
 			}
 		},
 		weatherConditions: (state) => {
-			if (state.weather.timestamp) {
+			if (state.weather?.timestamp && state.weather.weather.length > 0) {
 				let condition = useOptionsStore().weather.descriptive
 					? conditions[state.weather.weather[0].id][0]
 					: conditions[state.weather.weather[0].id][1]
@@ -101,9 +111,9 @@ export const useDataStore = defineStore('data', {
 				},
 			)
 			this.isChrome =
-				!!navigator.userAgentData &&
-				navigator.userAgentData.brands.some(
-					(data) => data.brand == 'Google Chrome',
+				!!(navigator as any).userAgentData &&
+				(navigator as any).userAgentData.brands.some(
+					(data: any) => data.brand == 'Google Chrome',
 				)
 			this.init = true
 			this.$subscribe((_, state) => {
@@ -116,60 +126,59 @@ export const useDataStore = defineStore('data', {
 			this.$patch({
 				position: { fetching: true },
 			})
-			const getPosition = new Promise((resolve, reject) => {
-				navigator.geolocation.getCurrentPosition(
-					(pos) => {
-						resolve(pos)
-					},
-					(err) => {
-						console.warn(err)
-						reject(err)
-					},
-				)
-			})
-			return getPosition.then((pos) => {
-				if (pos) {
-					this.$patch({
-						position: {
-							latitude: pos.coords.latitude,
-							longitude: pos.coords.longitude,
-							timestamp: Date.now(),
-							fetching: false,
+			const getPosition = new Promise<GeolocationPosition>(
+				(resolve, reject) => {
+					navigator.geolocation.getCurrentPosition(
+						(pos) => {
+							resolve(pos)
 						},
-					})
-				}
+						(err) => {
+							console.warn('Error fetching position', err)
+							this.errors.location = err.message
+							reject(err)
+							this.$patch({
+								position: {
+									fetching: false,
+								},
+							})
+						},
+					)
+				},
+			)
+			return getPosition.then((pos) => {
+				this.$patch({
+					position: {
+						latitude: pos.coords.latitude,
+						longitude: pos.coords.longitude,
+						timestamp: Date.now(),
+						fetching: false,
+					},
+				})
 				return pos
 			})
 		},
-		refreshWeather(lat?: number, long?: number) {
+		refreshWeather(lat: number, long: number) {
 			// console.log('refreshing weather')
 			let invalidated =
-				!this.weather.timestamp ||
+				!this.weather?.timestamp ||
 				Date.now() - this.weather.timestamp >= 30 * 60 * 1000
 			// don't fetch if recent data exists or no location data
-			// console.log({ invalidated })
 			if (!invalidated) {
 				return
 			}
 			// fetch new weather using last known position
-			// no state
-			// console.log('state', this.position)
-			if ((lat && long) || (this.position.latitude && this.position.longitude))
-				fetchWeather(
-					lat || this.position.latitude,
-					long || this.position.longitude,
-				).then((res) => {
-					return (
-						(this.weather = {
-							...this.weather,
-							...res,
-							timestamp: Date.now(),
-						}),
-						(err: any) => {
-							console.warn('error fetching weather', err)
-						}
-					)
-				})
+			fetchWeather(lat, long).then((res) => {
+				return (
+					(this.weather = {
+						...this.weather,
+						...res,
+						timestamp: Date.now(),
+					}),
+					(err: any) => {
+						console.warn('error fetching weather', err)
+					}
+				)
+			})
 			setCorrectingInterval(
 				() => {
 					if (this.position.latitude && this.position.longitude)
