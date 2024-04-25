@@ -1,12 +1,6 @@
 import { defineStore } from 'pinia'
 import { useDataStore } from './data'
 
-declare global {
-	interface Window {
-		themeColor: any
-	}
-}
-
 export const useOptionsStore = defineStore('options', {
 	state: () => ({
 		init: false,
