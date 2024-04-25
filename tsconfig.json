@@ -1,6 +1,8 @@
 {
 	"compilerOptions": {
 		"target": "ES2020",
+		"baseUrl": ".",
+		"paths": { "@/*": ["src/*"], "~/*": ["src/*"] },
 		"useDefineForClassFields": true,
 		"module": "ESNext",
 		"lib": ["ES2020", "DOM", "DOM.Iterable"],
@@ -18,10 +20,12 @@
 		"strict": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
-		"noFallthroughCasesInSwitch": true
+		"noFallthroughCasesInSwitch": true,
+
+		/* Netlify */
+		"esModuleInterop": true,
+		"verbatimModuleSyntax": true
 	},
 	"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-	"references": [{ "path": "./tsconfig.node.json" }],
-	"baseUrl": ".",
-	"paths": { "@/*": ["src/*"], "~/*": ["src/*"] }
+	"references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -25,10 +25,10 @@ export const setCorrectingInterval = (func, delay) => {
 
 // fetches current weather info from OpenWeatherMap API - max 60 calls/minute or 1,000,000 calls/month
 export async function fetchWeather(latitude: number, longitude: number) {
-	let baseUrl = 'https://api.openweathermap.org/data/2.5/weather'
-	let appid = import.meta.env.VITE_WEATHER_KEY_DEV
+	let baseUrl =
+		'https://fvrests-openweather-api.netlify.app/.netlify/functions/weather'
 	const res = await fetch(
-		`${baseUrl}?lat=${latitude}&lon=${longitude}&appid=${appid}`
+		`${baseUrl}?latitude=${latitude}&longitude=${longitude}`,
 	)
 	return await res.json()
 }

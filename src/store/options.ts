@@ -77,10 +77,6 @@ export const useOptionsStore = defineStore('options', {
 			this.$subscribe(() => {
 				if (this.init && useDataStore().isChrome && this.useChromeStorage) {
 					// push options on change
-					console.log(
-						'options will be set into chrome store',
-						window.localStorage.getItem('options'),
-					)
 					chrome.storage.sync.set({
 						options: JSON.stringify(this.$state),
 						lastSynced: Date.now(),

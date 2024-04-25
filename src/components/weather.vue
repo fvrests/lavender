@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useOptionsStore } from '../store/options'
 import { useDataStore } from '../store/data'
 import text from '../assets/styles/text.module.css'
@@ -8,7 +7,6 @@ import Alert from '../assets/icons/alert.vue'
 
 const optionsStore = useOptionsStore()
 const dataStore = useDataStore()
-let fetchError = ref('')
 
 function handleDecline() {
 	optionsStore.$patch({
@@ -19,19 +17,13 @@ function handleDecline() {
 
 <!--todo: EITHER check for focused tab before requesting (prevent inactive tabs / windows from refreshing) or add external API to keep track of requests per minute (firebase etc)-->
 <template>
-	<div v-if="dataStore.weather.timestamp" class="wrapper">
+	<div v-if="dataStore.weather?.timestamp" class="wrapper">
 		<div class="weather-items">
 			<p class="temp" :class="text.subtitle">
 				{{ dataStore.formattedTemp }} degrees
 			</p>
 			<div class="wi-bg">
-				<i
-					:class="
-						dataStore.weather.timestamp
-							? dataStore.weatherIconClass
-							: 'wi wi-cloud-refresh'
-					"
-				/>
+				<i :class="dataStore.weatherIconClass" />
 			</div>
 			<p class="conditions" :class="text.subtitle">
 				{{ dataStore.weatherConditions }}
@@ -43,9 +35,9 @@ function handleDecline() {
 			v-if="
 				dataStore.init &&
 				optionsStore.init &&
+				!dataStore.position.latitude &&
 				!dataStore.position.fetching &&
-				!optionsStore.position.declined &&
-				!dataStore.position.latitude
+				!optionsStore.position.declined
 			"
 			class="location-prompt"
 		>
@@ -55,18 +47,26 @@ function handleDecline() {
 				</div>
 
 				<p :class="text.label">
-					Lavender needs permission to fetch your location.
+					{{
+						!dataStore.errors.location
+							? 'Lavender needs permission to fetch your location.'
+							: 'Error fetching location.'
+					}}
 				</p>
 			</div>
 
+			<!--todo: consider adding custom error messages-->
 			<p :class="text.base" style="padding-left: 38px">
-				Location is used to fetch local weather data. You can always enable this
-				later in settings.
+				{{
+					!dataStore.errors.location
+						? 'Location is used to fetch local weather data. You can always enable this later in options.'
+						: `There's been an error (${dataStore.errors.location.toLowerCase()}). Please check your browser settings and try again.`
+				}}
 			</p>
 			<div class="space-small"></div>
 			<div class="row" style="justify-content: center; gap: 14px">
 				<button :class="button.primary" @click="dataStore.handleInitialFetch()">
-					Fetch location
+					{{ !dataStore.errors.location ? 'Fetch location' : 'Try again' }}
 				</button>
 				<div>
 					<!--todo: look at bottom padding / gap -- too big compared to other secondary buttons?  -->
@@ -75,11 +75,7 @@ function handleDecline() {
 					</button>
 				</div>
 			</div>
-
-			<div class="space-small"></div>
-			<div v-if="fetchError" :class="text.base">
-				Failed to fetch location. Please try again.
-			</div>
+			<div class="space-small" />
 		</div>
 	</transition>
 </template>
@@ -128,6 +124,7 @@ function handleDecline() {
 	top: var(--page-padding);
 	left: 50%;
 	margin-left: -160px;
+	z-index: 10;
 	background-color: var(--ui-bg);
 	color: var(--ui-fg);
 	padding: var(--space-small);
