@@ -144,8 +144,6 @@ function handleFetch() {
 					</div>
 					<div v-else :class="text.label">Fetching...</div>
 					<div>
-						<!--fix: button should be disabled on click  -->
-						<!--fix: handle error if fetch hangs (e.g. not enabled in browser) -->
 						<button
 							:class="button.primary"
 							style="margin: 0 auto"
@@ -184,7 +182,7 @@ function handleFetch() {
 
 				<div class="divider" />
 
-				<div v-if="optionsStore.init && dataStore.isChrome">
+				<div v-if="optionsStore.init && dataStore.isChromeExtension">
 					<div :class="text.subtitle">Data sync</div>
 
 					<OptionToggle
@@ -209,6 +207,7 @@ function handleFetch() {
 						Erase everything, including location and weather data, and restore
 						default options.
 					</div>
+					<!--fix: doesn't clear data in chrome-->
 					<div class="row separated">
 						<button :class="button.tertiary" @click="optionsStore.clearData()">
 							Reset all data
