@@ -5,14 +5,14 @@ import conditions from '../utils/weather-conditions'
 import { useOptionsStore } from './options'
 
 interface Weather extends OpenWeatherResponse {
-	timestamp: number
+	timestamp: number | null
 }
 
 export const useDataStore = defineStore('data', {
 	state: () => ({
 		init: false,
-		date: new Date().toString(),
 		isChrome: false,
+		date: new Date(),
 		weather: null as Weather | null,
 		position: {
 			latitude: null as number | null,
@@ -49,18 +49,10 @@ export const useDataStore = defineStore('data', {
 		weatherIconClass: (state) => {
 			let iconClass = 'wi wi-cloud-refresh'
 			if (state.weather?.timestamp) {
-				console.log(
-					'current',
-					Number(new Date(state.date)) / 1000,
-					'sunrise',
-					state.weather.sys.sunrise,
-					'sunset',
-					state.weather.sys.sunset,
-				)
 				let day = true
 				day = !!(
-					Number(new Date(state.date)) / 1000 > state.weather.sys.sunrise &&
-					Number(new Date(state.date)) / 1000 < state.weather.sys.sunset
+					Number(state.date) / 1000 > state.weather.sys.sunrise &&
+					Number(state.date) / 1000 < state.weather.sys.sunset
 				)
 				iconClass = day
 					? `wi wi-owm-day-${state.weather.weather[0].id}`
@@ -69,30 +61,28 @@ export const useDataStore = defineStore('data', {
 			return iconClass
 		},
 		formattedTemp: (state) => {
-			if (state.weather?.timestamp) {
-				let celsiusTemp = (state.weather.main.temp - 273.15).toFixed()
-				let fahrenheitTemp = (Number(celsiusTemp) * (9 / 5) + 32).toFixed()
-				return useOptionsStore().weather.useCelsius
-					? celsiusTemp
-					: fahrenheitTemp
-			} else {
-				return 'Please click the cloud to get data'
+			if (!state.weather?.timestamp) {
+				return 'No weather data available'
 			}
+			let celsiusTemp = (state.weather.main.temp - 273.15).toFixed()
+			let fahrenheitTemp = (Number(celsiusTemp) * (9 / 5) + 32).toFixed()
+			return useOptionsStore().weather.useCelsius ? celsiusTemp : fahrenheitTemp
 		},
 		weatherConditions: (state) => {
-			if (state.weather?.timestamp && state.weather.weather.length > 0) {
-				let condition = useOptionsStore().weather.descriptive
-					? conditions[state.weather.weather[0].id][0]
-					: conditions[state.weather.weather[0].id][1]
-				return condition
-			} else {
-				return 'No weather data available!'
+			if (!state.weather?.timestamp || !state.weather.weather.length) {
+				return 'No weather data available'
 			}
+			console.log('weather', state.weather.weather)
+			console.log('id', state.weather)
+			let condition = useOptionsStore().weather.descriptive
+				? conditions[state.weather.weather[0].id][0]
+				: conditions[state.weather.weather[0].id][1]
+			return condition
 		},
 	},
 	actions: {
 		startClock() {
-			setCorrectingInterval(() => (this.date = new Date().toString()), 1000)
+			setCorrectingInterval(() => (this.date = new Date()), 1000)
 		},
 		initialize() {
 			this.startClock()
@@ -104,6 +94,7 @@ export const useDataStore = defineStore('data', {
 					if (data) {
 						const localData = JSON.parse(data)
 						this.$patch(localData)
+						this.date = new Date(localData.date)
 					}
 				},
 				(err) => {
@@ -127,6 +118,7 @@ export const useDataStore = defineStore('data', {
 				position: { fetching: true },
 			})
 			const getPosition = new Promise<GeolocationPosition>(
+				// todo: make sure fetching set to false after error
 				(resolve, reject) => {
 					navigator.geolocation.getCurrentPosition(
 						(pos) => {
@@ -150,7 +142,7 @@ export const useDataStore = defineStore('data', {
 					position: {
 						latitude: pos.coords.latitude,
 						longitude: pos.coords.longitude,
-						timestamp: Date.now(),
+						timestamp: Number(Date.now()),
 						fetching: false,
 					},
 				})
@@ -159,9 +151,10 @@ export const useDataStore = defineStore('data', {
 		},
 		refreshWeather(lat: number, long: number) {
 			// console.log('refreshing weather')
+			// fix: doesn't always fetch new weather on first load?
 			let invalidated =
 				!this.weather?.timestamp ||
-				Date.now() - this.weather.timestamp >= 30 * 60 * 1000
+				Number(Date.now()) - this.weather?.timestamp >= 30 * 60 * 1000
 			// don't fetch if recent data exists or no location data
 			if (!invalidated) {
 				return
@@ -172,7 +165,7 @@ export const useDataStore = defineStore('data', {
 					(this.weather = {
 						...this.weather,
 						...res,
-						timestamp: Date.now(),
+						timestamp: Number(Date.now()),
 					}),
 					(err: any) => {
 						console.warn('error fetching weather', err)
@@ -181,8 +174,10 @@ export const useDataStore = defineStore('data', {
 			})
 			setCorrectingInterval(
 				() => {
-					if (this.position.latitude && this.position.longitude)
-						this.refreshWeather(this.position.latitude, this.position.longitude)
+					if (!this.position.latitude || !this.position.longitude) {
+						return console.log('No location data available')
+					}
+					this.refreshWeather(this.position.latitude, this.position.longitude)
 				},
 				5 * 60 * 1000,
 			)

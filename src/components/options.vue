@@ -139,8 +139,8 @@ function handleFetch() {
 
 				<div v-if="dataStore.weather?.timestamp" class="row separated">
 					<div v-if="dataStore.position.fetching == false" :class="text.label">
-						{{ dataStore.weather.name }},
-						{{ dataStore.weather.sys.country }}
+						{{ dataStore.weather?.name }},
+						{{ dataStore.weather?.sys.country }}
 					</div>
 					<div v-else :class="text.label">Fetching...</div>
 					<div>

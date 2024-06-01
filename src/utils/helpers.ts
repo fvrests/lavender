@@ -7,7 +7,7 @@ type Instance = {
 	target: number | undefined
 	started: boolean
 }
-export const setCorrectingInterval = (func: () => {}, delay: number) => {
+export const setCorrectingInterval = (func: () => {} | void, delay: number) => {
 	var instance: Instance = {
 		func: undefined,
 		delay: undefined,
@@ -15,7 +15,7 @@ export const setCorrectingInterval = (func: () => {}, delay: number) => {
 		target: undefined,
 		started: false,
 	}
-	function tick(func: () => {}, delay: number) {
+	function tick(func: () => void | {}, delay: number) {
 		if (!instance.started) {
 			instance = {
 				func: func,
