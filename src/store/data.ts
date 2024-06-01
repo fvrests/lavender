@@ -11,8 +11,8 @@ interface Weather extends OpenWeatherResponse {
 export const useDataStore = defineStore('data', {
 	state: () => ({
 		init: false,
-		isChrome: false,
 		date: new Date(),
+		isChromeExtension: false,
 		weather: null as Weather | null,
 		position: {
 			latitude: null as number | null,
@@ -101,11 +101,15 @@ export const useDataStore = defineStore('data', {
 					console.warn(err)
 				},
 			)
-			this.isChrome =
-				!!(navigator as any).userAgentData &&
-				(navigator as any).userAgentData.brands.some(
-					(data: any) => data.brand == 'Google Chrome',
-				)
+			this.isChromeExtension = !!(
+				window.chrome &&
+				chrome.runtime &&
+				chrome.runtime.id
+			)
+			// !!(navigator as any).userAgentData &&
+			// (navigator as any).userAgentData.brands.some(
+			// 	(data: any) => data.brand == 'Google Chrome',
+			// )
 			this.init = true
 			this.$subscribe((_, state) => {
 				if (this.init) {

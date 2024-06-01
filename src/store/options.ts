@@ -65,11 +65,23 @@ export const useOptionsStore = defineStore('options', {
 		},
 		initializeChromeStorage() {
 			// pull options on app load
-			if (this.init && useDataStore().isChrome && this.useChromeStorage) {
-				this.readChromeStorage()
+			if (
+				this.init &&
+				useDataStore().isChromeExtension &&
+				this.useChromeStorage
+			) {
+				try {
+					this.readChromeStorage()
+				} catch (err) {
+					console.warn('Error reading Chrome storage', err)
+				}
 			}
 			this.$subscribe(() => {
-				if (this.init && useDataStore().isChrome && this.useChromeStorage) {
+				if (
+					this.init &&
+					useDataStore().isChromeExtension &&
+					this.useChromeStorage
+				) {
 					// push options on change
 					chrome.storage.sync.set({
 						options: JSON.stringify(this.$state),
@@ -92,7 +104,7 @@ export const useOptionsStore = defineStore('options', {
 		clearData() {
 			// todo: prevent error on chrome undefined
 			localStorage.clear()
-			if (useDataStore().isChrome) chrome?.storage.sync.clear()
+			if (useDataStore().isChromeExtension) chrome?.storage?.sync?.clear()
 			this.$reset()
 			useDataStore().$reset()
 			this.initialize()
