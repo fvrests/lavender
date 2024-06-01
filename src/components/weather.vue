@@ -19,13 +19,13 @@ function handleDecline() {
 <template>
 	<div v-if="dataStore.weather?.timestamp" class="wrapper">
 		<div class="weather-items">
-			<p class="temp" :class="text.subtitle">
+			<p class="temp" :class="text.detail">
 				{{ dataStore.formattedTemp }} degrees
 			</p>
 			<div class="wi-bg">
 				<i :class="dataStore.weatherIconClass" />
 			</div>
-			<p class="conditions" :class="text.subtitle">
+			<p class="conditions" :class="text.detail">
 				{{ dataStore.weatherConditions }}
 			</p>
 		</div>
@@ -124,7 +124,6 @@ function handleDecline() {
 	top: var(--page-padding);
 	left: 50%;
 	margin-left: -160px;
-	z-index: 10;
 	background-color: var(--ui-bg);
 	color: var(--ui-fg);
 	padding: var(--space-small);
