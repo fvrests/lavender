@@ -10,20 +10,20 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
-		"@types/chrome": "^0.0.266",
-		"core-js": "^3.36.1",
+		"@types/chrome": "^0.0.268",
+		"core-js": "^3.37.1",
 		"date-fns": "3.6.0",
 		"pinia": "^2.1.7",
-		"vue": "^3.4.21",
+		"vue": "^3.4.27",
 		"vuex": "^4.1.0"
 	},
 	"devDependencies": {
-		"@types/node": "^20.12.7",
-		"@vitejs/plugin-vue": "^5.0.4",
-		"prettier": "^3.2.5",
+		"@types/node": "^20.14.2",
+		"@vitejs/plugin-vue": "^5.0.5",
+		"prettier": "^3.3.2",
 		"typescript": "^5.4.5",
-		"vite": "^5.2.8",
-		"vue-tsc": "^2.0.12"
+		"vite": "^5.2.13",
+		"vue-tsc": "^2.0.21"
 	},
 	"prettier": {
 		"singleQuote": true,
