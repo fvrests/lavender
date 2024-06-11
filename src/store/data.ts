@@ -72,12 +72,18 @@ export const useDataStore = defineStore('data', {
 			if (!state.weather?.timestamp || !state.weather.weather.length) {
 				return 'No weather data available'
 			}
-			console.log('weather', state.weather.weather)
-			console.log('id', state.weather)
-			let condition = useOptionsStore().weather.descriptive
-				? conditions[state.weather.weather[0].id][0]
-				: conditions[state.weather.weather[0].id][1]
-			return condition
+
+			// fix: type assertion?
+			let conditionCode = state.weather.weather[0].id
+			let conditionText: string = ''
+			if (conditionCode in conditions) {
+				conditionText = useOptionsStore().weather.descriptive
+					? conditions[conditionCode as keyof typeof conditions][0]
+					: conditions[conditionCode as keyof typeof conditions][1]
+			} else {
+				conditionText = 'Conditions unknown'
+			}
+			return conditionText
 		},
 	},
 	actions: {
@@ -106,10 +112,6 @@ export const useDataStore = defineStore('data', {
 				chrome.runtime &&
 				chrome.runtime.id
 			)
-			// !!(navigator as any).userAgentData &&
-			// (navigator as any).userAgentData.brands.some(
-			// 	(data: any) => data.brand == 'Google Chrome',
-			// )
 			this.init = true
 			this.$subscribe((_, state) => {
 				if (this.init) {
@@ -193,6 +195,7 @@ export const useDataStore = defineStore('data', {
 				},
 				(err) => {
 					console.log('error fetching location', err)
+					return err
 				},
 			)
 		},

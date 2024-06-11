@@ -9,13 +9,11 @@ let optionsStore = useOptionsStore()
 // convert option prop string to a store reference & set the new value into the store at that reference
 const optionNodes = props.option.split('.')
 const handleOption = (newValue = null) =>
-	optionNodes.reduce((prev, cur, index) => {
+	optionNodes.reduce((prev: any, cur: string, index) => {
 		if (newValue && index === optionNodes.length - 1) {
-			// @ts-expect-error cannot index cur
 			prev[cur] = newValue
 		}
 		// returns the store reference
-		// @ts-expect-error cannot index cur
 		return prev ? prev[cur] : null
 	}, optionsStore)
 

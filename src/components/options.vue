@@ -26,7 +26,9 @@ function handleFetch() {
 	optionsStore.$patch({
 		position: { declined: false },
 	})
-	dataStore.handleInitialFetch()
+	dataStore.handleInitialFetch().catch((error) => {
+		console.error(error)
+	})
 	setTimeout(function () {
 		refreshDisabled.value = false
 	}, 15 * 1000)
@@ -163,6 +165,7 @@ function handleFetch() {
 									: 'Fetching...'
 							}}
 						</div>
+						<!-- fix: button does not fetch location until second press -->
 						<div>
 							<button
 								:class="button.primary"

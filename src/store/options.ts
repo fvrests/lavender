@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { useDataStore } from './data'
 
+// todo: migrate old settings?
+
 export const useOptionsStore = defineStore('options', {
 	state: () => ({
 		init: false,
