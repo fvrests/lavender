@@ -15,7 +15,6 @@ function handleDecline() {
 }
 </script>
 
-<!--todo: EITHER check for focused tab before requesting (prevent inactive tabs / windows from refreshing) or add external API to keep track of requests per minute (firebase etc)-->
 <template>
 	<div v-if="dataStore.weather?.timestamp" class="wrapper">
 		<div class="weather-items">

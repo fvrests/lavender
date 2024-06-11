@@ -10,12 +10,15 @@ const props = withDefaults(
 		option: string
 		onChange?: () => void
 	}>(),
-	{ onChange: () => {} }
+	{ onChange: () => {} },
 )
 
+// allow passing nested options (convert to store entry reference)
 const optionNodes = props.option.split('.')
+
 const handleOption = (toggle = false) => {
-	return optionNodes.reduce((prev, cur, index) => {
+	return optionNodes.reduce((prev: any, cur: string, index) => {
+		// if toggle is set, toggle stored value
 		if (toggle && index === optionNodes.length - 1) {
 			prev[cur] = !prev[cur]
 		}
