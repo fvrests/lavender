@@ -193,7 +193,6 @@ export const useDataStore = defineStore('data', {
 					this.refreshWeather(pos.coords.latitude, pos.coords.longitude)
 				},
 				(err) => {
-					console.log('error fetching location', err)
 					return err
 				},
 			)
