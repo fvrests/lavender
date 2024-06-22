@@ -165,7 +165,6 @@ function handleFetch() {
 									: 'Fetching...'
 							}}
 						</div>
-						<!-- fix: button does not fetch location until second press -->
 						<div>
 							<button
 								:class="button.primary"
@@ -210,7 +209,6 @@ function handleFetch() {
 						Erase everything, including location and weather data, and restore
 						default options.
 					</div>
-					<!--fix: doesn't clear data in chrome-->
 					<div class="row separated">
 						<button :class="button.tertiary" @click="optionsStore.clearData()">
 							Reset all data

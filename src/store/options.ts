@@ -1,8 +1,6 @@
 import { defineStore } from 'pinia'
 import { useDataStore } from './data'
 
-// todo: migrate old settings?
-
 export const useOptionsStore = defineStore('options', {
 	state: () => ({
 		init: false,
@@ -104,7 +102,6 @@ export const useOptionsStore = defineStore('options', {
 			document.documentElement.className = theme
 		},
 		clearData() {
-			// todo: prevent error on chrome undefined
 			localStorage.clear()
 			if (useDataStore().isChromeExtension) chrome?.storage?.sync?.clear()
 			this.$reset()
