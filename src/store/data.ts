@@ -156,7 +156,6 @@ export const useDataStore = defineStore('data', {
 			})
 		},
 		refreshWeather(lat: number, long: number) {
-			// console.log('refreshing weather')
 			// fix: doesn't always fetch new weather on first load?
 			let invalidated =
 				!this.weather?.timestamp ||
