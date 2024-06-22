@@ -7,6 +7,7 @@ import './assets/styles/weather-icons.min.css'
 import './assets/styles/global.css'
 import { useOptionsStore } from './store/options'
 import { useDataStore } from './store/data'
+import Alert from './components/alert.vue'
 
 let optionsStore = useOptionsStore()
 let dataStore = useDataStore()
@@ -17,6 +18,7 @@ dataStore.initialize()
 
 <template>
 	<div class="app-wrapper">
+		<Alert />
 		<Clock v-if="optionsStore.init && dataStore.init" />
 		<Weather />
 		<Options />
