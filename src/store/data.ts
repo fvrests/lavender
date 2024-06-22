@@ -73,7 +73,6 @@ export const useDataStore = defineStore('data', {
 				return 'No weather data available'
 			}
 
-			// fix: type assertion?
 			let conditionCode = state.weather.weather[0].id
 			let conditionText: string = ''
 			if (conditionCode in conditions) {
@@ -124,7 +123,6 @@ export const useDataStore = defineStore('data', {
 				position: { fetching: true },
 			})
 			const getPosition = new Promise<GeolocationPosition>(
-				// todo: make sure fetching set to false after error
 				(resolve, reject) => {
 					navigator.geolocation.getCurrentPosition(
 						(pos) => {
@@ -156,7 +154,6 @@ export const useDataStore = defineStore('data', {
 			})
 		},
 		refreshWeather(lat: number, long: number) {
-			// fix: doesn't always fetch new weather on first load?
 			let invalidated =
 				!this.weather?.timestamp ||
 				Number(Date.now()) - this.weather?.timestamp >= 30 * 60 * 1000
