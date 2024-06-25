@@ -1,0 +1,37 @@
+{
+	"name": "lavender | new tab",
+	"short_name": "lavender",
+	"start_url": ".",
+	"display": "browser",
+	"description": "a soft, minimal new tab for your browser",
+	"icons": [
+		{
+			"src": "192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		},
+		{
+			"src": "1024.png",
+			"sizes": "1024x1024",
+			"type": "image/png"
+		},
+		{
+			"src": "maskable-192.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "maskable"
+		},
+		{
+			"src": "maskable-1024.png",
+			"sizes": "1024x1024",
+			"type": "image/png",
+			"purpose": "maskable"
+		}
+	],
+	"related_applications": [
+		{
+			"platform": "google chrome",
+			"url": "https://chromewebstore.google.com/detail/lavender-new-tab/ffobepdbanoiodmfimpmanafepclokbc"
+		}
+	]
+}

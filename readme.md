@@ -4,18 +4,24 @@
 
 ## features
 
-lavender is a soft, minimal new tab for your chrome browser featuring:
+lavender is a soft, minimal new tab for your browser featuring:
 
 - live time & weather updates
-- 5 calming background colors
+- 10 background colors in calming pastel and rich dark tones
+- dynamic light / dark mode for adaptive viewing
 - alternative UI layouts
 - location-based weather fetching
 - metric units & 24-hour time formatting
-- options sync between chrome browsers
+- options sync between devices using the chrome extension (optional)
 
-## download
+## chrome extension
 
-[Chrome Web Store](https://chrome.google.com/webstore/detail/lavender-new-tab/ffobepdbanoiodmfimpmanafepclokbc)
+download at the [Chrome Web Store](https://chrome.google.com/webstore/detail/lavender-new-tab/ffobepdbanoiodmfimpmanafepclokbc). also installable to Brave and other Chromium-based browsers.
+
+## web 
+
+- visit the [lavender site](https://lavender.fvrests.dev) to preview the app and customize your theme options
+- set as your browser homepage or new tab page to pair lavender with any web platform
 
 ## manual installation
 
@@ -25,7 +31,7 @@ lavender is a soft, minimal new tab for your chrome browser featuring:
 $ git clone git@github.com:fvrests/lavender.git && cd lavender
 ```
 
-- sign up for [OpenWeather API](https://home.openweathermap.org/users/sign_upgenerate) and generate a new API key
+- sign up for [OpenWeather API](https://home.openweathermap.org/users/sign_up) and generate a new API key (you'll be using the Current Weather Data API - the free tier should be sufficient)
 
 - within the .env.example file, paste your key directly after "VITE_WEATHER_KEY=" and rename the file to .env
 
@@ -46,14 +52,14 @@ $ pnpm install && pnpm build
 
 ## permissions & licensing
 
-this app requires the following permissions:
+the extension requires the following permissions:
 
 | permission             | usage                                                                                       |
 | ---------------------- | ------------------------------------------------------------------------------------------- |
-| chrome & local storage | store user settings, sync across browsers                                                   |
+| local & chrome storage | store user settings. optionally, sync between devices with chrome storage.                           |
 | geolocation            | fetch weather - data is used to query [OpenWeather API](https://openweathermap.org/find?q=) |
 
-this project is licensed under the MIT license. please feel free to browse the source code or use snippets for your own projects 💛
+this project is developed under MIT license. please feel free to browse the source code or use snippets for your own projects.
 
 [privacy policy](https://github.com/fvrests/lavender/blob/main/privacy-policy.md) | [terms of use](https://github.com/fvrests/lavender/blob/main/terms-of-use.md)
 
