@@ -98,8 +98,14 @@ export const useDataStore = defineStore('data', {
 				(data) => {
 					if (data) {
 						const localData = JSON.parse(data)
+						localData.date = new Date()
 						this.$patch(localData)
-						this.date = new Date(localData.date)
+						if (localData.position.latitude && localData.position.longitude) {
+							this.refreshWeatherIfInvalidated(
+								localData.position.latitude,
+								localData.position.longitude,
+							)
+						}
 					}
 				},
 				(err) => {
@@ -119,24 +125,29 @@ export const useDataStore = defineStore('data', {
 			})
 		},
 		async fetchPosition() {
-			this.$patch({
-				position: { fetching: true },
-			})
 			const getPosition = new Promise<GeolocationPosition>(
 				(resolve, reject) => {
+					this.$patch({
+						position: { fetching: true },
+					})
 					navigator.geolocation.getCurrentPosition(
 						(pos) => {
-							resolve(pos)
-						},
-						(err) => {
-							console.warn('Error fetching position', err)
-							this.errors.location = err.message
-							reject(err)
 							this.$patch({
 								position: {
 									fetching: false,
 								},
 							})
+							resolve(pos)
+						},
+						(err) => {
+							console.warn('Error fetching position', err)
+							this.errors.location = err.message
+							this.$patch({
+								position: {
+									fetching: false,
+								},
+							})
+							reject(err)
 						},
 					)
 				},
@@ -147,39 +158,41 @@ export const useDataStore = defineStore('data', {
 						latitude: pos.coords.latitude,
 						longitude: pos.coords.longitude,
 						timestamp: Number(Date.now()),
-						fetching: false,
 					},
 				})
 				return pos
 			})
 		},
-		refreshWeather(lat: number, long: number) {
+		refreshWeatherIfInvalidated(latitude: number, longitude: number) {
+			// don't fetch if no location data or recent data exists
 			let invalidated =
 				!this.weather?.timestamp ||
 				Number(Date.now()) - this.weather?.timestamp >= 30 * 60 * 1000
-			// don't fetch if recent data exists or no location data
-			if (!invalidated) {
-				return
-			}
+			if (!invalidated) return
 			// fetch new weather using last known position
-			fetchWeather(lat, long).then((res) => {
-				return (
-					(this.weather = {
+			fetchWeather(latitude, longitude).then(
+				(res) => {
+					this.weather = {
 						...this.weather,
 						...res,
 						timestamp: Number(Date.now()),
-					}),
-					(err: any) => {
-						console.warn('error fetching weather', err)
 					}
-				)
-			})
+				},
+				(err: any) => {
+					this.errors.weather = err.message
+					console.warn('error fetching weather', err)
+				},
+			)
 			setCorrectingInterval(
+				// refresh weather every 5 minutes if location data exists
 				() => {
 					if (!this.position.latitude || !this.position.longitude) {
 						return console.log('No location data available')
 					}
-					this.refreshWeather(this.position.latitude, this.position.longitude)
+					this.refreshWeatherIfInvalidated(
+						this.position.latitude,
+						this.position.longitude,
+					)
 				},
 				5 * 60 * 1000,
 			)
@@ -187,7 +200,10 @@ export const useDataStore = defineStore('data', {
 		async handleInitialFetch() {
 			await this.fetchPosition().then(
 				(pos) => {
-					this.refreshWeather(pos.coords.latitude, pos.coords.longitude)
+					this.refreshWeatherIfInvalidated(
+						pos.coords.latitude,
+						pos.coords.longitude,
+					)
 				},
 				(err) => {
 					return err
