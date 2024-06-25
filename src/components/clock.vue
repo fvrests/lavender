@@ -13,7 +13,7 @@ const dataStore = useDataStore()
 			:layout="optionsStore.time.layout"
 			:hour="dataStore.formattedDate.hour"
 			:minute="dataStore.formattedDate.minute"
-			:time="dataStore.date"
+			:date="dataStore.date"
 			v-if="dataStore.init && optionsStore.init"
 		/>
 		<div class="space-small" />

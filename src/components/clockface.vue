@@ -3,17 +3,17 @@ const props = defineProps<{
 	layout: string
 	hour: string
 	minute: string
-	time: Date
+	date: Date
 }>()
 </script>
 
 <template>
-	<time v-if="props.layout == 'default'" :datetime="props.time.toString()">
+	<time v-if="props.layout == 'default'" :datetime="props.date.toString()">
 		<div>{{ props.hour }}:{{ props.minute }}</div>
 	</time>
 	<time
 		v-if="props.layout == 'stacked'"
-		:datetime="props.time.toString()"
+		:datetime="props.date.toString()"
 		class="outline"
 	>
 		<div>

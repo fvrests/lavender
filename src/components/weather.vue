@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { useOptionsStore } from '../store/options'
 import { useDataStore } from '../store/data'
 import text from '../assets/styles/text.module.css'
 
-const optionsStore = useOptionsStore()
 const dataStore = useDataStore()
 </script>
 
