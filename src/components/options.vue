@@ -38,7 +38,6 @@ function handleFetch() {
 <template>
 	<!-- todo: consider updating typography-->
 	<!-- todo: consider adding font selection (sans serif, mono) -->
-	<!-- todo: options menu should still display if other errors in options-->
 	<div class="options" @keyup.esc="isOptionsOpen = false">
 		<button
 			:class="{ open: isOptionsOpen }"
