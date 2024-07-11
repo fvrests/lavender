@@ -1,21 +1,27 @@
 // correcting interval - corrects compounding variation in time between ticks that would occur using setInterval
 // https://andrewduthie.com/2013/12/31/creating-a-self-correcting-alternative-to-javascripts-setinterval/
-type Instance = {
-	func: (() => void) | undefined
-	delay: number | undefined
-	startTime: number | undefined
-	target: number | undefined
-	started: boolean
-}
-export const setCorrectingInterval = (func: () => {} | void, delay: number) => {
-	var instance: Instance = {
+export const setCorrectingInterval = (
+	func: () => {} | void,
+	delay: number,
+): number | null => {
+	var instance: {
+		func: (() => void | {}) | undefined
+		delay: number | undefined
+		startTime: number | undefined
+		target: number | undefined
+		started: boolean
+	} = {
 		func: undefined,
 		delay: undefined,
 		startTime: undefined,
 		target: undefined,
 		started: false,
 	}
-	function tick(func: () => void | {}, delay: number) {
+	let timeoutId: number | null = null
+
+	// recurring timeout loop
+	function tick(func: () => void | {}, delay: number): number {
+		// on first run, set up instance
 		if (!instance.started) {
 			instance = {
 				func: func,
@@ -24,25 +30,34 @@ export const setCorrectingInterval = (func: () => {} | void, delay: number) => {
 				target: delay,
 				started: true,
 			}
-
-			setTimeout(tick, delay)
+			timeoutId = setTimeout(tick, instance.delay)
 		} else {
-			var elapsed = new Date().valueOf() - instance.startTime!,
-				adjust = instance.target! - elapsed
+			// fix: timeoutId will be different every pass through loop. clearing outside will not work as set up
+			const elapsed = new Date().valueOf() - instance.startTime!
+			const adjust = instance.target! - elapsed
 
 			instance.func!()
 			instance.target! += instance.delay!
 
-			setTimeout(tick, instance.delay! + adjust)
+			// ensure timeout is cleared if it's still running
+			if (timeoutId !== null) {
+				clearTimeout(timeoutId)
+			}
+			timeoutId = setTimeout(tick, instance.delay! + adjust)
 		}
+		return timeoutId
 	}
-	return tick(func, delay)
+
+	// run once to start timeout loop
+	timeoutId = tick(func, delay)
+	return timeoutId
 }
 
 // fetches current weather info from OpenWeatherMap API - max 60 calls/minute or 1,000,000 calls/month
 export async function fetchWeather(latitude: number, longitude: number) {
-	let baseUrl =
-		'https://fvrests-openweather-api.netlify.app/.netlify/functions/weather'
+	// todo: need to set to local env variable?
+	let baseUrl = import.meta.env.VITE_WEATHER_API_URL
+
 	const res = await fetch(
 		`${baseUrl}?latitude=${latitude}&longitude=${longitude}`,
 	)

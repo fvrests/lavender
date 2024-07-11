@@ -12,16 +12,24 @@ const dataStore = useDataStore()
 
 let { errors }: any = storeToRefs(dataStore)
 
+// location not available, user has not denied access & no errors have occurred fetching
 let shouldPromptForLocation = computed(() => {
 	return (
 		!optionsStore.position.declined &&
-		!dataStore.position.latitude &&
+		(!dataStore.position.latitude || !dataStore.position.longitude) &&
+		!dataStore.position.fetching &&
 		errors.value.location === ''
 	)
 })
 
+// error fetching location or weather data. only show if error has blocked successful data fetch
 let shouldPromptWithError = computed(() => {
-	return errors.value.weather !== '' || errors.value.location !== ''
+	return (
+		(!dataStore.position.latitude ||
+			!dataStore.position.longitude ||
+			!dataStore.weather?.weather) &&
+		(errors.value.weather !== '' || errors.value.location !== '')
+	)
 })
 
 let enablePrompt = computed(() => {
@@ -63,7 +71,8 @@ function handleDecline() {
 				{{
 					shouldPromptForLocation
 						? 'Location is used to fetch local weather data. You can always enable this later in options.'
-						: `There's been an error (${errors.location.toLowerCase() || errors.weather.toLowerCase() || 'unknown error'}). Please check your browser settings and try again.`
+						: `There's been an error (${errors.location.toLowerCase() || errors.weather.toLowerCase() || 'unknown error'}).
+				Please check your browser settings and try again.`
 				}}
 			</p>
 			<div class="space-small"></div>
