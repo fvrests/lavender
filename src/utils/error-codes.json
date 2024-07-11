@@ -1,0 +1,12 @@
+{
+	"location": {
+		"1": "User denied the request for Geolocation",
+		"2": "Location information is unavailable",
+		"3": "The request to get user location timed out"
+	},
+	"weather": {
+		"408": "Request timed out",
+		"410": "Resource not available on server",
+		"429": "Too many requests"
+	}
+}

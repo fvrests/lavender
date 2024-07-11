@@ -1,12 +1,15 @@
 import { defineStore } from 'pinia'
 import { format } from 'date-fns'
-import { setCorrectingInterval, fetchWeather } from '../utils/helpers'
+import { fetchWeather } from '../utils/helpers'
 import conditions from '../utils/weather-conditions'
 import { useOptionsStore } from './options'
+import { useInstanceStore } from './instance'
+import errorCodes from '../utils/error-codes.json'
 
 interface Weather extends OpenWeatherResponse {
 	timestamp: number | null
 }
+let weatherIntervalIds: number[] = []
 
 export const useDataStore = defineStore('data', {
 	state: () => ({
@@ -84,10 +87,50 @@ export const useDataStore = defineStore('data', {
 			}
 			return conditionText
 		},
+		weatherInvalidated: (state) => {
+			let invalidated =
+				!state.weather?.timestamp ||
+				Number(Date.now()) - state.weather?.timestamp >= 30 * 60 * 1000
+			return invalidated
+		},
 	},
 	actions: {
 		startClock() {
-			setCorrectingInterval(() => (this.date = new Date()), 1000)
+			this.date = new Date()
+			useInstanceStore().setCorrectingInterval(
+				() => {
+					console.log('setting time')
+					return (this.date = new Date())
+				},
+				1000,
+				'time',
+			)
+		},
+		refreshWeatherWithStoredPosition() {
+			if (!this.position.latitude || !this.position.longitude) {
+				return console.warn(
+					'No location data available -- skipping weather fetch',
+				)
+			}
+			this.refreshWeatherIfInvalidated(
+				this.position.latitude,
+				this.position.longitude,
+			)
+		},
+		pauseWeatherFetchWhenHidden() {
+			document.addEventListener('visibilitychange', () => {
+				if (this.init && document.hidden) {
+					// page became hidden. pausing weather fetch interval
+					console.log('page hidden -- clearing weather interval')
+					useInstanceStore().clearInterval('weather')
+					console.log('weather intervals', useInstanceStore().intervalIds)
+				} else {
+					// page became visible. restarting weather fetch interval
+					console.log('page visible -- restarting weather interval')
+					this.refreshWeatherWithStoredPosition()
+					this.subscribeToWeather()
+				}
+			})
 		},
 		initialize() {
 			this.startClock()
@@ -96,15 +139,14 @@ export const useDataStore = defineStore('data', {
 			}
 			getLocalData().then(
 				(data) => {
-					if (data) {
+					if (data && data !== '') {
 						const localData = JSON.parse(data)
 						localData.date = new Date()
 						this.$patch(localData)
 						if (localData.position.latitude && localData.position.longitude) {
-							this.refreshWeatherIfInvalidated(
-								localData.position.latitude,
-								localData.position.longitude,
-							)
+							this.refreshWeatherWithStoredPosition()
+							this.subscribeToWeather()
+							this.pauseWeatherFetchWhenHidden()
 						}
 					}
 				},
@@ -132,16 +174,27 @@ export const useDataStore = defineStore('data', {
 					})
 					navigator.geolocation.getCurrentPosition(
 						(pos) => {
-							this.$patch({
-								position: {
-									fetching: false,
-								},
-							})
+							this.errors.location = ''
+							setTimeout(() => {
+								this.$patch({
+									position: {
+										fetching: false,
+									},
+								})
+							}, 1000)
 							resolve(pos)
 						},
 						(err) => {
 							console.warn('Error fetching position', err)
-							this.errors.location = err.message
+							if (err.code in errorCodes) {
+								this.errors.location =
+									errorCodes.location[
+										err.code.toString() as keyof typeof errorCodes.location
+									]
+							} else {
+								this.errors.location = err.message ?? 'Unknown error'
+							}
+							console.log('set into storage', this.errors.location)
 							this.$patch({
 								position: {
 									fetching: false,
@@ -152,6 +205,16 @@ export const useDataStore = defineStore('data', {
 					)
 				},
 			)
+			setTimeout(() => {
+				if (this.position.fetching) {
+					this.$patch({
+						position: {
+							fetching: false,
+						},
+						errors: { location: 'Location fetch timed out' },
+					})
+				}
+			}, 5 * 1000)
 			return getPosition.then((pos) => {
 				this.$patch({
 					position: {
@@ -168,7 +231,9 @@ export const useDataStore = defineStore('data', {
 			let invalidated =
 				!this.weather?.timestamp ||
 				Number(Date.now()) - this.weather?.timestamp >= 30 * 60 * 1000
-			if (!invalidated) return
+			if (!invalidated)
+				return console.log('Weather data still valid -- skipping weather fetch')
+
 			// fetch new weather using last known position
 			fetchWeather(latitude, longitude).then(
 				(res) => {
@@ -180,21 +245,20 @@ export const useDataStore = defineStore('data', {
 				},
 				(err: any) => {
 					this.errors.weather = err.message
-					console.warn('error fetching weather', err)
+					console.warn('Error fetching weather', err)
 				},
 			)
-			setCorrectingInterval(
-				// refresh weather every 5 minutes if location data exists
+		},
+		subscribeToWeather() {
+			useInstanceStore().clearInterval('weather')
+			console.log('weather interval cleared', useInstanceStore().intervalIds)
+			useInstanceStore().setCorrectingInterval(
+				// check if refresh weather needed every 5 minutes.
 				() => {
-					if (!this.position.latitude || !this.position.longitude) {
-						return console.log('No location data available')
-					}
-					this.refreshWeatherIfInvalidated(
-						this.position.latitude,
-						this.position.longitude,
-					)
+					this.refreshWeatherWithStoredPosition()
 				},
 				5 * 60 * 1000,
+				'weather',
 			)
 		},
 		async handleInitialFetch() {
@@ -204,6 +268,7 @@ export const useDataStore = defineStore('data', {
 						pos.coords.latitude,
 						pos.coords.longitude,
 					)
+					this.subscribeToWeather()
 				},
 				(err) => {
 					return err
