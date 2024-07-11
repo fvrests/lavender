@@ -9,7 +9,6 @@ import errorCodes from '../utils/error-codes.json'
 interface Weather extends OpenWeatherResponse {
 	timestamp: number | null
 }
-let weatherIntervalIds: number[] = []
 
 export const useDataStore = defineStore('data', {
 	state: () => ({
