@@ -35,12 +35,6 @@ export const useInstanceStore = defineStore('instance', {
 			// recurring timeout loop
 			let store = this
 			function tick(func: () => void | {}, delay: number) {
-				console.log(
-					'weather intervals:',
-					store.intervalIds.weather,
-					'time intervals:',
-					store.intervalIds.time,
-				)
 				clearInterval(store.intervalIds[name])
 				// on first run, set up instance
 				if (!instance.started) {

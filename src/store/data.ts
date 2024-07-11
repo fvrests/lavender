@@ -99,7 +99,6 @@ export const useDataStore = defineStore('data', {
 			this.date = new Date()
 			useInstanceStore().setCorrectingInterval(
 				() => {
-					console.log('setting time')
 					return (this.date = new Date())
 				},
 				1000,
@@ -123,7 +122,6 @@ export const useDataStore = defineStore('data', {
 					// page became hidden. pausing weather fetch interval
 					console.log('page hidden -- clearing weather interval')
 					useInstanceStore().clearInterval('weather')
-					console.log('weather intervals', useInstanceStore().intervalIds)
 				} else {
 					// page became visible. restarting weather fetch interval
 					console.log('page visible -- restarting weather interval')
@@ -251,7 +249,6 @@ export const useDataStore = defineStore('data', {
 		},
 		subscribeToWeather() {
 			useInstanceStore().clearInterval('weather')
-			console.log('weather interval cleared', useInstanceStore().intervalIds)
 			useInstanceStore().setCorrectingInterval(
 				// check if refresh weather needed every 5 minutes.
 				() => {
