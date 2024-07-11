@@ -32,7 +32,6 @@ export const setCorrectingInterval = (
 			}
 			timeoutId = setTimeout(tick, instance.delay)
 		} else {
-			// fix: timeoutId will be different every pass through loop. clearing outside will not work as set up
 			const elapsed = new Date().valueOf() - instance.startTime!
 			const adjust = instance.target! - elapsed
 
@@ -55,7 +54,6 @@ export const setCorrectingInterval = (
 
 // fetches current weather info from OpenWeatherMap API - max 60 calls/minute or 1,000,000 calls/month
 export async function fetchWeather(latitude: number, longitude: number) {
-	// todo: need to set to local env variable?
 	let baseUrl = import.meta.env.VITE_WEATHER_API_URL
 
 	const res = await fetch(
