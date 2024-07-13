@@ -57,7 +57,7 @@ export async function fetchWeather(latitude: number, longitude: number) {
 	let baseUrl = import.meta.env.VITE_WEATHER_API_URL
 
 	const res = await fetch(
-		`${baseUrl}?latitude=${latitude}&longitude=${longitude}`,
+		`${baseUrl}?lat=${latitude}&lon=${longitude}&appid=${import.meta.env.VITE_WEATHER_KEY}`,
 	)
 	return await res.json()
 }
