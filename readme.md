@@ -1,4 +1,4 @@
-![illustration of a starry landscape with a screencap of the lavender app & the lavender logo](./promo/promo-marquee-1400@2x.png)
+![illustration of a starry landscape with a screencap of the lavender app & the lavender logo](./promo/promo-marquee-1400.png)
 
 # lavender new tab 🌙
 
@@ -18,7 +18,7 @@ lavender is a soft, minimal new tab for your browser featuring:
 
 download at the [Chrome Web Store](https://chrome.google.com/webstore/detail/lavender-new-tab/ffobepdbanoiodmfimpmanafepclokbc). also installable to Brave and other Chromium-based browsers.
 
-## web 
+## web
 
 - visit the [lavender site](https://lavender.fvrests.dev) to preview the app and customize your theme options
 - set as your browser homepage or new tab page to pair lavender with any web platform
@@ -56,7 +56,7 @@ the extension requires the following permissions:
 
 | permission             | usage                                                                                       |
 | ---------------------- | ------------------------------------------------------------------------------------------- |
-| local & chrome storage | store user settings. optionally, sync between devices with chrome storage.                           |
+| local & chrome storage | store user settings. optionally, sync between devices with chrome storage.                  |
 | geolocation            | fetch weather - data is used to query [OpenWeather API](https://openweathermap.org/find?q=) |
 
 this project is developed under MIT license. please feel free to browse the source code or use snippets for your own projects.
@@ -67,4 +67,4 @@ feedback & suggestions are always welcome!
 
 by [fvrests](https://fvrests.dev)
 
-[donations 💛](https://ko-fi.com/fvrests)
+[support my work 💛](https://ko-fi.com/fvrests)
