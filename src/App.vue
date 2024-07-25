@@ -7,13 +7,16 @@ import './assets/styles/weather-icons.min.css'
 import './assets/styles/global.css'
 import { useOptionsStore } from './store/options'
 import { useDataStore } from './store/data'
+import { useInstanceStore } from './store/instance'
 import Alert from './components/alert.vue'
 
 let optionsStore = useOptionsStore()
 let dataStore = useDataStore()
+let instanceStore = useInstanceStore()
 
 optionsStore.initialize()
 dataStore.initialize()
+instanceStore.initialize()
 </script>
 
 <template>

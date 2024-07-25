@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { format } from 'date-fns'
 import { fetchWeather } from '../utils/helpers'
 import conditions from '../utils/weather-conditions'
 import { useOptionsStore } from './options'
@@ -8,14 +7,14 @@ import errorCodes from '../utils/error-codes.json'
 
 interface Weather extends OpenWeatherResponse {
 	timestamp: number | null
+	fetching: boolean
 }
 
 export const useDataStore = defineStore('data', {
 	state: () => ({
 		init: false,
-		date: new Date(),
 		isChromeExtension: false,
-		weather: null as Weather | null,
+		weather: { timestamp: null, fetching: false as boolean } as Weather,
 		position: {
 			latitude: null as number | null,
 			longitude: null as number | null,
@@ -28,33 +27,13 @@ export const useDataStore = defineStore('data', {
 		},
 	}),
 	getters: {
-		useOptionsStore() {
-			return useOptionsStore()
-		},
-		formattedDate(state) {
-			let hour = ''
-			let date = new Date(state.date)
-			if (useOptionsStore().time.use24Hour) {
-				hour = format(date, 'HH')
-			} else if (useOptionsStore().time.layout == 'stacked') {
-				hour = format(date, 'hh')
-			} else {
-				hour = format(date, 'h')
-			}
-			return {
-				today: format(date, 'LLLL do, yyyy'),
-				hour: hour,
-				minute: format(date, 'mm'),
-				descriptor: format(date, 'B'),
-			}
-		},
 		weatherIconClass: (state) => {
 			let iconClass = 'wi wi-cloud-refresh'
 			if (state.weather?.timestamp) {
 				let day = true
 				day = !!(
-					Number(state.date) / 1000 > state.weather.sys.sunrise &&
-					Number(state.date) / 1000 < state.weather.sys.sunset
+					Number(useInstanceStore().date) / 1000 > state.weather.sys.sunrise &&
+					Number(useInstanceStore().date) / 1000 < state.weather.sys.sunset
 				)
 				iconClass = day
 					? `wi wi-owm-day-${state.weather.weather[0].id}`
@@ -86,77 +65,43 @@ export const useDataStore = defineStore('data', {
 			}
 			return conditionText
 		},
-		weatherInvalidated: (state) => {
-			let invalidated =
-				!state.weather?.timestamp ||
-				Number(Date.now()) - state.weather?.timestamp >= 30 * 60 * 1000
-			return invalidated
-		},
 	},
 	actions: {
-		startClock() {
-			this.date = new Date()
-			useInstanceStore().setCorrectingInterval(
-				() => {
-					return (this.date = new Date())
-				},
-				1000,
-				'time',
-			)
-		},
-		refreshWeatherWithStoredPosition() {
-			if (!this.position.latitude || !this.position.longitude) {
-				return console.warn(
-					'No location data available -- skipping weather fetch',
-				)
+		parseLocalData() {
+			let localData = localStorage.getItem('data') ?? null
+			if (localData) {
+				return JSON.parse(localData.toString())
 			}
-			this.refreshWeatherIfInvalidated(
-				this.position.latitude,
-				this.position.longitude,
-			)
-		},
-		pauseWeatherFetchWhenHidden() {
-			document.addEventListener('visibilitychange', () => {
-				if (this.init && document.hidden) {
-					// page became hidden. pausing weather fetch interval
-					console.log('page hidden -- clearing weather interval')
-					useInstanceStore().clearInterval('weather')
-				} else {
-					// page became visible. restarting weather fetch interval
-					console.log('page visible -- restarting weather interval')
-					this.refreshWeatherWithStoredPosition()
-					this.subscribeToWeather()
-				}
-			})
 		},
 		initialize() {
-			this.startClock()
-			async function getLocalData() {
-				return localStorage.getItem('data')
+			localStorage.setItem('weatherCalls', '0')
+
+			// get data from localStorage
+			const localData = this.parseLocalData()
+			this.$patch(localData)
+
+			// if location exists, fetch weather and subscribe to weather updates
+			if (localData?.position.latitude && localData?.position.longitude) {
+				this.refreshWeatherIfInvalidated()
+				this.subscribeToWeather()
 			}
-			getLocalData().then(
-				(data) => {
-					if (data && data !== '') {
-						const localData = JSON.parse(data)
-						localData.date = new Date()
-						this.$patch(localData)
-						if (localData.position.latitude && localData.position.longitude) {
-							this.refreshWeatherWithStoredPosition()
-							this.subscribeToWeather()
-							this.pauseWeatherFetchWhenHidden()
-						}
-					}
-				},
-				(err) => {
-					console.warn(err)
-				},
-			)
+
+			// check if running in chrome extension
 			this.isChromeExtension = !!(
 				window.chrome &&
 				chrome.runtime &&
 				chrome.runtime.id
 			)
+
 			this.init = true
+
+			// setup broadcast channel for weather updates from other tabs
+			const bc = new BroadcastChannel('weatherData')
+			bc.onmessage = (eventMessage) => {
+				console.log('msg received', eventMessage.data)
+				this.$patch({ weather: JSON.parse(eventMessage.data.toString()) })
+			}
+
 			this.$subscribe((_, state) => {
 				if (this.init) {
 					localStorage.setItem('data', JSON.stringify(state))
@@ -164,6 +109,7 @@ export const useDataStore = defineStore('data', {
 			})
 		},
 		async fetchPosition() {
+			// fetch position and set into state
 			const getPosition = new Promise<GeolocationPosition>(
 				(resolve, reject) => {
 					this.$patch({
@@ -171,7 +117,9 @@ export const useDataStore = defineStore('data', {
 					})
 					navigator.geolocation.getCurrentPosition(
 						(pos) => {
+							// clear any previous errors
 							this.errors.location = ''
+							// clear fetching state after 1 second. prevents hanging on some browsers
 							setTimeout(() => {
 								this.$patch({
 									position: {
@@ -191,7 +139,6 @@ export const useDataStore = defineStore('data', {
 							} else {
 								this.errors.location = err.message ?? 'Unknown error'
 							}
-							console.log('set into storage', this.errors.location)
 							this.$patch({
 								position: {
 									fetching: false,
@@ -202,6 +149,7 @@ export const useDataStore = defineStore('data', {
 					)
 				},
 			)
+			// allow 5 seconds for location fetch, otherwise time out
 			setTimeout(() => {
 				if (this.position.fetching) {
 					this.$patch({
@@ -223,37 +171,97 @@ export const useDataStore = defineStore('data', {
 				return pos
 			})
 		},
-		refreshWeatherIfInvalidated(latitude: number, longitude: number) {
-			// don't fetch if no location data or recent data exists
-			let invalidated =
-				!this.weather?.timestamp ||
-				Number(Date.now()) - this.weather?.timestamp >= 30 * 60 * 1000
-			if (!invalidated)
-				return console.log('Weather data still valid -- skipping weather fetch')
+		refreshWeatherIfInvalidated(latitude?: number, longitude?: number) {
+			// ignore if another instance is already fetching weather
+			if (!this.weather.fetching) {
+				// update local storage with new timestamp
+				this.weather.fetching = true
+				const bc = new BroadcastChannel('weatherData')
+				bc.postMessage(JSON.stringify({ fetching: true }))
 
-			// fetch new weather using last known position
-			fetchWeather(latitude, longitude).then(
-				(res) => {
-					this.weather = {
-						...this.weather,
-						...res,
-						timestamp: Number(Date.now()),
-					}
-				},
-				(err: any) => {
-					this.errors.weather = err.message
-					console.warn('Error fetching weather', err)
-				},
-			)
+				// get local data to account for recent weather fetches in other tabs or windows
+				let localData = this.parseLocalData()
+
+				// invalidate if no timestamp or timestamp is older than 30 minutes
+				// todo: set back to 30 min - 30*60*1000
+				let invalidated =
+					this.init &&
+					(!localData.weather?.timestamp ||
+						Number(Date.now()) - localData.weather?.timestamp >=
+							0.25 * 60 * 1000)
+
+				// don't fetch if data is still valid. set state with weather data from localStorage
+				if (!invalidated) {
+					this.weather = localData.weather
+					console.log('Weather data still valid -- skipping weather fetch')
+					this.weather.fetching = false
+					bc.postMessage(JSON.stringify({ fetching: false }))
+					return
+				}
+
+				// don't fetch if no location data
+				let lat = latitude ?? this.position.latitude ?? null
+				let long = longitude ?? this.position.longitude ?? null
+				if (!lat || !long) {
+					console.warn('No location data available -- skipping weather fetch')
+					this.weather.fetching = false
+					bc.postMessage(JSON.stringify({ fetching: false }))
+					return
+				}
+
+				// fetch new weather using passed in or stored location data
+				fetchWeather(lat, long).then(
+					(res) => {
+						const timestamp = Date.now()
+						console.log(
+							'invalidated',
+							invalidated,
+							'calling weather api',
+							timestamp,
+						)
+
+						// append weather data in state & update timestamp
+						this.weather = {
+							...this.weather,
+							...res,
+							timestamp: timestamp,
+						}
+
+						// broadcast new weather data to other tabs / windows
+						const bc = new BroadcastChannel('weatherData')
+						bc.postMessage(JSON.stringify({ ...this.weather, fetching: false }))
+
+						// todo: remove -- track number of weather calls
+						localStorage.setItem(
+							'weatherCalls',
+							localStorage.getItem('weatherCalls')
+								? (Number(localStorage.getItem('weatherCalls')) + 1).toString()
+								: '1',
+						)
+					},
+					(err: any) => {
+						this.errors.weather = err.message
+						console.warn('Error fetching weather', err)
+						localStorage.setItem(
+							'weatherCalls',
+							localStorage.getItem('weatherCalls')
+								? (Number(localStorage.getItem('weatherCalls')) + 1).toString()
+								: '1',
+						)
+						bc.postMessage(JSON.stringify({ fetching: false }))
+						console.log('msg sent -- no longer fetching (error)')
+					},
+				)
+			}
 		},
 		subscribeToWeather() {
-			useInstanceStore().clearInterval('weather')
+			// try refresh weather if needed every 5 minutes.
+			// todo: set back to 5 min - 5*60*1000
 			useInstanceStore().setCorrectingInterval(
-				// check if refresh weather needed every 5 minutes.
 				() => {
-					this.refreshWeatherWithStoredPosition()
+					this.refreshWeatherIfInvalidated()
 				},
-				5 * 60 * 1000,
+				0.5 * 60 * 1000,
 				'weather',
 			)
 		},

@@ -7,7 +7,7 @@
 		"module": "ESNext",
 		"lib": ["ES2020", "DOM", "DOM.Iterable"],
 		"skipLibCheck": true,
-		"types": ["vite/client", "chrome"],
+		"types": ["vite/client", "chrome", "node"],
 
 		/* Bundler mode */
 		"moduleResolution": "bundler",
