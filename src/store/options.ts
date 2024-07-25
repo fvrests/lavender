@@ -31,7 +31,7 @@ export const useOptionsStore = defineStore('options', {
 					// set localStore options into store
 					(options) => {
 						if (options) {
-							const localOptions = JSON.parse(options)
+							const localOptions = JSON.parse(options.toString())
 							this.$patch(localOptions)
 						}
 					},
@@ -54,7 +54,7 @@ export const useOptionsStore = defineStore('options', {
 			chrome.storage.sync.get().then(
 				(value) => {
 					if (value) {
-						const syncOptions = JSON.parse(value.options)
+						const syncOptions = JSON.parse(value.options.toString())
 						this.$patch({ ...syncOptions, init: true })
 						document.documentElement.className = syncOptions.theme.color
 					}
@@ -108,9 +108,11 @@ export const useOptionsStore = defineStore('options', {
 			this.$reset()
 			useInstanceStore().clearInterval('weather')
 			useInstanceStore().clearInterval('time')
+			useInstanceStore().$reset()
 			useDataStore().$reset()
 			this.initialize()
 			useDataStore().initialize()
+			useInstanceStore().initialize()
 		},
 	},
 })
