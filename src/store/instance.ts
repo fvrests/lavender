@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
-import { useOptionsStore } from './options'
 import { format } from 'date-fns'
+import { useOptionsStore } from './options'
 import { useDataStore } from './data'
 
 export const useInstanceStore = defineStore('instance', {
@@ -29,7 +29,20 @@ export const useInstanceStore = defineStore('instance', {
 		},
 	},
 	actions: {
-		pauseFetchWhenHidden() {
+		startClock() {
+			this.date = new Date()
+			this.setCorrectingInterval(
+				() => {
+					return (this.date = new Date())
+				},
+				1000,
+				'time',
+			)
+		},
+		initialize() {
+			this.init = true
+			this.startClock()
+			// listen to visibility & pause fetch when hidden
 			document.addEventListener('visibilitychange', () => {
 				if (this.init && document.hidden) {
 					// page became hidden
@@ -44,26 +57,42 @@ export const useInstanceStore = defineStore('instance', {
 					useDataStore().subscribeToWeather()
 				}
 			})
-		},
-		initialize() {
-			this.init = true
-			this.startClock()
-			this.pauseFetchWhenHidden()
-		},
-		startClock() {
-			this.date = new Date()
-			this.setCorrectingInterval(
-				() => {
-					return (this.date = new Date())
-				},
-				1000,
-				'time',
-			)
+			const clearBc = new BroadcastChannel('clear')
+			clearBc.onmessage = (message) => {
+				console.log("received 'reset' broadcast message", message)
+				if (message.data === 'clear') {
+					this.clearData(false)
+				}
+			}
 		},
 		clearInterval(name: string) {
 			clearTimeout(this.timeoutIds[name])
 			delete this.timeoutIds[name]
 		},
+		reset() {
+			this.clearInterval('weather')
+			this.clearInterval('time')
+			this.$reset()
+		},
+		clearData(broadcast: boolean = false) {
+			// if this is the first tab to reset, broadcast to other tabs
+			if (broadcast === true) {
+				const clearBc = new BroadcastChannel('clear')
+				clearBc.postMessage('clear')
+			} else {
+				localStorage.clear()
+
+				useOptionsStore().reset()
+				useDataStore().reset()
+				this.reset()
+
+				this.initialize()
+				useOptionsStore().initialize()
+				useDataStore().initialize()
+			}
+		},
+		// correcting interval - corrects compounding variation in time between ticks that would occur using setInterval
+		// https://andrewduthie.com/2013/12/31/creating-a-self-correcting-alternative-to-javascripts-setinterval/
 		setCorrectingInterval(func: () => {} | void, delay: number, name: string) {
 			var instance: {
 				func: (() => void | {}) | undefined
