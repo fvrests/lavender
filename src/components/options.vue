@@ -62,7 +62,6 @@ function handleClearData() {
 				<div style="padding: 6px 0px">
 					<div :class="text.label">Lavender collection</div>
 					<div class="space-xsmall" />
-					<!-- fix: selected button is higher in firefox -->
 					<ul class="theme-list">
 						<li v-for="theme in themes">
 							<ThemeSelect :theme="theme" :colors="[theme]" />
@@ -351,5 +350,9 @@ function handleClearData() {
 .theme-list {
 	display: grid;
 	grid-template-columns: repeat(6, 1fr);
+}
+.theme-list > * {
+	margin-right: auto;
+	display: inline-flex;
 }
 </style>
