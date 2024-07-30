@@ -76,7 +76,7 @@ export const useDataStore = defineStore('data', {
 			let localData = localStorage.getItem('data') ?? null
 			if (localData) {
 				return JSON.parse(localData.toString())
-			}
+			} else return null
 		},
 		initialize() {
 			// todo: remove
@@ -225,16 +225,20 @@ export const useDataStore = defineStore('data', {
 							timestamp,
 						)
 
-						// append weather data in state & update timestamp
-						this.$patch({
+						let updatedWeather = {
 							weather: {
 								...res,
 								timestamp: timestamp,
 								fetching: false,
 							},
-						})
+						}
+						// append weather data in state & update timestamp
+						this.$patch(updatedWeather)
 						// broadcast new data to other tabs / windows. include all data to sync position
-						this.messageAllInstances({ ...this })
+						this.messageAllInstances({
+							...this,
+							updatedWeather,
+						})
 
 						// todo: remove -- track number of weather calls
 						localStorage.setItem(

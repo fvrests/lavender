@@ -54,8 +54,16 @@ export const useInstanceStore = defineStore('instance', {
 					// page became visible
 					console.log('page visible -- restarting intervals')
 					this.startClock()
-					useDataStore().refreshWeatherIfInvalidated()
-					useDataStore().subscribeToWeather()
+					let localData = useDataStore().parseLocalData()
+					if (
+						localData &&
+						localData.position.latitude &&
+						localData.position.longitude
+					) {
+						console.log('location exists - fetching weather')
+						useDataStore().refreshWeatherIfInvalidated()
+						useDataStore().subscribeToWeather()
+					}
 				}
 			})
 			broadcastChannel.onmessage = (message) => {
