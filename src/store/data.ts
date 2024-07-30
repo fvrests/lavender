@@ -10,6 +10,8 @@ interface Weather extends OpenWeatherResponse {
 	fetching: boolean
 }
 
+const broadcastChannel = new BroadcastChannel('data')
+
 export const useDataStore = defineStore('data', {
 	state: () => ({
 		init: false,
@@ -68,8 +70,7 @@ export const useDataStore = defineStore('data', {
 	},
 	actions: {
 		messageAllInstances(message: {}) {
-			const bc = new BroadcastChannel('data')
-			bc.postMessage(JSON.stringify(message))
+			broadcastChannel.postMessage(JSON.stringify(message))
 		},
 		parseLocalData() {
 			let localData = localStorage.getItem('data') ?? null
@@ -101,8 +102,7 @@ export const useDataStore = defineStore('data', {
 			this.init = true
 
 			// setup broadcast channel for data updates from other tabs
-			const bc = new BroadcastChannel('data')
-			bc.onmessage = (eventMessage) => {
+			broadcastChannel.onmessage = (eventMessage) => {
 				console.log('msg received', eventMessage.data)
 				this.$patch(JSON.parse(eventMessage.data.toString()))
 			}
@@ -180,7 +180,6 @@ export const useDataStore = defineStore('data', {
 		},
 		refreshWeatherIfInvalidated(latitude?: number, longitude?: number) {
 			// ignore if another instance is already fetching weather
-			const bc = new BroadcastChannel('data')
 			if (!this.weather.fetching) {
 				this.weather.fetching = true
 				this.messageAllInstances({ weather: { fetching: true } })

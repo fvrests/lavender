@@ -35,6 +35,10 @@ function handleFetch() {
 		refreshDisabled.value = false
 	}, 15 * 1000)
 }
+function handleClearData() {
+	instanceStore.clearData(true)
+	isOptionsOpen.value = false
+}
 </script>
 
 <template>
@@ -212,10 +216,7 @@ function handleFetch() {
 						default options.
 					</div>
 					<div class="row separated">
-						<button
-							:class="button.tertiary"
-							@click="instanceStore.clearData(true)"
-						>
+						<button :class="button.tertiary" @click="handleClearData">
 							Reset all data
 						</button>
 					</div>
