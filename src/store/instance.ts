@@ -3,6 +3,7 @@ import { format } from 'date-fns'
 import { useOptionsStore } from './options'
 import { useDataStore } from './data'
 
+const broadcastChannel = new BroadcastChannel('clear')
 export const useInstanceStore = defineStore('instance', {
 	state: () => ({
 		init: false,
@@ -57,8 +58,7 @@ export const useInstanceStore = defineStore('instance', {
 					useDataStore().subscribeToWeather()
 				}
 			})
-			const clearBc = new BroadcastChannel('clear')
-			clearBc.onmessage = (message) => {
+			broadcastChannel.onmessage = (message) => {
 				console.log("received 'reset' broadcast message", message)
 				if (message.data === 'clear') {
 					this.clearData(false)
@@ -77,19 +77,18 @@ export const useInstanceStore = defineStore('instance', {
 		clearData(broadcast: boolean = false) {
 			// if this is the first tab to reset, broadcast to other tabs
 			if (broadcast === true) {
-				const clearBc = new BroadcastChannel('clear')
-				clearBc.postMessage('clear')
-			} else {
-				localStorage.clear()
-
-				useOptionsStore().reset()
-				useDataStore().reset()
-				this.reset()
-
-				this.initialize()
-				useOptionsStore().initialize()
-				useDataStore().initialize()
+				broadcastChannel.postMessage('clear')
 			}
+
+			localStorage.clear()
+
+			useOptionsStore().reset()
+			useDataStore().reset()
+			this.reset()
+
+			this.initialize()
+			useOptionsStore().initialize()
+			useDataStore().initialize()
 		},
 		// correcting interval - corrects compounding variation in time between ticks that would occur using setInterval
 		// https://andrewduthie.com/2013/12/31/creating-a-self-correcting-alternative-to-javascripts-setinterval/
