@@ -166,15 +166,16 @@ export const useDataStore = defineStore('data', {
 				}
 			}, 5 * 1000)
 			return getPosition.then((pos) => {
-				this.$patch({
+				const updatedPosition = {
 					position: {
 						latitude: pos.coords.latitude,
 						longitude: pos.coords.longitude,
 						timestamp: Number(Date.now()),
 						fetching: false,
 					},
-				})
-				this.messageAllInstances({ position: { ...this.position } })
+				}
+				this.$patch(updatedPosition)
+				this.messageAllInstances({ ...this, position: updatedPosition })
 				return pos
 			})
 		},
@@ -188,12 +189,10 @@ export const useDataStore = defineStore('data', {
 				let localData = this.parseLocalData()
 
 				// invalidate if no timestamp or timestamp is older than 30 minutes
-				// todo: set back to 30 min - 30*60*1000
 				let invalidated =
 					this.init &&
 					(!localData.weather?.timestamp ||
-						Number(Date.now()) - localData.weather?.timestamp >=
-							0.25 * 60 * 1000)
+						Number(Date.now()) - localData.weather?.timestamp >= 30 * 60 * 1000)
 
 				// don't fetch if data is still valid. set state with weather data from localStorage.
 				if (!invalidated) {
@@ -270,12 +269,11 @@ export const useDataStore = defineStore('data', {
 		},
 		subscribeToWeather() {
 			// try refresh weather if needed every 5 minutes.
-			// todo: set back to 5 min - 5*60*1000
 			useInstanceStore().setCorrectingInterval(
 				() => {
 					this.refreshWeatherIfInvalidated()
 				},
-				0.5 * 60 * 1000,
+				5 * 60 * 1000,
 				'weather',
 			)
 		},
