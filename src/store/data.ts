@@ -67,6 +67,10 @@ export const useDataStore = defineStore('data', {
 		},
 	},
 	actions: {
+		messageAllInstances(message: {}) {
+			const bc = new BroadcastChannel('data')
+			bc.postMessage(JSON.stringify(message))
+		},
 		parseLocalData() {
 			let localData = localStorage.getItem('data') ?? null
 			if (localData) {
@@ -74,6 +78,7 @@ export const useDataStore = defineStore('data', {
 			}
 		},
 		initialize() {
+			// todo: remove
 			localStorage.setItem('weatherCalls', '0')
 
 			// get data from localStorage
@@ -95,11 +100,11 @@ export const useDataStore = defineStore('data', {
 
 			this.init = true
 
-			// setup broadcast channel for weather updates from other tabs
-			const bc = new BroadcastChannel('weatherData')
+			// setup broadcast channel for data updates from other tabs
+			const bc = new BroadcastChannel('data')
 			bc.onmessage = (eventMessage) => {
 				console.log('msg received', eventMessage.data)
-				this.$patch({ weather: JSON.parse(eventMessage.data.toString()) })
+				this.$patch(JSON.parse(eventMessage.data.toString()))
 			}
 
 			this.$subscribe((_, state) => {
@@ -119,7 +124,7 @@ export const useDataStore = defineStore('data', {
 						(pos) => {
 							// clear any previous errors
 							this.errors.location = ''
-							// clear fetching state after 1 second. prevents hanging on some browsers
+							// clear fetching state after 1 second. prevents hanging on some browsers if location not enabled
 							setTimeout(() => {
 								this.$patch({
 									position: {
@@ -149,7 +154,7 @@ export const useDataStore = defineStore('data', {
 					)
 				},
 			)
-			// allow 5 seconds for location fetch, otherwise time out
+			// allow 5 seconds for location fetch, otherwise time out. accounts for hanging behavior in some browsers
 			setTimeout(() => {
 				if (this.position.fetching) {
 					this.$patch({
@@ -166,18 +171,19 @@ export const useDataStore = defineStore('data', {
 						latitude: pos.coords.latitude,
 						longitude: pos.coords.longitude,
 						timestamp: Number(Date.now()),
+						fetching: false,
 					},
 				})
+				this.messageAllInstances({ position: { ...this.position } })
 				return pos
 			})
 		},
 		refreshWeatherIfInvalidated(latitude?: number, longitude?: number) {
 			// ignore if another instance is already fetching weather
+			const bc = new BroadcastChannel('data')
 			if (!this.weather.fetching) {
-				// update local storage with new timestamp
 				this.weather.fetching = true
-				const bc = new BroadcastChannel('weatherData')
-				bc.postMessage(JSON.stringify({ fetching: true }))
+				this.messageAllInstances({ weather: { fetching: true } })
 
 				// get local data to account for recent weather fetches in other tabs or windows
 				let localData = this.parseLocalData()
@@ -190,12 +196,12 @@ export const useDataStore = defineStore('data', {
 						Number(Date.now()) - localData.weather?.timestamp >=
 							0.25 * 60 * 1000)
 
-				// don't fetch if data is still valid. set state with weather data from localStorage
+				// don't fetch if data is still valid. set state with weather data from localStorage.
 				if (!invalidated) {
 					this.weather = localData.weather
 					console.log('Weather data still valid -- skipping weather fetch')
 					this.weather.fetching = false
-					bc.postMessage(JSON.stringify({ fetching: false }))
+					this.messageAllInstances({ weather: { fetching: false } })
 					return
 				}
 
@@ -205,7 +211,7 @@ export const useDataStore = defineStore('data', {
 				if (!lat || !long) {
 					console.warn('No location data available -- skipping weather fetch')
 					this.weather.fetching = false
-					bc.postMessage(JSON.stringify({ fetching: false }))
+					this.messageAllInstances({ weather: { fetching: false } })
 					return
 				}
 
@@ -221,15 +227,15 @@ export const useDataStore = defineStore('data', {
 						)
 
 						// append weather data in state & update timestamp
-						this.weather = {
-							...this.weather,
-							...res,
-							timestamp: timestamp,
-						}
-
-						// broadcast new weather data to other tabs / windows
-						const bc = new BroadcastChannel('weatherData')
-						bc.postMessage(JSON.stringify({ ...this.weather, fetching: false }))
+						this.$patch({
+							weather: {
+								...res,
+								timestamp: timestamp,
+								fetching: false,
+							},
+						})
+						// broadcast new data to other tabs / windows. include all data to sync position
+						this.messageAllInstances({ ...this })
 
 						// todo: remove -- track number of weather calls
 						localStorage.setItem(
@@ -248,9 +254,14 @@ export const useDataStore = defineStore('data', {
 								? (Number(localStorage.getItem('weatherCalls')) + 1).toString()
 								: '1',
 						)
-						bc.postMessage(JSON.stringify({ fetching: false }))
-						console.log('msg sent -- no longer fetching (error)')
+						this.messageAllInstances({
+							weather: { fetching: false },
+						})
 					},
+				)
+			} else {
+				console.log(
+					'another instance is already fetching weather. skipping fetch',
 				)
 			}
 		},
@@ -278,6 +289,10 @@ export const useDataStore = defineStore('data', {
 					return err
 				},
 			)
+		},
+		reset() {
+			if (this.isChromeExtension) chrome?.storage?.sync?.clear()
+			this.$reset()
 		},
 	},
 })

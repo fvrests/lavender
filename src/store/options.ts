@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import { useDataStore } from './data'
-import { useInstanceStore } from './instance'
 
 export const useOptionsStore = defineStore('options', {
 	state: () => ({
@@ -102,17 +101,8 @@ export const useOptionsStore = defineStore('options', {
 		previewTheme(theme: string) {
 			document.documentElement.className = theme
 		},
-		clearData() {
-			localStorage.clear()
-			if (useDataStore().isChromeExtension) chrome?.storage?.sync?.clear()
+		reset() {
 			this.$reset()
-			useInstanceStore().clearInterval('weather')
-			useInstanceStore().clearInterval('time')
-			useInstanceStore().$reset()
-			useDataStore().$reset()
-			this.initialize()
-			useDataStore().initialize()
-			useInstanceStore().initialize()
 		},
 	},
 })

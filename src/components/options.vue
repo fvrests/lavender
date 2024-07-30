@@ -9,9 +9,11 @@ import text from '../assets/styles/text.module.css'
 import { ref } from 'vue'
 import { useDataStore } from '../store/data'
 import { useOptionsStore } from '../store/options'
+import { useInstanceStore } from '../store/instance'
 
 const dataStore = useDataStore()
 const optionsStore = useOptionsStore()
+const instanceStore = useInstanceStore()
 let isOptionsOpen = ref(false)
 let refreshDisabled = ref(false)
 
@@ -56,6 +58,7 @@ function handleFetch() {
 				<div style="padding: 6px 0px">
 					<div :class="text.label">Lavender collection</div>
 					<div class="space-xsmall" />
+					<!-- fix: selected button is higher in firefox -->
 					<ul class="theme-list">
 						<li v-for="theme in themes">
 							<ThemeSelect :theme="theme" :colors="[theme]" />
@@ -209,7 +212,10 @@ function handleFetch() {
 						default options.
 					</div>
 					<div class="row separated">
-						<button :class="button.tertiary" @click="optionsStore.clearData()">
+						<button
+							:class="button.tertiary"
+							@click="instanceStore.clearData(true)"
+						>
 							Reset all data
 						</button>
 					</div>
