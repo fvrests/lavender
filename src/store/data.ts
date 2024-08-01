@@ -92,11 +92,13 @@ export const useDataStore = defineStore('data', {
 			}
 
 			// check if running in chrome extension
-			// fix: should be false in brave extension
 			this.isChromeExtension = !!(
 				window.chrome &&
 				chrome.runtime &&
-				chrome.runtime.id
+				chrome.runtime.id &&
+				(navigator as any).userAgentData.brands.some(
+					(data: any) => data.brand == 'Google Chrome',
+				)
 			)
 
 			this.init = true
