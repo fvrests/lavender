@@ -55,11 +55,7 @@ export const useInstanceStore = defineStore('instance', {
 					console.log('page visible -- restarting intervals')
 					this.startClock()
 					let localData = useDataStore().parseLocalData()
-					if (
-						localData &&
-						localData.position.latitude &&
-						localData.position.longitude
-					) {
+					if (localData?.position?.latitude && localData?.position?.longitude) {
 						console.log('location exists - fetching weather')
 						useDataStore().refreshWeatherIfInvalidated()
 						useDataStore().subscribeToWeather()

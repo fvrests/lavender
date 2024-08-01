@@ -75,11 +75,10 @@ export const useDataStore = defineStore('data', {
 		parseLocalData() {
 			let localData = localStorage.getItem('data') ?? null
 			if (localData) {
-				return JSON.parse(localData.toString())
+				return JSON.parse(localData)
 			} else return null
 		},
 		initialize() {
-			// todo: remove
 			localStorage.setItem('weatherCalls', '0')
 
 			// get data from localStorage
@@ -87,12 +86,13 @@ export const useDataStore = defineStore('data', {
 			this.$patch(localData)
 
 			// if location exists, fetch weather and subscribe to weather updates
-			if (localData?.position.latitude && localData?.position.longitude) {
+			if (localData?.position?.latitude && localData?.position?.longitude) {
 				this.refreshWeatherIfInvalidated()
 				this.subscribeToWeather()
 			}
 
 			// check if running in chrome extension
+			// fix: should be false in brave extension
 			this.isChromeExtension = !!(
 				window.chrome &&
 				chrome.runtime &&
@@ -109,11 +109,12 @@ export const useDataStore = defineStore('data', {
 
 			this.$subscribe((_, state) => {
 				if (this.init) {
-					localStorage.setItem('data', JSON.stringify(state))
+					localStorage.setItem('data', JSON.stringify({ ...state }))
 				}
 			})
 		},
 		async fetchPosition() {
+			// todo: maybe alert other instances of position fetching state
 			// fetch position and set into state
 			const getPosition = new Promise<GeolocationPosition>(
 				(resolve, reject) => {
@@ -124,18 +125,10 @@ export const useDataStore = defineStore('data', {
 						(pos) => {
 							// clear any previous errors
 							this.errors.location = ''
-							// clear fetching state after 1 second. prevents hanging on some browsers if location not enabled
-							setTimeout(() => {
-								this.$patch({
-									position: {
-										fetching: false,
-									},
-								})
-							}, 1000)
 							resolve(pos)
 						},
 						(err) => {
-							console.warn('Error fetching position', err)
+							console.warn('error fetching position', err)
 							if (err.code in errorCodes) {
 								this.errors.location =
 									errorCodes.location[
@@ -151,6 +144,7 @@ export const useDataStore = defineStore('data', {
 							})
 							reject(err)
 						},
+						{ maximumAge: 60000, timeout: 5000, enableHighAccuracy: true },
 					)
 				},
 			)
@@ -167,113 +161,110 @@ export const useDataStore = defineStore('data', {
 			}, 5 * 1000)
 			return getPosition.then((pos) => {
 				const updatedPosition = {
-					position: {
-						latitude: pos.coords.latitude,
-						longitude: pos.coords.longitude,
-						timestamp: Number(Date.now()),
-						fetching: false,
-					},
+					latitude: pos.coords.latitude,
+					longitude: pos.coords.longitude,
+					timestamp: Number(Date.now()),
+					fetching: false,
 				}
-				this.$patch(updatedPosition)
-				this.messageAllInstances({ ...this, position: updatedPosition })
+				this.$patch({ position: updatedPosition })
+				this.messageAllInstances({ position: updatedPosition })
 				return pos
 			})
 		},
 		refreshWeatherIfInvalidated(latitude?: number, longitude?: number) {
 			// ignore if another instance is already fetching weather
-			if (!this.weather.fetching) {
-				this.weather.fetching = true
-				this.messageAllInstances({ weather: { fetching: true } })
-
-				// get local data to account for recent weather fetches in other tabs or windows
-				let localData = this.parseLocalData()
-
-				// invalidate if no timestamp or timestamp is older than 30 minutes
-				let invalidated =
-					this.init &&
-					(!localData.weather?.timestamp ||
-						Number(Date.now()) - localData.weather?.timestamp >= 30 * 60 * 1000)
-
-				// don't fetch if data is still valid. set state with weather data from localStorage.
-				if (!invalidated) {
-					this.weather = localData.weather
-					console.log('Weather data still valid -- skipping weather fetch')
-					this.weather.fetching = false
-					this.messageAllInstances({ weather: { fetching: false } })
-					return
-				}
-
-				// don't fetch if no location data
-				let lat = latitude ?? this.position.latitude ?? null
-				let long = longitude ?? this.position.longitude ?? null
-				if (!lat || !long) {
-					console.warn('No location data available -- skipping weather fetch')
-					this.weather.fetching = false
-					this.messageAllInstances({ weather: { fetching: false } })
-					return
-				}
-
-				// fetch new weather using passed in or stored location data
-				fetchWeather(lat, long).then(
-					(res) => {
-						const timestamp = Date.now()
-						console.log(
-							'invalidated',
-							invalidated,
-							'calling weather api',
-							timestamp,
-						)
-
-						let updatedWeather = {
-							weather: {
-								...res,
-								timestamp: timestamp,
-								fetching: false,
-							},
-						}
-						// append weather data in state & update timestamp
-						this.$patch(updatedWeather)
-						// broadcast new data to other tabs / windows. include all data to sync position
-						this.messageAllInstances({
-							...this,
-							updatedWeather,
-						})
-
-						// todo: remove -- track number of weather calls
-						localStorage.setItem(
-							'weatherCalls',
-							localStorage.getItem('weatherCalls')
-								? (Number(localStorage.getItem('weatherCalls')) + 1).toString()
-								: '1',
-						)
-					},
-					(err: any) => {
-						this.errors.weather = err.message
-						console.warn('Error fetching weather', err)
-						localStorage.setItem(
-							'weatherCalls',
-							localStorage.getItem('weatherCalls')
-								? (Number(localStorage.getItem('weatherCalls')) + 1).toString()
-								: '1',
-						)
-						this.messageAllInstances({
-							weather: { fetching: false },
-						})
-					},
-				)
-			} else {
-				console.log(
-					'another instance is already fetching weather. skipping fetch',
-				)
+			if (this.weather.fetching) {
+				console.log('an instance is already fetching weather. skipping fetch')
+				return
 			}
+
+			this.weather.fetching = true
+			this.messageAllInstances({ weather: { fetching: true } })
+
+			// get local data to account for recent weather fetches in other tabs or windows
+			let localData = this.parseLocalData()
+
+			// invalidate if no timestamp or timestamp is older than 30 minutes
+			//todo: set back to 30 min - 30*60*1000
+			let invalidated =
+				this.init &&
+				(!localData.weather?.timestamp ||
+					Number(Date.now()) - localData.weather?.timestamp >= 0.25 * 60 * 1000)
+
+			// don't fetch if data is still valid. set state with weather data from localStorage.
+			if (!invalidated) {
+				this.weather = localData.weather
+				console.log('weather data still valid -- skipping weather fetch')
+				this.weather.fetching = false
+				this.messageAllInstances({ weather: { fetching: false } })
+				return
+			}
+
+			// don't fetch if no location data
+			let lat = latitude ?? this.position.latitude ?? null
+			let long = longitude ?? this.position.longitude ?? null
+			if (!lat || !long) {
+				console.warn('no location data available -- skipping weather fetch')
+				this.weather.fetching = false
+				this.messageAllInstances({ weather: { fetching: false } })
+				return
+			}
+
+			// fetch new weather using passed in or stored location data
+			fetchWeather(lat, long).then(
+				(res) => {
+					const timestamp = Date.now()
+					console.log(
+						'weather invalidated',
+						invalidated,
+						'calling weather api',
+						timestamp,
+					)
+
+					let updatedWeather = {
+						...res,
+						timestamp: timestamp,
+						fetching: false,
+					}
+
+					// append weather data in state & update timestamp
+					this.$patch({ weather: updatedWeather })
+
+					// broadcast new data to other tabs / windows. include all data to sync position
+					this.messageAllInstances({
+						weather: updatedWeather,
+					})
+
+					localStorage.setItem(
+						'weatherCalls',
+						localStorage.getItem('weatherCalls')
+							? (Number(localStorage.getItem('weatherCalls')) + 1).toString()
+							: '1',
+					)
+				},
+				(err: any) => {
+					this.errors.weather = err.message
+					console.warn('error fetching weather', err)
+					localStorage.setItem(
+						'weatherCalls',
+						localStorage.getItem('weatherCalls')
+							? (Number(localStorage.getItem('weatherCalls')) + 1).toString()
+							: '1',
+					)
+					this.messageAllInstances({
+						weather: { fetching: false },
+					})
+				},
+			)
 		},
 		subscribeToWeather() {
+			// todo: set back to 5 minutes - 5*60*1000
 			// try refresh weather if needed every 5 minutes.
 			useInstanceStore().setCorrectingInterval(
 				() => {
 					this.refreshWeatherIfInvalidated()
 				},
-				5 * 60 * 1000,
+				0.5 * 60 * 1000,
 				'weather',
 			)
 		},

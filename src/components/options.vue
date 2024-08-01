@@ -203,7 +203,7 @@ function handleClearData() {
 						"
 					/>
 					<div :class="text.base">
-						Persist options across your Chrome browsers (overrides local
+						Persist options across your Chrome browsers (overrides your current
 						options). Your location is not synced and will remain on-device.
 					</div>
 					<div class="divider" />
