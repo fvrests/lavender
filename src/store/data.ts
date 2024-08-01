@@ -96,7 +96,7 @@ export const useDataStore = defineStore('data', {
 				window.chrome &&
 				chrome.runtime &&
 				chrome.runtime.id &&
-				(navigator as any).userAgentData.brands.some(
+				(navigator as any)?.userAgentData?.brands?.some(
 					(data: any) => data.brand == 'Google Chrome',
 				)
 			)
