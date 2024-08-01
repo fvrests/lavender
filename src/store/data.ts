@@ -187,11 +187,10 @@ export const useDataStore = defineStore('data', {
 			let localData = this.parseLocalData()
 
 			// invalidate if no timestamp or timestamp is older than 30 minutes
-			//todo: set back to 30 min - 30*60*1000
 			let invalidated =
 				this.init &&
 				(!localData.weather?.timestamp ||
-					Number(Date.now()) - localData.weather?.timestamp >= 0.25 * 60 * 1000)
+					Number(Date.now()) - localData.weather?.timestamp >= 30 * 60 * 1000)
 
 			// don't fetch if data is still valid. set state with weather data from localStorage.
 			if (!invalidated) {
@@ -260,13 +259,12 @@ export const useDataStore = defineStore('data', {
 			)
 		},
 		subscribeToWeather() {
-			// todo: set back to 5 minutes - 5*60*1000
 			// try refresh weather if needed every 5 minutes.
 			useInstanceStore().setCorrectingInterval(
 				() => {
 					this.refreshWeatherIfInvalidated()
 				},
-				0.5 * 60 * 1000,
+				5 * 60 * 1000,
 				'weather',
 			)
 		},
