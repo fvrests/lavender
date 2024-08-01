@@ -47,23 +47,23 @@ export const useInstanceStore = defineStore('instance', {
 			document.addEventListener('visibilitychange', () => {
 				if (this.init && document.hidden) {
 					// page became hidden
-					console.log('page hidden -- clearing intervals')
+					// console.log('page hidden -- clearing intervals')
 					this.clearInterval('time')
 					this.clearInterval('weather')
 				} else {
 					// page became visible
-					console.log('page visible -- restarting intervals')
+					// console.log('page visible -- restarting intervals')
 					this.startClock()
 					let localData = useDataStore().parseLocalData()
 					if (localData?.position?.latitude && localData?.position?.longitude) {
-						console.log('location exists - fetching weather')
+						// console.log('location exists - fetching weather')
 						useDataStore().refreshWeatherIfInvalidated()
 						useDataStore().subscribeToWeather()
 					}
 				}
 			})
 			broadcastChannel.onmessage = (message) => {
-				console.log("received 'reset' broadcast message", message)
+				// console.log("received 'reset' broadcast message", message)
 				if (message.data === 'clear') {
 					this.clearData(false)
 				}
