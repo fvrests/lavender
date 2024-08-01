@@ -53,7 +53,6 @@ export const useOptionsStore = defineStore('options', {
 			chrome.storage.sync.get().then(
 				(value) => {
 					if (value && value.options) {
-						console.log('value from chrome store', value)
 						const syncOptions = JSON.parse(value.options)
 						this.$patch({ ...syncOptions, init: true })
 						document.documentElement.className = syncOptions.theme.color
