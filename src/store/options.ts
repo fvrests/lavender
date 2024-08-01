@@ -30,7 +30,7 @@ export const useOptionsStore = defineStore('options', {
 					// set localStore options into store
 					(options) => {
 						if (options) {
-							const localOptions = JSON.parse(options.toString())
+							const localOptions = JSON.parse(options)
 							this.$patch(localOptions)
 						}
 					},
@@ -45,18 +45,19 @@ export const useOptionsStore = defineStore('options', {
 				.then(() => {
 					this.setTheme(this.theme.color)
 					this.$subscribe((_, state) => {
-						localStorage.setItem('options', JSON.stringify(state))
+						localStorage.setItem('options', JSON.stringify({ ...state }))
 					})
 				})
 		},
 		readChromeStorage() {
 			chrome.storage.sync.get().then(
 				(value) => {
-					if (value) {
-						const syncOptions = JSON.parse(value.options.toString())
+					if (value && value.options) {
+						console.log('value from chrome store', value)
+						const syncOptions = JSON.parse(value.options)
 						this.$patch({ ...syncOptions, init: true })
 						document.documentElement.className = syncOptions.theme.color
-					}
+					} else return null
 				},
 				(err) => {
 					console.warn(err)
@@ -73,7 +74,7 @@ export const useOptionsStore = defineStore('options', {
 				try {
 					this.readChromeStorage()
 				} catch (err) {
-					console.warn('Error reading Chrome storage', err)
+					console.warn('error reading Chrome storage', err)
 				}
 			}
 			this.$subscribe(() => {
