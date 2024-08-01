@@ -105,7 +105,7 @@ export const useDataStore = defineStore('data', {
 
 			// setup broadcast channel for data updates from other tabs
 			broadcastChannel.onmessage = (eventMessage) => {
-				console.log('msg received', eventMessage.data)
+				// console.log('msg received', eventMessage.data)
 				this.$patch(JSON.parse(eventMessage.data.toString()))
 			}
 
