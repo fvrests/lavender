@@ -15,8 +15,7 @@
 		"core-js": "^3.37.1",
 		"date-fns": "3.6.0",
 		"pinia": "^2.2.0",
-		"vue": "^3.4.35",
-		"vuex": "^4.1.0"
+		"vue": "^3.4.35"
 	},
 	"devDependencies": {
 		"@types/node": "^22.0.2",

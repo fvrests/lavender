@@ -20,9 +20,6 @@ dependencies:
   vue:
     specifier: ^3.4.35
     version: 3.4.35(typescript@5.5.4)
-  vuex:
-    specifier: ^4.1.0
-    version: 4.1.0(vue@3.4.35)
 
 devDependencies:
   '@types/node':
@@ -833,12 +830,3 @@ packages:
       '@vue/server-renderer': 3.4.35(vue@3.4.35)
       '@vue/shared': 3.4.35
       typescript: 5.5.4
-
-  /vuex@4.1.0(vue@3.4.35):
-    resolution: {integrity: sha512-hmV6UerDrPcgbSy9ORAtNXDr9M4wlNP4pEFKye4ujJF8oqgFFuxDCdOLS3eNoRTtq5O3hoBDh9Doj1bQMYHRbQ==}
-    peerDependencies:
-      vue: ^3.2.0
-    dependencies:
-      '@vue/devtools-api': 6.6.3
-      vue: 3.4.35(typescript@5.5.4)
-    dev: false
