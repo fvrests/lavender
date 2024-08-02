@@ -11,20 +11,20 @@
 		"serve-dev": "bun server/main.ts"
 	},
 	"dependencies": {
-		"@types/chrome": "^0.0.268",
+		"@types/chrome": "^0.0.269",
 		"core-js": "^3.37.1",
 		"date-fns": "3.6.0",
-		"pinia": "^2.1.7",
-		"vue": "^3.4.27",
+		"pinia": "^2.2.0",
+		"vue": "^3.4.35",
 		"vuex": "^4.1.0"
 	},
 	"devDependencies": {
-		"@types/node": "^20.14.2",
-		"@vitejs/plugin-vue": "^5.0.5",
-		"prettier": "^3.3.2",
-		"typescript": "^5.4.5",
-		"vite": "^5.2.13",
-		"vue-tsc": "^2.0.21"
+		"@types/node": "^22.0.2",
+		"@vitejs/plugin-vue": "^5.1.2",
+		"prettier": "^3.3.3",
+		"typescript": "^5.5.4",
+		"vite": "^5.3.5",
+		"vue-tsc": "^2.0.29"
 	},
 	"prettier": {
 		"singleQuote": true,
