@@ -1,62 +1,44 @@
-<template>
-    <div class="app-wrapper">
-        <v-time v-if="storeInitialized" />
-        <v-weather />
-        <v-options />
-    </div>
-</template>
-
-<script>
-import VWeather from './components/weather.vue'
-import VOptions from './components/options.vue'
-import VTime from './components/time.vue'
-import store from '@/store'
-import { onBeforeUnmount, computed } from 'vue'
+<script setup lang="ts">
+import Weather from './components/weather.vue'
+import Options from './components/options.vue'
+import Clock from './components/clock.vue'
 import './assets/styles/normalize.css'
 import './assets/styles/weather-icons.min.css'
 import './assets/styles/global.css'
+import { useOptionsStore } from './store/options'
+import { useDataStore } from './store/data'
+import { useInstanceStore } from './store/instance'
+import Alert from './components/alert.vue'
 
-export default {
-    name: 'App',
-    components: {
-        VWeather,
-        VOptions,
-        VTime,
-    },
-    setup() {
-        store.commit('initializeStore')
-        // console.log('store initialized 🥳', store.state)
-        let storeInitialized = computed(() => store.state.init)
+let optionsStore = useOptionsStore()
+let dataStore = useDataStore()
+let instanceStore = useInstanceStore()
 
-        store.subscribe((mutations, state) => {
-            if (state.init)
-                chrome.storage.sync.set({
-                    ...state,
-                    lastSynced: Date.now(),
-                })
-        })
-
-        onBeforeUnmount(() => {
-            store.unsubscribe()
-        })
-
-        return {
-            storeInitialized,
-        }
-    },
-}
+optionsStore.initialize()
+dataStore.initialize()
+instanceStore.initialize()
 </script>
+
+<template>
+	<div class="app-wrapper">
+		<Alert />
+		<Clock v-if="optionsStore.init && dataStore.init" />
+		<Weather />
+		<Options />
+	</div>
+</template>
 
 <style scoped>
 .app-wrapper {
-    display: grid;
-    grid-template-areas:
-        'top top top'
-        'left middle right'
-        'bottom bottom bottom';
-    justify-items: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: var(--space-medium);
+	display: grid;
+	grid-template-areas:
+		'top top top'
+		'left middle right'
+		'bottom bottom bottom';
+	justify-items: center;
+	align-items: center;
+	min-height: 100vh;
+	min-height: 100dvh;
+	padding: var(--space-medium);
 }
 </style>

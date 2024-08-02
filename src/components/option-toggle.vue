@@ -1,75 +1,98 @@
-<template>
-    <button class="item-wrapper" @click="toggle">
-        <div class="row">
-            <div :class="text.label">{{ label }}</div>
-            <div :class="text.sublabel">{{ sublabel }}</div>
-        </div>
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="toggle"
-            :class="selected ? 'selected' : ''"
-        >
-            <rect x="1" y="5" width="22" height="14" rx="7" ry="7" />
-            <circle :cx="selected ? 16 : 8" cy="12" r="4" />
-        </svg>
-    </button>
-</template>
-
-<script>
+<script setup lang="ts">
 import { computed } from 'vue'
-import { useStore } from 'vuex'
-import text from './text.module.css'
+import text from '../assets/styles/text.module.css'
+import { useOptionsStore } from '../store/options'
+const optionsStore = useOptionsStore()
 
-export default {
-    props: {
-        label: { type: String, required: true },
-        option: { type: String, required: true },
-        sublabel: { type: String, required: false, default: '' },
-    },
-    setup(props) {
-        let store = useStore()
-        let selected = computed(() => store.state[props.option])
+const props = withDefaults(
+	defineProps<{
+		label: string
+		option: string
+		onChange?: () => void
+	}>(),
+	{ onChange: () => {} },
+)
 
-        function toggle() {
-            store.commit('toggleProperty', props.option)
-        }
+// allow passing nested options (convert to store entry reference)
+const optionNodes = props.option.split('.')
 
-        return { selected, toggle, text }
-    },
+const handleOption = (toggle = false) => {
+	return optionNodes.reduce((prev: any, cur: string, index) => {
+		// if toggle is set, toggle stored value
+		if (toggle && index === optionNodes.length - 1) {
+			prev[cur] = !prev[cur]
+		}
+		return prev ? prev[cur] : null
+	}, optionsStore)
 }
+const selected = computed(() => handleOption())
 </script>
 
+<template>
+	<button
+		class="item-wrapper"
+		@click="
+			() => {
+				props.onChange && props.onChange()
+				handleOption(true)
+			}
+		"
+	>
+		<div :class="text.label">{{ props.label }}</div>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="16"
+			viewBox="4 4 16 16"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			:class="selected ? 'selected' : ''"
+		>
+			<rect x="1" y="5" width="22" height="14" rx="7" ry="7" />
+
+			<circle :cx="selected ? 16 : 8" cy="12" r="4" />
+		</svg>
+	</button>
+</template>
+
 <style scoped>
-/* general styling */
 .item-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    margin: 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	margin: 0 auto;
+	border-radius: var(--rounded);
+	/* prevent cutoff of svg shadow on safari */
+	outline: 4px solid transparent;
 }
-svg.toggle > rect,
-svg.toggle > circle {
-    transition: all 200ms ease-in-out;
+svg {
+	color: var(--ui-fg);
+	border-radius: var(--rounded);
 }
-svg.toggle.selected > circle {
-    fill: white;
+.item-wrapper:focus {
+	outline: none;
 }
-svg.toggle > circle {
-    fill: var(--theme-bg);
+.item-wrapper:focus svg {
+	box-shadow: var(--ui-focus-box);
 }
-svg.toggle > rect {
-    fill: white;
+svg > rect,
+svg > circle {
+	transition: all 200ms ease-in-out;
 }
-svg.toggle.selected > rect {
-    fill: var(--theme-bg);
+svg.selected > circle {
+	fill: var(--ui-bg);
+}
+svg > circle {
+	fill: var(--theme-bg);
+}
+svg > rect {
+	fill: var(--ui-bg);
+}
+svg.selected > rect {
+	fill: var(--theme-bg);
 }
 </style>

@@ -1,0 +1,69 @@
+.primary {
+	user-select: none;
+}
+.primary {
+	background-color: var(--ui-bg);
+	color: var(--ui-fg);
+	border: 2px solid var(--ui-fg);
+	font-weight: bold;
+	border-radius: var(--rounded-full);
+	padding: 2px 12px;
+	font-size: 12px;
+}
+.primary:hover,
+.primary:focus {
+	background-color: var(--theme-bg);
+	color: var(--theme-fg);
+}
+.primary[disabled] {
+	cursor: not-allowed;
+	opacity: 0.2;
+}
+.primary[disabled]:hover,
+.primary[disabled]:focus {
+	background-color: white;
+}
+
+.secondary {
+	color: var(--ui-fg);
+	font-weight: bold;
+	font-size: 11px;
+	padding: 4px 2px;
+	position: relative;
+	display: block;
+	text-align: center;
+	border-radius: var(--rounded-slight);
+}
+.secondary::after {
+	content: '';
+	position: absolute;
+	height: 2px;
+	width: 100%;
+	left: 0;
+	bottom: 0px;
+	background-color: var(--theme-bg);
+	z-index: -1;
+	transition: var(--transition);
+}
+.secondary:hover::after {
+	height: 4px;
+}
+
+.tertiary {
+	font-weight: bold;
+	font-size: 11px;
+	padding: 1px 2px;
+	margin: -1px -2px;
+	border-radius: var(--rounded-slight);
+}
+.tertiary:hover {
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.primary:focus,
+.secondary:focus,
+.tertiary:focus {
+	outline: none;
+	box-shadow: var(--ui-focus-box);
+}

@@ -1,67 +1,70 @@
-![illustration of a starry landscape with a screencap of the lavender app & the lavender logo](./promo/promo-marquee-1400@2x.png)
+![illustration of a starry landscape with a screencap of the lavender app & the lavender logo](./promo/promo-marquee-1400.png)
 
 # lavender new tab 🌙
 
 ## features
 
-lavender is a soft, minimal new tab for your chrome browser featuring:
+lavender is a soft, minimal new tab for your browser featuring:
 
--   live time & weather updates
--   5 calming background colors
--   alternative UI layouts
--   location-based weather fetching
--   metric units & 24-hour time formatting
--   options sync between chrome browsers
+- live time & weather updates
+- 10 background colors in calming pastel and rich dark tones
+- dynamic light / dark mode for adaptive viewing
+- alternative UI layouts
+- location-based weather fetching
+- metric units & 24-hour time formatting
+- options sync between devices using the chrome extension (optional)
 
-## download
+## chrome extension
 
-[<img alt="Chrome Web Store" src="https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_496x150.png" height="64">](https://chrome.google.com/webstore/detail/lavender-new-tab/ffobepdbanoiodmfimpmanafepclokbc)
+download at the [Chrome Web Store](https://chrome.google.com/webstore/detail/lavender-new-tab/ffobepdbanoiodmfimpmanafepclokbc). also installable to Brave and other Chromium-based browsers.
+
+## web
+
+- visit the [lavender site](https://lavender.fvrests.dev) to preview the app and customize your theme options
+- set as your browser homepage or new tab page to pair lavender with any web platform
 
 ## manual installation
 
--   clone or download lavender
+- clone or download lavender
 
 ```sh
 $ git clone git@github.com:fvrests/lavender.git && cd lavender
 ```
 
--   sign up for [OpenWeather API](https://home.openweathermap.org/users/sign_upgenerate) and generate a new API key
+- sign up for [OpenWeather API](https://home.openweathermap.org/users/sign_up) and generate a new API key (you'll be using the Current Weather Data API - the free tier should be sufficient)
 
--   within the .env.example file, paste your key directly after "VUE_APP_WEATHER_KEY=" and rename the file to .env
+- within the .env.example file, paste your key directly after "VITE_WEATHER_KEY=" and rename the file to .env
 
 ```sh
 # .env
-VUE_APP_WEATHER_KEY=<api_key>
+VITE_WEATHER_KEY=<api_key>
 ```
 
--   install dependencies and build lavender (generating the necessary **dist** folder)
+- install dependencies and build lavender (generating the necessary **dist** folder)
 
 ```sh
-$ yarn && yarn build
-
-# or using npm
-$ npm install && npm run build
+$ pnpm install && pnpm build
 ```
 
--   navigate to chrome://extensions and turn on developer mode (in the top right corner)
--   click "load unpacked" at the top and select the **dist** folder of lavender
--   opening a new tab should now load lavender ✨ enjoy!
+- navigate to chrome://extensions and turn on developer mode (in the top right corner)
+- click "load unpacked" at the top and select the **dist** folder of lavender
+- opening a new tab should now load lavender ✨ enjoy!
 
 ## permissions & licensing
 
-this app requires the following permissions:
+the extension requires the following permissions:
 
 | permission             | usage                                                                                       |
 | ---------------------- | ------------------------------------------------------------------------------------------- |
-| chrome & local storage | store user settings, sync across browsers                                                   |
+| local & chrome storage | store user settings. optionally, sync between devices with chrome storage.                  |
 | geolocation            | fetch weather - data is used to query [OpenWeather API](https://openweathermap.org/find?q=) |
 
-this project is licensed under the MIT license. please feel free to browse the source code or use snippets for your own projects 💛
+this project is developed under MIT license. please feel free to browse the source code or use snippets for your own projects.
 
 [privacy policy](https://github.com/fvrests/lavender/blob/main/privacy-policy.md) | [terms of use](https://github.com/fvrests/lavender/blob/main/terms-of-use.md)
 
 feedback & suggestions are always welcome!
 
-by [@fvrests](https://twitter.com/fvrests)
+by [fvrests](https://fvrests.dev)
 
-[donate 💕](https://givebutter.com/fvrests)
+[support my work 💛](https://ko-fi.com/fvrests)

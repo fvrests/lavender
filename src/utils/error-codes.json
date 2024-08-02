@@ -1,7 +1,12 @@
 {
-    "position": {
-        "1": "🤦permission denied by user. please review your browser location permissions",
-        "2": "🔮position unavailable. please try again",
-        "3": "⏳the operation took longer than expected. please try again"
-    }
+	"location": {
+		"1": "User denied the request for Geolocation",
+		"2": "Location information is unavailable",
+		"3": "The request to get user location timed out"
+	},
+	"weather": {
+		"408": "Request timed out",
+		"410": "Resource not available on server",
+		"429": "Too many requests"
+	}
 }
