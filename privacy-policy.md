@@ -4,21 +4,21 @@
 
 ### Geolocation Data
 
-Lavender's weather features use Google Chrome's Geolocation API, which prompts the user's browser for approximate current location in the form of latitude and longitude coordinates.
+Lavender's weather features use the Geolocation API, which prompts the user's browser for approximate current location in the form of latitude and longitude coordinates.
 
 ### Local and Chrome Sync Storage
 
-Lavender accesses the user's Local Storage and Chrome Storage.
+Lavender accesses the user's Local Storage and may access the user's Chrome Storage, if browsing via the Chrome extension.
 
 ## How does Lavender use the information it collects?
 
 ### Geolocation Data
 
-The user's location data is stored in the user's chrome browser and is not pre-fetched, indexed, stored, or cached in any way by the developer of Lavender. Location data obtained through Chrome is subject to Google's Privacy Policy, found [here](https://www.google.com/policies/privacy/). The coordinates collected are used to query OpenWeather's Current Weather Data API to obtain weather data for the user's area. The OpenWeather privacy policy can be found [here](https://openweather.co.uk/privacy-policy).
+The user's location data is stored in the user's browser and is not pre-fetched, indexed, stored, or cached in any way by the developer of Lavender. Location data obtained through the browser may be subject to additional privacy policies provided by the user's browser, such as Google's Privacy Policy, found [here](https://www.google.com/policies/privacy/). The coordinates collected are used to query OpenWeather's Current Weather Data API to obtain weather data for the user's area. The OpenWeather privacy policy can be found [here](https://openweather.co.uk/privacy-policy).
 
 ### Local and Chrome Sync Storage
 
-The user's local and Chrome storage are used to save UI settings within the browser and allow them to persist across Chrome instances using the Chrome Storage API. User data and settings are not indexed, stored, or cached by the developer of Lavender and are accessible only to the user.
+The user's local and Chrome storage are used to save UI settings within the browser and allow them to persist across Chrome extension instances using the Chrome Storage API. User data and settings are not indexed, stored, or cached by the developer of Lavender and are accessible only to the user.
 
 ## Limiting access to personal data
 
@@ -26,7 +26,7 @@ The user may deny access to location data by clicking the "Not now" link when as
 
 ## Dispute resolution
 
-Complaints about Lavender's privacy practices can be directed to the developer at <fvrests@pm.me>. Reasonable steps will be taken to attempt to resolve any complaints.
+Complaints about Lavender's privacy practices can be directed to the developer at <fvrests@icloud.com>. Reasonable steps will be taken to attempt to resolve any complaints.
 
 ## Changes to the privacy policy
 
