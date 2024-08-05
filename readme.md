@@ -1,4 +1,4 @@
-![illustration of a starry landscape with a screencap of the lavender app & the lavender logo](./promo/promo-marquee-1400.png)
+![illustration of a starry landscape with a screencap of the lavender app & the lavender logo](./promo/promo-marquee-1400@2x.png)
 
 # lavender new tab 🌙
 
@@ -18,6 +18,10 @@ lavender is a soft, minimal new tab for your browser featuring:
 
 download at the [Chrome Web Store](https://chrome.google.com/webstore/detail/lavender-new-tab/ffobepdbanoiodmfimpmanafepclokbc). also installable to Brave and other Chromium-based browsers.
 
+## firefox extension
+
+> pending review
+
 ## web
 
 - visit the [lavender site](https://lavender.fvrests.dev) to preview the app and customize your theme options
@@ -25,30 +29,79 @@ download at the [Chrome Web Store](https://chrome.google.com/webstore/detail/lav
 
 ## manual installation
 
+### setup
+
 - clone or download lavender
 
-```sh
-$ git clone git@github.com:fvrests/lavender.git && cd lavender
-```
+  ```sh
+  git clone git@github.com:fvrests/lavender.git && cd lavender
+  ```
 
 - sign up for [OpenWeather API](https://home.openweathermap.org/users/sign_up) and generate a new API key (you'll be using the Current Weather Data API - the free tier should be sufficient)
 
-- within the .env.example file, paste your key directly after "VITE_WEATHER_KEY=" and rename the file to .env
+- within the `.env.example` file, paste your key directly after "VITE_WEATHER_KEY=" and rename the file to `.env`
 
-```sh
-# .env
-VITE_WEATHER_KEY=<api_key>
-```
+  ```sh
+  # .env
+  VITE_WEATHER_KEY=<api_key>
+  ```
 
-- install dependencies and build lavender (generating the necessary **dist** folder)
+- install dependencies and build lavender (generating the necessary `dist` folder)
 
-```sh
-$ pnpm install && pnpm build
-```
+  ```sh
+  pnpm install && pnpm build
+  ```
 
-- navigate to chrome://extensions and turn on developer mode (in the top right corner)
-- click "load unpacked" at the top and select the **dist** folder of lavender
-- opening a new tab should now load lavender ✨ enjoy!
+### platform-specific instructions
+
+**web**
+
+- paste the preview address from the terminal into your browser to view lavender locally. the build address defaults to [http://localhost:4173](http://localhost:4173)
+
+**Chrome (& Chromium)**
+
+- navigate to [chrome://extensions](chrome://extensions) (or the extensions page for your Chromium browser) and turn on developer mode (in the top right corner)
+- click "load unpacked" at the top and select the `dist` folder of lavender
+
+**firefox**
+
+- navigate to [about:debugging#/runtime/this-firefox](about:debugging#/runtime/this-firefox) and click "load temporary add-on". select the `dist/manifest.json` file from lavender
+
+### open lavender
+
+opening a new tab should now load lavender ✨ enjoy!
+
+## contributing
+
+**development**
+
+- clone or download lavender
+
+  ```sh
+  git clone git@github.com:fvrests/lavender.git && cd lavender
+  ```
+
+- to run the local server with test weather data for development, install [Bun](https://bun.sh/docs/installation) and run the server
+
+  ```sh
+  pnpm dev:server
+  ```
+
+- install dependencies and start the dev server for lavender
+
+  ```sh
+  pnpm install && pnpm dev
+  ```
+
+**preview**
+
+- build and preview lavender (generating the necessary `dist` folder)
+
+  ```sh
+  pnpm build && pnpm preview
+  ```
+
+- follow [platorm-specific instructions](#platform-specific-instructions) to load your local build
 
 ## permissions & licensing
 
@@ -59,7 +112,7 @@ the extension requires the following permissions:
 | local & chrome storage | store user settings. optionally, sync between devices with chrome storage.                  |
 | geolocation            | fetch weather - data is used to query [OpenWeather API](https://openweathermap.org/find?q=) |
 
-this project is developed under MIT license. please feel free to browse the source code or use snippets for your own projects.
+this project is licensed under MIT. please feel free to browse the source code or use snippets for your own projects.
 
 [privacy policy](https://github.com/fvrests/lavender/blob/main/privacy-policy.md) | [terms of use](https://github.com/fvrests/lavender/blob/main/terms-of-use.md)
 

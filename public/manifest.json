@@ -1,7 +1,7 @@
 {
 	"name": "lavender | new tab",
 	"short_name": "lavender",
-	"version": "2.0",
+	"version": "2.0.1",
 	"description": "a soft, minimal new tab for your browser",
 	"permissions": ["storage", "geolocation"],
 	"action": {
@@ -18,6 +18,11 @@
 		"192": "192.png",
 		"512": "512.png",
 		"1024": "1024.png"
+	},
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "{47f3d8fd-acfc-4e8c-a17c-ae34551e1c96}"
+		}
 	},
 	"chrome_url_overrides": {
 		"newtab": "index.html"
