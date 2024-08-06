@@ -7,7 +7,7 @@
 lavender is a soft, minimal new tab for your browser featuring:
 
 - live time & weather updates
-- 10 background colors in calming pastel and rich dark tones
+- 12 background colors in calming pastel and rich dark tones
 - dynamic light / dark mode for adaptive viewing
 - alternative UI layouts
 - location-based weather fetching
