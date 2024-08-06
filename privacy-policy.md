@@ -14,15 +14,15 @@ Lavender accesses the user's Local Storage and may access the user's Chrome Stor
 
 ### Geolocation Data
 
-The user's location data is stored in the user's browser and is not pre-fetched, indexed, stored, or cached in any way by the developer of Lavender. Location data obtained through the browser may be subject to additional privacy policies provided by the user's browser, such as Google's Privacy Policy, found [here](https://www.google.com/policies/privacy/). The coordinates collected are used to query OpenWeather's Current Weather Data API to obtain weather data for the user's area. The OpenWeather privacy policy can be found [here](https://openweather.co.uk/privacy-policy).
+The user's location data is stored in the user's browser and is not pre-fetched, indexed, stored, or cached in any way by the developer of Lavender. Location data obtained through the browser may be subject to additional privacy policies provided by the user's browser, such as Google's Privacy Policy, found [here](https://www.google.com/policies/privacy/), or Firefox's Privacy Policy, found [here](https://www.mozilla.org/en-US/privacy/firefox/). The coordinates collected are used to query OpenWeather's Current Weather Data API to obtain weather data for the user's area. The OpenWeather privacy policy can be found [here](https://openweather.co.uk/privacy-policy).
 
 ### Local and Chrome Sync Storage
 
-The user's local and Chrome storage are used to save UI settings within the browser and allow them to persist across Chrome extension instances using the Chrome Storage API. User data and settings are not indexed, stored, or cached by the developer of Lavender and are accessible only to the user.
+The user's local storage is used to save UI settings within the browser. Chrome storage, if Chrome sync is enabled in the Chrome extension, saves settings using the Chrome Storage API to allow them to persist across extension instances. User data and settings are not indexed, stored, or cached by the developer of Lavender and are accessible only to the user.
 
 ## Limiting access to personal data
 
-The user may deny access to location data by clicking the "Not now" link when asked for permission to access location. If the user has already enabled location access or updated their UI settings, settings and location data can be deleted from the user's Chrome Storage by navigating to Chrome > Settings > Privacy and Security > "Clear Browsing Data" within the Chrome browser. Please be aware that browsing data for products & sites offered by other parties may be deleted through this action.
+The user may deny access to location data by clicking the "Not now" link when asked for permission to access location. If the user has already enabled location access or updated their UI settings, settings and location data can be deleted from the user's Chrome Storage by navigating to Chrome > Settings > Privacy and Security > "Clear Browsing Data" within the Chrome browser, or from Firefox at Firefox > Privacy & Security > Cookies & Site Data > "Clear Data". For other browsers, we recommend to follow browser-specific directions to clear local storage for the Lavender site or for site data in the browser as a whole. Please be aware that browsing data for products & sites offered by other parties may be deleted through this action.
 
 ## Dispute resolution
 
