@@ -105,6 +105,12 @@ opening a new tab should now load lavender ✨ enjoy!
 
 - follow [platorm-specific instructions](#platform-specific-instructions) to load your local build
 
+## troubleshooting
+
+**location fetch**
+
+location fetch will fail on ungoogled-chromium or any browser which disables location access. in some cases, location may be spoofed instead (see [workaround for ungoogled-chromium](https://github.com/ungoogled-software/ungoogled-chromium/issues/1551#issuecomment-1738237814))
+
 ## permissions & licensing
 
 the extension requires the following permissions:
