@@ -16,11 +16,13 @@ lavender is a soft, minimal new tab for your browser featuring:
 
 ## chrome extension
 
-download at the [Chrome Web Store](https://chrome.google.com/webstore/detail/lavender-new-tab/ffobepdbanoiodmfimpmanafepclokbc). also installable to Brave and other Chromium-based browsers.
+[lavender for Chrome](https://chrome.google.com/webstore/detail/lavender-new-tab/ffobepdbanoiodmfimpmanafepclokbc)
+
+> also installable to Brave and other Chromium-based browsers.
 
 ## firefox extension
 
-> pending review
+[lavender for Firefox](https://addons.mozilla.org/en-US/firefox/addon/lavender-new-tab/#)
 
 ## web
 
