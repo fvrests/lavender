@@ -12,3 +12,28 @@ export async function fetchWeather(latitude: number, longitude: number) {
 	)
 	return await res.json()
 }
+
+export function hexToRgb(hex: string) {
+	// Remove the hash at the start if it's there
+	hex = hex.slice(1)
+
+	if (hex.length < 5) {
+		hex = hex.replace(/./g, '$&$&')
+	}
+
+	// Parse r, g, b values
+	const color = +('0x' + hex)
+	const r = color >> 16
+	const g = (color >> 8) & 255
+	const b = color & 255
+
+	return { r, g, b }
+}
+
+// https://awik.io/determine-color-bright-dark-using-javascript/
+export function isColorDark(hex: string) {
+	const { r, g, b } = hexToRgb(hex)
+	// HSP (Highly Sensitive Poo) equation from http://alienryderflex.com/hsp.html
+	const hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b))
+	return hsp < 127.5
+}

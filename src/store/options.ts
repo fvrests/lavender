@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { useDataStore } from './data'
+import { isColorDark } from '../utils/helpers'
 
 export const useOptionsStore = defineStore('options', {
 	state: () => ({
@@ -7,6 +8,7 @@ export const useOptionsStore = defineStore('options', {
 		useChromeStorage: false,
 		theme: {
 			color: 'lavender',
+			customColor: '',
 		},
 		time: {
 			layout: 'default',
@@ -31,6 +33,10 @@ export const useOptionsStore = defineStore('options', {
 					(options) => {
 						if (options) {
 							const localOptions = JSON.parse(options)
+							document.documentElement.style.setProperty(
+								'--color-custom',
+								localOptions.theme.customColor,
+							)
 							this.$patch(localOptions)
 						}
 					},
@@ -96,6 +102,13 @@ export const useOptionsStore = defineStore('options', {
 		},
 		setTheme(theme: string) {
 			this.$patch({ theme: { color: theme } })
+			document.documentElement.className = theme
+		},
+		setCustomColor(colorHex: string) {
+			const isDark = isColorDark(colorHex)
+			const theme = isDark ? 'custom-dark' : 'custom'
+			this.$patch({ theme: { customColor: colorHex, color: theme } })
+			document.documentElement.style.setProperty('--color-custom', colorHex)
 			document.documentElement.className = theme
 		},
 		previewTheme(theme: string) {
