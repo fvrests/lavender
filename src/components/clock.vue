@@ -29,6 +29,7 @@ const instanceStore = useInstanceStore()
 .wrapper {
 	grid-area: middle;
 	text-align: center;
+	user-select: none;
 }
 
 .context-label {
