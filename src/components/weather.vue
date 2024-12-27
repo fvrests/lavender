@@ -25,6 +25,10 @@ const dataStore = useDataStore()
 .wrapper {
 	grid-area: bottom;
 	text-align: center;
+	user-select: none;
+	-webkit-user-select: none; /* Safari */
+	-webkit-touch-callout: none; /* iOS Safari */
+	cursor: default; /* prevents text cursor in Safari */
 }
 
 .wi {
