@@ -39,8 +39,7 @@ function handleCustomColorChange(e: Event) {
 	}
 
 	if (
-		color.length > 1 &&
-		color.at(0) === '#' &&
+		color.length > 0 &&
 		!/^#([0-9A-F]{3}){1,2}$/i.test(color)
 	) {
 		return
@@ -71,11 +70,7 @@ function handleClearData() {
 	<!-- todo: consider updating typography-->
 	<!-- todo: consider adding font selection (sans serif, mono) -->
 	<div class="options" @keyup.esc="isOptionsOpen = false">
-		<button
-			:class="{ open: isOptionsOpen }"
-			class="options-button"
-			@click="toggleOptionsMenu"
-		>
+		<button :class="{ open: isOptionsOpen }" class="options-button" @click="toggleOptionsMenu">
 			<Icon class="options-icon" />
 		</button>
 		<div v-if="isOptionsOpen" class="overlay" @click="toggleOptionsMenu" />
@@ -98,11 +93,7 @@ function handleClearData() {
 					<div class="space-xsmall" />
 					<ul class="theme-list">
 						<li v-for="theme in themes">
-							<ThemeSelect
-								:theme="theme + '-dark'"
-								:colors="[theme + '-dark']"
-								dark
-							/>
+							<ThemeSelect :theme="theme + '-dark'" :colors="[theme + '-dark']" dark />
 						</li>
 					</ul>
 					<div class="space-xsmall" />
@@ -110,31 +101,16 @@ function handleClearData() {
 					<div class="space-xsmall" />
 					<ul class="theme-list">
 						<li v-for="theme in themes">
-							<ThemeSelect
-								:theme="theme + '-system'"
-								split
-								:colors="[theme, `${theme}-dark`]"
-								dark
-							/>
+							<ThemeSelect :theme="theme + '-system'" split :colors="[theme, `${theme}-dark`]" dark />
 						</li>
 					</ul>
 					<div class="space-xsmall" />
 					<div :class="text.label">Custom</div>
 					<div class="space-xsmall" />
 					<ul class="custom-theme-menu">
-						<ThemeSelect
-							:theme="customColorScheme"
-							:dark="isCustomColorDark"
-							:colors="['custom', 'custom-dark']"
-						/>
-						<input
-							type="text"
-							:value="optionsStore.theme.customColor"
-							@input="handleCustomColorChange"
-							placeholder="#3a3441"
-							maxlength="7"
-							:class="text.title"
-						/>
+						<ThemeSelect :theme="customColorScheme" :dark="isCustomColorDark" :colors="['custom', 'custom-dark']" />
+						<input type="text" :value="optionsStore.theme.customColor" @input="handleCustomColorChange"
+							placeholder="#3a3441" maxlength="7" :class="text.title" />
 					</ul>
 				</div>
 
@@ -165,11 +141,7 @@ function handleClearData() {
 					</template>
 				</RadioGroup>
 
-				<OptionToggle
-					option="time.use24Hour"
-					label="24-hour format"
-					role="menuitem"
-				/>
+				<OptionToggle option="time.use24Hour" label="24-hour format" role="menuitem" />
 
 				<div class="divider" />
 
@@ -179,9 +151,7 @@ function handleClearData() {
 
 				<div class="row">
 					<div :class="text.base">Source:</div>
-					<ExternalLink url="https://openweathermap.org"
-						>OpenWeather</ExternalLink
-					>
+					<ExternalLink url="https://openweathermap.org">OpenWeather</ExternalLink>
 				</div>
 
 				<div class="divider" />
@@ -195,12 +165,7 @@ function handleClearData() {
 					</div>
 					<div v-else :class="text.label">Fetching...</div>
 					<div>
-						<button
-							:class="button.primary"
-							style="margin: 0 auto"
-							:disabled="refreshDisabled"
-							@click="handleFetch()"
-						>
+						<button :class="button.primary" style="margin: 0 auto" :disabled="refreshDisabled" @click="handleFetch()">
 							{{ !refreshDisabled ? 'Refresh' : 'Please wait 15s' }}
 						</button>
 					</div>
@@ -215,11 +180,7 @@ function handleClearData() {
 							}}
 						</div>
 						<div>
-							<button
-								:class="button.primary"
-								style="margin: 0 auto"
-								@click="handleFetch()"
-							>
+							<button :class="button.primary" style="margin: 0 auto" @click="handleFetch()">
 								Enable
 							</button>
 						</div>
@@ -236,16 +197,10 @@ function handleClearData() {
 				<div v-if="optionsStore.init && dataStore.isChromeExtension">
 					<div :class="text.subtitle">Data sync</div>
 
-					<OptionToggle
-						option="useChromeStorage"
-						label="Sync with Chrome"
-						role="menuitem"
-						:onChange="
-							() =>
-								!optionsStore.useChromeStorage &&
-								optionsStore.readChromeStorage()
-						"
-					/>
+					<OptionToggle option="useChromeStorage" label="Sync with Chrome" role="menuitem" :onChange="() =>
+							!optionsStore.useChromeStorage &&
+							optionsStore.readChromeStorage()
+						" />
 					<div :class="text.base">
 						Persist options across your Chrome browsers (overrides your current
 						options). Your location is not synced and will remain on-device.
@@ -267,26 +222,17 @@ function handleClearData() {
 				</div>
 
 				<div class="row even">
-					<ExternalLink
-						url="https://github.com/fvrests/lavender/blob/main/privacy-policy.md"
-						>Privacy Policy
+					<ExternalLink url="https://github.com/fvrests/lavender/blob/main/privacy-policy.md">Privacy Policy
 					</ExternalLink>
-					<ExternalLink
-						url="https://github.com/fvrests/lavender/blob/main/terms-of-use.md"
-						>Terms of Use</ExternalLink
-					>
+					<ExternalLink url="https://github.com/fvrests/lavender/blob/main/terms-of-use.md">Terms of Use</ExternalLink>
 				</div>
 
 				<div class="space-small" />
 
 				<div class="row even">
-					<ExternalLink url="https://fvrests.dev" :underline="true"
-						>fvrests</ExternalLink
-					>
+					<ExternalLink url="https://fvrests.dev" :underline="true">fvrests</ExternalLink>
 
-					<ExternalLink url="https://ko-fi.com/fvrests" :underline="true"
-						>donate ♥</ExternalLink
-					>
+					<ExternalLink url="https://ko-fi.com/fvrests" :underline="true">donate ♥</ExternalLink>
 				</div>
 			</div>
 		</transition>
@@ -306,9 +252,7 @@ function handleClearData() {
 
 .options-menu {
 	--_space-around: var(--page-padding);
-	--_space-around-bottom: calc(
-		var(--_space-around) + 36px + var(--space-small)
-	);
+	--_space-around-bottom: calc(var(--_space-around) + 36px + var(--space-small));
 
 	margin-top: var(--_space-around);
 	color: var(--ui-fg);
@@ -415,7 +359,7 @@ input:focus {
 	grid-template-columns: repeat(6, 1fr);
 }
 
-.theme-list > * {
+.theme-list>* {
 	margin-right: auto;
 	display: inline-flex;
 }
