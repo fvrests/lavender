@@ -1,16 +1,16 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue'
 import Icon from '../assets/icons/icon.vue'
-import OptionToggle from './option-toggle.vue'
-import RadioGroup from './radio-group.vue'
-import ExternalLink from './external-link.vue'
-import ThemeSelect from './theme-select.vue'
 import button from '../assets/styles/button.module.css'
 import text from '../assets/styles/text.module.css'
-import { ref } from 'vue'
 import { useDataStore } from '../store/data'
-import { useOptionsStore } from '../store/options'
 import { useInstanceStore } from '../store/instance'
+import { useOptionsStore } from '../store/options'
 import { isColorDark } from '../utils/helpers'
+import ExternalLink from './external-link.vue'
+import OptionToggle from './option-toggle.vue'
+import RadioGroup from './radio-group.vue'
+import ThemeSelect from './theme-select.vue'
 
 const dataStore = useDataStore()
 const optionsStore = useOptionsStore()
@@ -24,8 +24,12 @@ function toggleOptionsMenu() {
 	isOptionsOpen.value = !isOptionsOpen.value
 }
 
-const isCustomColorDark = isColorDark(optionsStore.theme.customColor)
-const customColorScheme = isCustomColorDark ? 'custom-dark' : 'custom'
+const isCustomColorDark = computed(() =>
+	isColorDark(optionsStore.theme.customColor),
+)
+const customColorScheme = computed(() =>
+	isCustomColorDark.value ? 'custom-dark' : 'custom',
+)
 
 function handleCustomColorChange(e: Event) {
 	const target = e.target as HTMLInputElement
@@ -33,6 +37,15 @@ function handleCustomColorChange(e: Event) {
 	if (color && !color.startsWith('#')) {
 		color = '#' + color
 	}
+
+	if (
+		color.length > 1 &&
+		color.at(0) === '#' &&
+		!/^#([0-9A-F]{3}){1,2}$/i.test(color)
+	) {
+		return
+	}
+
 	optionsStore.setCustomColor(color)
 }
 
@@ -119,6 +132,7 @@ function handleClearData() {
 							:value="optionsStore.theme.customColor"
 							@input="handleCustomColorChange"
 							placeholder="#3a3441"
+							maxlength="7"
 							:class="text.title"
 						/>
 					</ul>

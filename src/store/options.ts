@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
-import { useDataStore } from './data'
 import { isColorDark } from '../utils/helpers'
+import { useDataStore } from './data'
 
 export const useOptionsStore = defineStore('options', {
 	state: () => ({

@@ -568,8 +568,8 @@ pre,
 code,
 kbd,
 samp {
-	font-family:
-		Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+	font-family: Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+		monospace;
 }
 
 /**
