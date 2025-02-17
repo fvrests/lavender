@@ -29,6 +29,10 @@ const instanceStore = useInstanceStore()
 .wrapper {
 	grid-area: middle;
 	text-align: center;
+	user-select: none;
+	-webkit-user-select: none; /* Safari */
+	-webkit-touch-callout: none; /* iOS Safari */
+	cursor: default; /* prevents text cursor in Safari */
 }
 
 .context-label {
