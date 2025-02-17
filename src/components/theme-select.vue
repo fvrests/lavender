@@ -10,7 +10,7 @@ const props = withDefaults(
 		split?: boolean
 		dark?: boolean
 	}>(),
-	{ split: false, dark: false }
+	{ split: false, dark: false },
 )
 </script>
 
