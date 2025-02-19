@@ -10,7 +10,7 @@ const props = withDefaults(
 		split?: boolean
 		dark?: boolean
 	}>(),
-	{ split: false, dark: false }
+	{ split: false, dark: false },
 )
 </script>
 
@@ -53,6 +53,7 @@ const props = withDefaults(
 button {
 	height: 30px;
 	width: 30px;
+	aspect-ratio: 1;
 	border-radius: var(--rounded-full);
 	cursor: pointer;
 	border: var(--border);

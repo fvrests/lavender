@@ -41,6 +41,9 @@
 	--ui-fg: var(--color-gray);
 	--ui-bg: white;
 
+	/* custom color */
+	--color-custom: #3a3441;
+
 	--ui-focus-box: 0px 0px 0px 2px var(--ui-bg), 0px 0px 0px 4px var(--ui-fg);
 }
 
@@ -63,6 +66,9 @@
 .sand:root {
 	--theme-bg: var(--color-sand);
 }
+.custom:root {
+	--theme-bg: var(--color-custom);
+}
 
 /* dark classic themes: with [name]-dark class */
 .lavender-dark:root,
@@ -70,7 +76,8 @@
 .lemon-dark:root,
 .sea-dark:root,
 .leaf-dark:root,
-.sand-dark:root {
+.sand-dark:root,
+.custom-dark:root {
 	--theme-fg: var(--color-sand);
 	--ui-bg: var(--color-sand);
 }
@@ -91,6 +98,9 @@
 }
 .sand-dark:root {
 	--theme-bg: var(--color-sand-dark);
+}
+.custom-dark:root {
+	--theme-bg: var(--color-custom);
 }
 
 /* system themes: with [name]-system class */
@@ -152,8 +162,18 @@ body {
 }
 
 body {
-	font-family: var(--font), -apple-system, BlinkMacSystemFont, 'Segoe UI',
-		Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+	font-family:
+		var(--font),
+		-apple-system,
+		BlinkMacSystemFont,
+		'Segoe UI',
+		Roboto,
+		Oxygen,
+		Ubuntu,
+		Cantarell,
+		'Open Sans',
+		'Helvetica Neue',
+		sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	background-color: var(--theme-bg);

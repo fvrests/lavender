@@ -1,15 +1,16 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue'
 import Icon from '../assets/icons/icon.vue'
-import OptionToggle from './option-toggle.vue'
-import RadioGroup from './radio-group.vue'
-import ExternalLink from './external-link.vue'
-import ThemeSelect from './theme-select.vue'
 import button from '../assets/styles/button.module.css'
 import text from '../assets/styles/text.module.css'
-import { ref } from 'vue'
 import { useDataStore } from '../store/data'
-import { useOptionsStore } from '../store/options'
 import { useInstanceStore } from '../store/instance'
+import { useOptionsStore } from '../store/options'
+import { isColorDark } from '../utils/helpers'
+import ExternalLink from './external-link.vue'
+import OptionToggle from './option-toggle.vue'
+import RadioGroup from './radio-group.vue'
+import ThemeSelect from './theme-select.vue'
 
 const dataStore = useDataStore()
 const optionsStore = useOptionsStore()
@@ -21,6 +22,27 @@ let themes = ['lavender', 'rose', 'lemon', 'sea', 'leaf', 'sand']
 
 function toggleOptionsMenu() {
 	isOptionsOpen.value = !isOptionsOpen.value
+}
+
+const isCustomColorDark = computed(() =>
+	isColorDark(optionsStore.theme.customColor),
+)
+const customColorScheme = computed(() =>
+	isCustomColorDark.value ? 'custom-dark' : 'custom',
+)
+
+function handleCustomColorChange(e: Event) {
+	const target = e.target as HTMLInputElement
+	let color = target.value
+	if (color && !color.startsWith('#')) {
+		color = '#' + color
+	}
+
+	if (color.length > 0 && !/^#([0-9A-F]{3}){1,2}$/i.test(color)) {
+		return
+	}
+
+	optionsStore.setCustomColor(color)
 }
 
 function handleFetch() {
@@ -91,6 +113,24 @@ function handleClearData() {
 								dark
 							/>
 						</li>
+					</ul>
+					<div class="space-xsmall" />
+					<div :class="text.label">Custom</div>
+					<div class="space-xsmall" />
+					<ul class="custom-theme-menu">
+						<ThemeSelect
+							:theme="customColorScheme"
+							:dark="isCustomColorDark"
+							:colors="['custom', 'custom-dark']"
+						/>
+						<input
+							type="text"
+							:value="optionsStore.theme.customColor"
+							@input="handleCustomColorChange"
+							placeholder="#3a3441"
+							maxlength="7"
+							:class="text.title"
+						/>
 					</ul>
 				</div>
 
@@ -347,10 +387,30 @@ function handleClearData() {
 	padding: 4px;
 }
 
+.custom-theme-menu {
+	display: flex;
+	align-items: center;
+	gap: var(--space-xsmall);
+}
+
+input {
+	width: 100%;
+	height: 30px;
+	border: var(--border);
+	border-radius: var(--rounded-full);
+	padding: 0 var(--space-xsmall);
+}
+
+input:focus {
+	outline: none;
+	box-shadow: var(--ui-focus-box);
+}
+
 .theme-list {
 	display: grid;
 	grid-template-columns: repeat(6, 1fr);
 }
+
 .theme-list > * {
 	margin-right: auto;
 	display: inline-flex;
