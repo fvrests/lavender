@@ -121,7 +121,7 @@ function handleClearData() {
 						<ThemeSelect
 							:theme="customColorScheme"
 							:dark="isCustomColorDark"
-							:colors="['custom', 'custom-dark']"
+							:colors="['custom']"
 						/>
 						<input
 							type="text"
