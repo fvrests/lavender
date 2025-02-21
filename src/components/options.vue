@@ -399,6 +399,7 @@ input {
 	border: var(--border);
 	border-radius: var(--rounded-full);
 	padding: 0 var(--space-xsmall);
+	background-color: var(--ui-bg);
 }
 
 input:focus {
