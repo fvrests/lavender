@@ -18,6 +18,7 @@
 
 	/* ui colors*/
 	--color-gray: #222222;
+	--color-gray-light: #6f6f6f;
 
 	/* classic theme colors */
 	--color-lavender: #dad4e0;
@@ -214,4 +215,19 @@ body {
 }
 .centered {
 	justify-content: center;
+}
+
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+	color: var(--color-gray-light);
+}
+
+input::-ms-input-placeholder,
+textarea::-ms-input-placeholder {
+	color: var(--color-gray-light);
+}
+
+input::placeholder,
+textarea::placeholder {
+	color: var(--color-gray-light);
 }
