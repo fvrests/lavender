@@ -35,7 +35,7 @@ export const useOptionsStore = defineStore('options', {
 							const localOptions = JSON.parse(options)
 							document.documentElement.style.setProperty(
 								'--color-custom',
-								localOptions.theme.customColor,
+								localOptions.theme.customColor ?? '#3a3441',
 							)
 							this.$patch(localOptions)
 						}
