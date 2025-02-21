@@ -18,6 +18,7 @@
 
 	/* ui colors*/
 	--color-gray: #222222;
+	--color-gray-light: #6f6f6f;
 
 	/* classic theme colors */
 	--color-lavender: #dad4e0;
@@ -42,7 +43,7 @@
 	--ui-bg: white;
 
 	/* custom color */
-	--color-custom: #3a3441;
+	--color-custom: var(--color-lavender-dark);
 
 	--ui-focus-box: 0px 0px 0px 2px var(--ui-bg), 0px 0px 0px 4px var(--ui-fg);
 }
@@ -214,4 +215,19 @@ body {
 }
 .centered {
 	justify-content: center;
+}
+
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+	color: var(--color-gray-light);
+}
+
+input::-ms-input-placeholder,
+textarea::-ms-input-placeholder {
+	color: var(--color-gray-light);
+}
+
+input::placeholder,
+textarea::placeholder {
+	color: var(--color-gray-light);
 }

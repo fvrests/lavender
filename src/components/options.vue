@@ -42,7 +42,7 @@ function handleCustomColorChange(e: Event) {
 		return
 	}
 
-	optionsStore.setCustomColor(color)
+	optionsStore.setCustomColor(color, true)
 }
 
 function handleFetch() {
@@ -121,7 +121,7 @@ function handleClearData() {
 						<ThemeSelect
 							:theme="customColorScheme"
 							:dark="isCustomColorDark"
-							:colors="['custom', 'custom-dark']"
+							:colors="['custom']"
 						/>
 						<input
 							type="text"
@@ -399,6 +399,7 @@ input {
 	border: var(--border);
 	border-radius: var(--rounded-full);
 	padding: 0 var(--space-xsmall);
+	background-color: var(--ui-bg);
 }
 
 input:focus {
