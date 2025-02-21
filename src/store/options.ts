@@ -33,10 +33,6 @@ export const useOptionsStore = defineStore('options', {
 					(options) => {
 						if (options) {
 							const localOptions = JSON.parse(options)
-							document.documentElement.style.setProperty(
-								'--color-custom',
-								localOptions.theme.customColor ?? '#3a3441',
-							)
 							this.$patch(localOptions)
 						}
 					},
@@ -50,6 +46,7 @@ export const useOptionsStore = defineStore('options', {
 				})
 				.then(() => {
 					this.setTheme(this.theme.color)
+					this.setCustomColor(this.theme.customColor)
 					this.$subscribe((_, state) => {
 						localStorage.setItem('options', JSON.stringify({ ...state }))
 					})
@@ -104,12 +101,14 @@ export const useOptionsStore = defineStore('options', {
 			this.$patch({ theme: { color: theme } })
 			document.documentElement.className = theme
 		},
-		setCustomColor(colorHex: string) {
+		setCustomColor(colorHex: string, enable = false) {
 			const isDark = isColorDark(colorHex)
 			const theme = isDark ? 'custom-dark' : 'custom'
-			this.$patch({ theme: { customColor: colorHex, color: theme } })
 			document.documentElement.style.setProperty('--color-custom', colorHex)
-			document.documentElement.className = theme
+			if (enable) {
+				this.$patch({ theme: { color: theme, customColor: colorHex } })
+				document.documentElement.className = theme
+			}
 		},
 		previewTheme(theme: string) {
 			document.documentElement.className = theme

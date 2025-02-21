@@ -42,7 +42,7 @@ function handleCustomColorChange(e: Event) {
 		return
 	}
 
-	optionsStore.setCustomColor(color)
+	optionsStore.setCustomColor(color, true)
 }
 
 function handleFetch() {
