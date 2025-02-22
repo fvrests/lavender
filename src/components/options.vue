@@ -327,6 +327,7 @@ function handleClearData() {
 	width: 36px;
 	height: 36px;
 	background: transparent;
+	transition: none;
 	position: fixed;
 	bottom: var(--page-padding);
 	right: var(--page-padding);
@@ -356,7 +357,7 @@ function handleClearData() {
 
 .optionsMenu-enter-active,
 .optionsMenu-leave-active {
-	transition: ease-in-out all 100ms;
+	transition: var(--transition-motion);
 }
 
 .optionsMenu-enter-from,

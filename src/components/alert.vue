@@ -108,7 +108,7 @@ function handleDecline() {
 
 .prompt-enter-active,
 .prompt-leave-active {
-	transition: ease-in-out all 200ms;
+	transition: var(--transition-motion);
 }
 
 .prompt-enter-from,

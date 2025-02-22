@@ -43,7 +43,6 @@
 	bottom: 0px;
 	background-color: var(--theme-bg);
 	z-index: -1;
-	transition: var(--transition);
 }
 .secondary:hover::after {
 	height: 4px;

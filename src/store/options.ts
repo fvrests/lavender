@@ -50,6 +50,9 @@ export const useOptionsStore = defineStore('options', {
 					this.$subscribe((_, state) => {
 						localStorage.setItem('options', JSON.stringify({ ...state }))
 					})
+					setTimeout(() => {
+						document.documentElement.setAttribute('data-loaded', 'true')
+					}, 1000)
 				})
 		},
 		readChromeStorage() {
@@ -111,6 +114,9 @@ export const useOptionsStore = defineStore('options', {
 			}
 		},
 		previewTheme(theme: string) {
+			const isReduced =
+				window.matchMedia(`(prefers-reduced-motion: reduce)`).matches === true
+			if (isReduced) return
 			document.documentElement.className = theme
 		},
 		reset() {
