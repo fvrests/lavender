@@ -315,7 +315,7 @@ function handleClearData() {
 	max-width: 320px;
 	padding: var(--space-medium);
 	width: 100%;
-	height: 600px;
+	height: 610px;
 	max-height: calc(100vh - var(--_space-around) - var(--_space-around-bottom));
 	background: var(--ui-bg);
 	border: var(--border);
