@@ -409,11 +409,11 @@ input:focus {
 
 .theme-list {
 	display: grid;
-	grid-template-columns: repeat(6, 1fr);
+	grid-template-columns: repeat(6, auto);
+	justify-content: space-between;
 }
 
 .theme-list > * {
-	margin-right: auto;
 	display: inline-flex;
 }
 </style>
