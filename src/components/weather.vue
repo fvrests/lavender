@@ -34,7 +34,7 @@ const dataStore = useDataStore()
 .wi {
 	font-size: var(--text-large);
 	color: var(--theme-fg);
-	background-color: var(--theme-bg);
+	background-color: transparent;
 	height: var(--space-large);
 	width: var(--space-large);
 	border-radius: var(--rounded-full);
@@ -79,7 +79,7 @@ const dataStore = useDataStore()
 
 .prompt-enter-active,
 .prompt-leave-active {
-	transition: ease-in-out all 200ms;
+	transition: var(--transition-motion);
 }
 
 .prompt-enter-from,

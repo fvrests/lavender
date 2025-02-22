@@ -81,7 +81,7 @@ svg {
 }
 svg > rect,
 svg > circle {
-	transition: all 200ms ease-in-out;
+	transition: var(--transition-motion);
 }
 svg.selected > circle {
 	fill: var(--ui-bg);

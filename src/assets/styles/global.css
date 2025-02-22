@@ -12,7 +12,9 @@
 	--rounded: 12px;
 	--rounded-slight: 2px;
 
-	--transition: var(--transition);
+	--transition-motion: all 100ms ease-in-out;
+	--transition-color: background-color 250ms linear;
+	--transition-fast: background-color 100ms linear;
 
 	--font: 'Lora', serif;
 
@@ -179,6 +181,22 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 	background-color: var(--theme-bg);
 	color: var(--theme-fg);
+}
+
+/* prevent transitioning color on first load */
+[data-loaded='true'] *:not(button) {
+	transition: var(--transition-color);
+}
+[data-loaded='true'] button {
+	transition: var(--transition-fast);
+}
+@media screen and (prefers-reduced-motion: reduce) {
+	* {
+		-webkit-transition: none !important;
+		-moz-transition: none !important;
+		-o-transition: none !important;
+		transition: none !important;
+	}
 }
 
 .space-xsmall {

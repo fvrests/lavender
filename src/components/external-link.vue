@@ -71,7 +71,6 @@ a:focus .text {
 	left: 2px;
 	bottom: 10%;
 	background-color: var(--theme-bg);
-	transition: var(--transition);
 }
 .text.underline:hover::after,
 .text.underline:focus::after {
@@ -82,7 +81,6 @@ a:focus .text {
 	left: 2px;
 	bottom: 10%;
 	background-color: var(--theme-bg);
-	transition: var(--transition);
 	visibility: visible;
 }
 

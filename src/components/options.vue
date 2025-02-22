@@ -315,7 +315,7 @@ function handleClearData() {
 	max-width: 320px;
 	padding: var(--space-medium);
 	width: 100%;
-	height: 640px;
+	height: 610px;
 	max-height: calc(100vh - var(--_space-around) - var(--_space-around-bottom));
 	background: var(--ui-bg);
 	border: var(--border);
@@ -327,6 +327,7 @@ function handleClearData() {
 	width: 36px;
 	height: 36px;
 	background: transparent;
+	transition: none;
 	position: fixed;
 	bottom: var(--page-padding);
 	right: var(--page-padding);
@@ -356,7 +357,7 @@ function handleClearData() {
 
 .optionsMenu-enter-active,
 .optionsMenu-leave-active {
-	transition: ease-in-out all 100ms;
+	transition: var(--transition-motion);
 }
 
 .optionsMenu-enter-from,
@@ -409,11 +410,11 @@ input:focus {
 
 .theme-list {
 	display: grid;
-	grid-template-columns: repeat(6, 1fr);
+	grid-template-columns: repeat(6, auto);
+	justify-content: space-between;
 }
 
 .theme-list > * {
-	margin-right: auto;
 	display: inline-flex;
 }
 </style>
