@@ -37,7 +37,7 @@ export function hexToRgb(hex: string) {
 // https://awik.io/determine-color-bright-dark-using-javascript/
 export function isColorDark(hex: string) {
 	const { r, g, b } = hexToRgb(hex)
-	// HSP (Highly Sensitive Poo) equation from http://alienryderflex.com/hsp.html
+	// HSP (Hue - Saturation - Perceived brightness) equation from http://alienryderflex.com/hsp.html
 	const hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b))
 	return hsp < 127.5
 }
