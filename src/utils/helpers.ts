@@ -7,10 +7,14 @@ export async function fetchWeather(latitude: number, longitude: number) {
 		baseUrl = 'http://localhost:3000'
 	}
 
-	const res = await fetch(
-		`${baseUrl}?lat=${latitude}&lon=${longitude}&appid=${import.meta.env.VITE_WEATHER_KEY}`,
-	)
-	return await res.json()
+	try {
+		const res = await fetch(
+			`${baseUrl}?lat=${latitude}&lon=${longitude}&appid=${import.meta.env.VITE_WEATHER_KEY}`,
+		)
+		return await res.json()
+	} catch (error) {
+		console.error('fetch error', error)
+	}
 }
 
 export function hexToRgb(hex: string) {
