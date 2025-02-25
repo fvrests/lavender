@@ -1,7 +1,7 @@
 {
 	"name": "lavender | new tab",
 	"short_name": "lavender",
-	"version": "2.1.0",
+	"version": "2.1.1",
 	"description": "a soft, minimal new tab for your browser",
 	"permissions": ["storage", "geolocation"],
 	"action": {

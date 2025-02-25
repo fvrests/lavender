@@ -7,10 +7,14 @@ export async function fetchWeather(latitude: number, longitude: number) {
 		baseUrl = 'http://localhost:3000'
 	}
 
-	const res = await fetch(
-		`${baseUrl}?lat=${latitude}&lon=${longitude}&appid=${import.meta.env.VITE_WEATHER_KEY}`,
-	)
-	return await res.json()
+	try {
+		const res = await fetch(
+			`${baseUrl}?lat=${latitude}&lon=${longitude}&appid=${import.meta.env.VITE_WEATHER_KEY}`,
+		)
+		return await res.json()
+	} catch (error) {
+		console.error('fetch error', error)
+	}
 }
 
 export function hexToRgb(hex: string) {
@@ -33,7 +37,7 @@ export function hexToRgb(hex: string) {
 // https://awik.io/determine-color-bright-dark-using-javascript/
 export function isColorDark(hex: string) {
 	const { r, g, b } = hexToRgb(hex)
-	// HSP (Highly Sensitive Poo) equation from http://alienryderflex.com/hsp.html
+	// HSP (Hue - Saturation - Perceived brightness) equation from http://alienryderflex.com/hsp.html
 	const hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b))
 	return hsp < 127.5
 }
